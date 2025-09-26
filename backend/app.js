@@ -4,13 +4,13 @@ const { loggerMiddleware } = require('./util/logger');
 const { authenticateToken } = require('./util/jwt');
 
 const userRoutes = require('./routes/api/userRoutes');
-const ticketRoutes = require('./routes/api/ticketRoutes');
 
 const app = express();
 
 app.use(bodyParser.json());
 app.use(loggerMiddleware);
 
+// can change /api to something else if desired
 app.use('/api/users', userRoutes);
 
 
