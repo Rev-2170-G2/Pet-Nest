@@ -13,8 +13,8 @@ app.use(loggerMiddleware);
 // can change /api to something else if desired
 app.use('/api/users', userRoutes);
 
-
-// app.use('/api/tickets', authenticateToken, ticketRoutes);
+// example of middleware usage on a suite of routes
+// app.use('/api/route', authenticateToken, someRoutes);
 
 
 // for testing purposes only 
