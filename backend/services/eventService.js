@@ -1,5 +1,6 @@
 const eventDAO = require('../repository/eventDAO');
 const { logger } = require('../util/logger');
+const { nanoid } = requier('nanoid');
 
 
 /**
@@ -9,10 +10,21 @@ const { logger } = require('../util/logger');
  * @param {JSON} event object to be sent to the DAO
  * @returns the persisted data or null
  */
-async function postEvent(event) { 
+async function postEvent(event) {
+    const id = nanoid();
+    const entity = 'EVENT';
+    const sk = entity + '#' + id;
     if (validateEvent(event)) {
         const data = await eventDAO.createEvent({
-            //some data
+            //unsure how to obtain pk at this time
+            pk: 'u#12345',
+            sk,
+            id,
+            entity,
+            name: event.name,
+            description: event.description,
+            location: event.location,
+            date: event.date,
         });
         if (data) { 
             logger.info(`Creating new event | eventService | postEvent | data: ${data}`);
@@ -30,8 +42,11 @@ async function postEvent(event) {
 
 
 function validateEvent(event) {
-    // should validate all event fields
-    return null;
+    const nameResult = event.name.length > 0;
+    const descResult = event.description.length > 0;
+    const dateResult = event.date.length > 0;
+    const locationResult = event.location.length > 0;
+    return (nameResult && descResult && dateResult && locationResult);
 }
 
 
