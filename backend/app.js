@@ -4,6 +4,7 @@ const { loggerMiddleware } = require('./util/logger');
 const { authenticateToken } = require('./util/jwt');
 
 const userRoutes = require('./routes/api/userRoutes');
+const eventRoutes = require('./routes/api/eventRoutes');
 
 const app = express();
 
@@ -12,6 +13,7 @@ app.use(loggerMiddleware);
 
 // can change /api to something else if desired
 app.use('/api/users', userRoutes);
+app.use('/api/events', eventRoutes);
 
 // example of middleware usage on a suite of routes
 // app.use('/api/route', authenticateToken, someRoutes);
