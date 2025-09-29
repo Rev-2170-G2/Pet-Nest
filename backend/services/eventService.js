@@ -39,6 +39,21 @@ async function postEvent(event) {
     }
 }
 
+/**
+ * should call the eventDAO method for retrieving all events from db
+ * 
+ * @returns the retrieved events or null
+ */
+async function getAllEvents() {
+    const data = await eventDAO.findAllEvents();
+    if (data) {
+        logger.info(`Events found | eventService | getAllEvents | data: ${data}`);
+        return data;
+    } else { 
+        logger.info(`Failed to find events | eventService | getAllEvents`);
+        return null;
+    }
+}
 
 
 function validateEvent(event) {
@@ -52,4 +67,5 @@ function validateEvent(event) {
 
 module.exports = {
     postEvent,
+    getAllEvents,
 }

@@ -29,6 +29,29 @@ async function createEvent(event) {
     }
 }
 
+/**
+ * should retrieve a list of all event objects 
+ *
+ * @returns the retrieved data or null
+ */
+async function findAllEvents() {
+    const command = new ScanCommand({
+        TableName,
+        FilterExpression: '#entity = :entity',
+        ExpressionAttributeNames: {'#entity' : 'entity'},
+        ExpressionAttributeValues: {':entity' : 'EVENT'}
+    });
+    try {
+        const data = await documentClient.send(command);
+        logger.info(`SCAN command to datatbase complete | eventDAO | findAllEvents | data: ${data}`);
+        return data;
+    } catch (err) {
+        logger.error(`Error in eventDAO | findAllEvents | error: ${err}`);
+        return null
+    }
+}
+
 module.exports = {
     createEvent,
+    findAllEvents,
 }
