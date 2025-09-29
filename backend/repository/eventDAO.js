@@ -43,7 +43,7 @@ async function findAllEvents() {
     });
     try {
         const data = await documentClient.send(command);
-        logger.info(`SCAN command to datatbase complete | eventDAO | findAllEvents | data: ${data}`);
+        logger.info(`SCAN command to database complete | eventDAO | findAllEvents | data: ${data}`);
         return data;
     } catch (err) {
         logger.error(`Error in eventDAO | findAllEvents | error: ${err}`);
@@ -51,7 +51,31 @@ async function findAllEvents() {
     }
 }
 
+/**
+ * should attempt to find a specific evevnt by its id 
+ * 
+ * @param {string} id with which to be searched
+ * @returns the found event or null
+ */
+async function findEventById(id) {
+    const command = new QueryCommand({ 
+        TableName,
+        IndexName: 'gsi-1',
+        KeyConditionExpression: `pk = :pk`,
+        ExpressionAttributeValues: {':pk': 'e' + id},
+    });
+    try {
+        const data = await documentClient.send(command);
+        logger.info(`QUERY command to database complete | eventDAO | findEventById | data: ${data}`);
+        return data;
+    } catch (err) {
+        logger.error(`Error in eventDAO | findEventById | error: ${err}`);
+        return null;
+    }
+}
+
 module.exports = {
     createEvent,
     findAllEvents,
+    findEventById,
 }

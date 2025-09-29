@@ -55,6 +55,23 @@ async function getAllEvents() {
     }
 }
 
+/**
+ * should call the DAO method for retrieving a single event by its id
+ * 
+ * @param {*} id with which to search
+ * @returns the event retrieved or null
+ */
+async function getEventById(id) {
+    const data = await eventDAO.findEventById(id);
+    if (data) {
+        logger.info(`Event found | eventService | getEventById | data: ${data}`);
+        return data;
+    } else { 
+        logger.info(`Failed to find any event | eventService | getEventById`);
+        return null;
+    }
+}
+
 
 function validateEvent(event) {
     const nameResult = event.name.length > 0;
@@ -68,4 +85,5 @@ function validateEvent(event) {
 module.exports = {
     postEvent,
     getAllEvents,
+    getEventById,
 }

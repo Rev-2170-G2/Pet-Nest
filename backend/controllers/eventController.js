@@ -36,6 +36,22 @@ async function GetAllEvents(req, res) {
     }
 }
 
+/**
+ * should call the service layer method for retrieving an event by its id 
+ * 
+ * @param {*} req object containing the id to be parsed
+ * @param {*} res object to be manipulated and sent back to client
+ */
+async function GetEventById(req, res) { 
+    const id = req.params.id;
+    const data = await eventService.getEventById(id);
+    if (data) {
+        res.status(200).json({message: 'Ticket found ', data});
+    } else { 
+        res.status(400).json({message: 'No ticket found '})
+    }
+}
+
 function validatePostEvent(event) {
     return (event.name && event.description && event.date && event.location);
 }
@@ -43,4 +59,5 @@ function validatePostEvent(event) {
 module.exports = {
     PostEvent,
     GetAllEvents,
+    GetEventById,
 }
