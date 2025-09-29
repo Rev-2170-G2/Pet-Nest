@@ -72,6 +72,23 @@ async function getEventById(id) {
     }
 }
 
+/**
+ * should call the DAO method for retrieving a list of events by user id
+ * 
+ * @param {string} id with which to query 
+ * @returns the retrieved data or null
+ */
+async function getEventsByUser(id) {
+    const data = await eventDAO.findEventsByUser(id);
+    if (data) {
+        logger.info(`Event found | eventService | getEventsByUser | data: ${data}`);
+        return data;
+    } else { 
+        logger.info(`Failed to find any event | eventService | getEventsByUser`);
+        return null;
+    }
+}
+
 
 function validateEvent(event) {
     const nameResult = event.name.length > 0;
@@ -86,4 +103,5 @@ module.exports = {
     postEvent,
     getAllEvents,
     getEventById,
+    getEventsByUser,
 }

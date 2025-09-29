@@ -74,8 +74,25 @@ async function findEventById(id) {
     }
 }
 
+async function findEventsByUser(id) {
+    const command = new QueryCommand({
+        TableName,
+        KeyConditionExpression: `pk = :pk AND begins_with(sk, :sk)`,
+        ExpressionAttributeValues: {':pk': 'e' + id}
+    })
+    try {
+        const data = await documentClient.send(command);
+        logger.info(`QUERY command to database complete | eventDAO | findEventsByUser | data: ${data}`);
+        return data;
+    } catch (err) { 
+        logger.error(`Error in eventDAO | findEventsByUser | error: ${err}`);
+        return null;
+    }
+}
+
 module.exports = {
     createEvent,
     findAllEvents,
     findEventById,
+    findEventsByUser,
 }

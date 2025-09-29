@@ -46,9 +46,25 @@ async function GetEventById(req, res) {
     const id = req.params.id;
     const data = await eventService.getEventById(id);
     if (data) {
-        res.status(200).json({message: 'Ticket found ', data});
+        res.status(200).json({message: 'Event found ', data});
     } else { 
-        res.status(400).json({message: 'No ticket found '})
+        res.status(400).json({message: 'No event found'})
+    }
+}
+
+/**
+ * should call the service layer method for retrieving events by user who posted
+ * 
+ * @param {*} req object containing the id to be parsed
+ * @param {*} res object to be manipulated and sent back to client
+ */
+async function GetEventsByUser(req, res) {
+    const id = req.params.id;
+    const data = await eventService.getEventsByUser(id);
+    if (data) {
+        res.status(200).json({message: 'Events found ', data});
+    } else { 
+        res.status(400).json({message: 'No events found'})
     }
 }
 
@@ -60,4 +76,5 @@ module.exports = {
     PostEvent,
     GetAllEvents,
     GetEventById,
+    GetEventsByUser,
 }

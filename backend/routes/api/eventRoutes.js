@@ -9,4 +9,6 @@ router.get('/', eventController.GetAllEvents);
 
 router.get('/:id', eventController.GetEventById);
 
+router.get('/user/:id', eventController.GetEventsByUser);
+
 module.exports = router;
