@@ -1,7 +1,6 @@
 const jwt = require('jsonwebtoken');
 const { logger } = require('./logger');
 
-// should probably be changed
 const secretKey = 'my-secret-key';
 
 async function authenticateToken(req, res, next) {
