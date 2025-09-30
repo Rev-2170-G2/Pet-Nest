@@ -40,27 +40,8 @@ const getUserByUsername = async (username) => {
     return null; 
 }
 
-async function getUserById(userId) { // Assists with deleting accounts smoothly
-    const pk = `u#${userId}`;
-    
-    try {
-        const command = new QueryCommand({
-            TableName,
-            KeyConditionExpression: 'PK = :pk',
-            ExpressionAttributeValues: {':pk': pk}
-        })
-
-        const data = await ddbDocClient.send(command);
-        logger.info(`Data from getUserById: ${JSON.stringify(data.Items)}`);
-        return data.Items.length ? data.Items : null;
-    } catch (err) {
-        logger.error(`Error in getUserById: ${err}`);
-        return null;
-    }
-}
-
 async function deleteUser(userId) {
-    const pk = `u#${userId}`;
+    const pk = userId.startsWith("u#") ? userId : `u#${userId}`;
 
     try {
         const queryCommand = new QueryCommand({
@@ -68,9 +49,12 @@ async function deleteUser(userId) {
             KeyConditionExpression: 'PK = :pk',
             ExpressionAttributeValues: {':pk': pk}
         });
-        const {Items} = await ddbDocClient.send(queryCommand);
 
-        if (!Items || Items.length === 0) return false;
+        const {Items} = await ddbDocClient.send(queryCommand);
+        if (!Items || Items.length === 0) return {success: false, message: "User not found."};
+
+        const targetUser = Items.find(item => item.SK.startsWith('USER#'));
+        if (targetUser?.admin) return {success: false, message: "Admins cannot be deleted."};
 
         const deleteRequests = Items.map(item => ({
             DeleteRequest: {Key: {PK: item.PK, SK: item.SK}}
@@ -83,17 +67,16 @@ async function deleteUser(userId) {
             }));
         }
 
-        logger.info(`Deleted user ${userId}`);
-        return true;
+        logger.info(`Deleted user ${pk}`);
+        return {success: true, message: `User ${pk} deleted.`};
     } catch (err) {
-        logger.error(`Failed to delete user ${userId}: ${err}`);
-        return false;
+        logger.error(`Failed to delete user ${pk}: ${err}`);
+        return {success: false, message: "Internal server error."};
     }
 }
 
 module.exports = {
     registerUser,
     getUserByUsername,
-    getUserById,
     deleteUser
 }

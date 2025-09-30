@@ -40,35 +40,17 @@ const validateLogin = async (username, password) => {
 
 async function removeUser(userId) {
     try {
-        const result = await userDAO.deleteUser(userId);
-
-        if (result) {
-            logger.info(`User ${userId} deleted successfully.`);
-            return {success: true, message: "User deleted successfully."};
-        } else {
-            logger.warn(`User ${userId} not found or could not be deleted.`);
-            return {success: false, message: "User not found or could not be deleted."};
-        }
+        const pk = userId.startsWith("u#") ? userId : `u#${userId}`;
+        const result = await userDAO.deleteUser(pk);
+        return result;
     } catch (err) {
         logger.error(`Error deleting user ${userId}: ${err}`);
-        return {success: false, message: "Error occurred while deleting user."};
-    }
-}
-
-async function getUserById(userId) {
-    try {
-        const user = await userDAO.getUserById(userId);
-        if (!user || user.length === 0) return null;
-        return user[0];
-    } catch (err) {
-        logger.error(`Error fetching user by ID ${userId}: ${err}`);
-        return null;
+        return {success: false, message: "Internal server error."};
     }
 }
 
 module.exports = {
     registerUser,
     validateLogin,
-    removeUser,
-    getUserById
+    removeUser
 }

@@ -48,14 +48,14 @@ async function login (req, res) {
 async function DeleteOwnAccount(req, res) {
     const userId = req.user.id;
 
-    const user = await userService.getUserById(userId);
-    if (!user) {
-        return res.status(404).json({error: "User not found."});
-    }
-
     const result = await userService.removeUser(userId);
+
     if (result.success) {
         return res.status(200).json({message: result.message});
+    } else if (result.message === "User not found.") {
+        return res.status(404).json({error: result.message});
+    } else if (result.message === "Admins cannot be deleted.") {
+        return res.status(403).json({error: result.message});
     } else {
         return res.status(500).json({error: result.message});
     }
@@ -65,30 +65,24 @@ async function DeleteUserAsAdmin(req, res) {
     const requester = req.user;
     const targetUserId = req.params.id;
 
-    if (!requester.admin && requester.admin !== "true") {
+    if (!requester.admin) {
         return res.status(403).json({error: "Admin access required."});
     }
 
-    try {
-        const targetUser = await userService.getUserById(targetUserId)
-        if (!targetUser) {
-            return res.status(404).json({error: "Target user not found."});
-        }
+    if (!targetUserId.admin) {
+        return res.status(403).json({error: "User ID is required."});
+    }
 
-        if (targetUser.admin) {
-            return res.status(403).json({error: "Admins cannot delete other admin accounts"});
-        }
-        
-        const result = await userService.removeUser(targetUserId);
+    const result = await userService.removeUser(targetUserId);
 
-        if (result.success) {
-            return res.status(200).json({message: `User ${targetUserId} deleted.`});
-        } else {
-            return res.status(404).json({error: result.message});
-        }
-    } catch (err) {
-        console.error(`Error deleting user as admin: ${err}`);
-        return res.status(500).json({error: "Internal server error."})
+    if (result.success) {
+        return res.status(200).json({message: result.message});
+    } else if (result.message === "User not found.") {
+        return res.status(404).json({error: result.message});
+    } else if (result.message === "Admins cannot be deleted.") {
+        return res.status(403).json({error: result.message});
+    } else {
+        return res.status(500).json({error: result.message});
     }
 }
 
