@@ -9,14 +9,17 @@ async function registerUser (req, res) {
     logger.info({message: `Incoming userController registerUser request: ${JSON.stringify(req.body)}`});
 
     try {
-        if ('admin' in req.body && !(await isAdministrator(req.body.admin))) {
-            res.status(400).json({message: "Only administrators can create admin accounts."});
-        }
+        const isAdmin = req.user?.admin === "true" || req.user?.admin === true;
 
-        const newUserdata = await userService.registerUser(req.body);
-        return newUserdata
-            ? res.status(201).json({message: "Created user", user: newUserdata})
-            : res.status(400).json({message: `Invalid request: user not created. Must contain a unique username, password and valid email.`});  
+        if (req.body.admin === true && !isAdmin) {
+            res.status(400).json({message: "Only administrators can create admin accounts."});
+        } else {
+            const newUserdata = await userService.registerUser(req.body);
+            
+            return newUserdata
+                ? res.status(201).json({message: "Created user", user: newUserdata})
+                : res.status(400).json({message: `Invalid request: user not created. Must contain a unique username, password and valid email.`}); 
+        } 
     } catch (error) {
         console.error(`Error in userController registerUser: ${error}`);
     }

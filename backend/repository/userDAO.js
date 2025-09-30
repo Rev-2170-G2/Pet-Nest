@@ -32,7 +32,7 @@ const getUserByUsername = async (username) => {
 
     try {
         const data = await ddbDocClient.send(command);
-        logger.info(`Data from getUserByUsername in userDAO: ${JSON.stringify(data)}`);
+        logger.info(`Data from getUserByUsername in userDAO: ${JSON.stringify(data.Items[0])}`);
         return data.Items[0];
     } catch (err) {
         logger.error(`Error in getUserByUsername in userDAO: ${err}`);
