@@ -2,9 +2,9 @@ const { DynamoDBClient } = require("@aws-sdk/client-dynamodb");
 const { DynamoDBDocumentClient, PutCommand, ScanCommand, QueryCommand, BatchWriteCommand } = require("@aws-sdk/lib-dynamodb");
 const { logger } = require("../util/logger");
 
-const client = new DynamoDBClient();
+const client = new DynamoDBClient({region: 'us-east-1'}); // Added region
 const ddbDocClient = DynamoDBDocumentClient.from(client);
-const TableName = "pet_services_table";
+const TableName = "PetNest"; // Ask about table name: pet_services_table
 
 async function registerUser (user) {
     const command = new PutCommand({
@@ -41,7 +41,7 @@ const getUserByUsername = async (username) => {
 }
 
 async function deleteUser(userId) {
-    const pk = `USER#${userId}`;
+    const pk = `u#${userId}`;
 
     try {
         const queryCommand = new QueryCommand({
@@ -49,7 +49,7 @@ async function deleteUser(userId) {
             KeyConditionExpression: 'PK = :pk',
             ExpressionAttributeValues: {':pk': pk}
         });
-        const {Items} = await documentClient.send(queryCommand);
+        const {Items} = await ddbDocClient.send(queryCommand);
 
         if (!Items || Items.length === 0) return false;
 
@@ -59,7 +59,7 @@ async function deleteUser(userId) {
 
         for (let i = 0; i < deleteRequests.length; i += 25) {
             const batch = deleteRequests.slice(i, i + 25);
-            await documentClient.send(new BatchWriteCommand({
+            await ddbDocClient.send(new BatchWriteCommand({
                 RequestItems: {[TableName]: batch}
             }));
         }

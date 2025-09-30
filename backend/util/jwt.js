@@ -21,6 +21,7 @@ async function authenticateToken(req, res, next) {
         const user = decodeJWT(token);
         if (user) {
             req.user = user;
+            console.log("Decoded JWT payload:", user); //add/delete
             next();
         } else { 
             return res.status(401).json({message: 'Bad JWT'});

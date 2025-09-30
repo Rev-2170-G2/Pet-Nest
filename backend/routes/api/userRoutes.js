@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 const userController = require('../../controllers/userController');
-const { authenticateToken } = require('../util/jwt');
+const { authenticateToken } = require('../../util/jwt');
 
 router.post('/login', userController.login);
 

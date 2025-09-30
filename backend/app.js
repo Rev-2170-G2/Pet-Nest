@@ -3,7 +3,7 @@ const bodyParser = require('body-parser');
 const { loggerMiddleware } = require('./util/logger');
 const { authenticateToken } = require('./util/jwt');
 
-const userRoutes = require('./routes/userRoutes');
+const userRoutes = require('./routes/api/userRoutes');
 
 const app = express();
 
