@@ -13,12 +13,12 @@ const createPet = async (req, res) => {
     return res.status(400).json({message: "Pet not created: ", data: pet});
 }
 
-const removePet = async (req, res) => {
+const deletePet = async (req, res) => {
     logger.info({message: `Incoming petController removePet request`});
     const userId = req.user.id;
     const petId = req.params.petId;
 
-    const data = await petService.removePet(userId, petId);
+    const data = await petService.deletePet(userId, petId);
     if(data){
         return res.status(200).json({message: `Removed pet: ${petId}`});
     }
@@ -27,5 +27,5 @@ const removePet = async (req, res) => {
 
 module.exports = {
     createPet,
-    removePet
+    deletePet
 }

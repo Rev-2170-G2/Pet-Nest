@@ -5,7 +5,7 @@ const {logger} = require('../util/logger')
 async function createPet(userId, pet){
     //check if userId exists, then add Pet
     if(userId){
-        const data = await petDAO.addPet(userId, {
+        const data = await petDAO.createPet(userId, {
             id: nanoid(5),
             type: pet.type,
             name: pet.name,
@@ -20,7 +20,7 @@ async function createPet(userId, pet){
         return null;
 }
 
-async function removePet(userId, petId){
+async function deletePet(userId, petId){
     try{ 
         const data = await petDAO.deletePet(userId, petId);
         return data;
@@ -32,9 +32,9 @@ async function removePet(userId, petId){
 }
 
 // createPet("2", {type: "bird", name: "wing", services: ["catches food", "keeps animals away"], description: "something", images: [] })
-// removePet("u#C8E1W", "c_moQ")
+// deletePet("u#C8E1W", "c_moQ")
 
 module.exports = {
     createPet,
-    removePet
+    deletePet
 }

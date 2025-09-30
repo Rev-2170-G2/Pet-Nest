@@ -8,7 +8,7 @@ const documentClient = DynamoDBDocumentClient.from(client);
 const TableName = "pet-nest";
 
 // link userId with new pet
-async function addPet(userId, pet){
+async function createPet(userId, pet){
     const command = new PutCommand({
         TableName,
         Item: {
@@ -57,10 +57,10 @@ async function deletePet(userId, petId){
     }
 }
 
-// addPet("1", {id: "1", name: "rex", type: "dog", services: ["dance", "sing"], description: "not sure what this is for", reviews: 5, eventsCompleted: 10})
+// createPet("1", {id: "1", name: "rex", type: "dog", services: ["dance", "sing"], description: "not sure what this is for", reviews: 5, eventsCompleted: 10})
 // deletePet("C8ERW","KBKPG")
 
 module.exports = {
-    addPet,
+    createPet,
     deletePet
 }
