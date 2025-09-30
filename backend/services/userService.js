@@ -12,7 +12,7 @@ async function registerUser (user) {
             const formattedUser = await createFormattedUserProfile(username, password, fullName, email, admin);
             const data = await userDAO.registerUser(formattedUser);
             logger.info({message: `Result data from registerUser in userService: ${JSON.stringify(data)}`})
-            return formattedUser;
+            return data;
         }
     } catch (error) {
         console.error(`Error in registerUser in userService: ${error}`);
