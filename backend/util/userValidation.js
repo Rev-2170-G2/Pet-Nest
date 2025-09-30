@@ -37,7 +37,7 @@ async function isValidUsernamePasswordAndEmail(username, password, email){
     return await isValidUsername(username) && isValidPassword(password) && isValidEmail(email);
 }
 
-async function createFormattedUserProfile (username, userPass, fullName, email, admin = "false") {
+async function createFormattedUserProfile (username, userPass, fullName, email, admin = false) {
     try {
         const entity = "USER";
         const idNumber = nanoid(5);
