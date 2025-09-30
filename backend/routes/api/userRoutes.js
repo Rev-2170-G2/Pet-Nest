@@ -6,9 +6,9 @@ const { authenticateToken } = require('../../util/jwt');
 
 router.post('/login', userController.login);
 
-router.post('/register', userController.registerUser);
+router.post('/admin/register', authenticateToken, userController.registerUser);
 
-router.post('admin/register', authenticateToken, userController.registerUser);
+router.post('/register', userController.registerUser);
 
 
 module.exports = router;
