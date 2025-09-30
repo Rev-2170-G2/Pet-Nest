@@ -1,6 +1,6 @@
 const eventDAO = require('../repository/eventDAO');
 const { logger } = require('../util/logger');
-const { nanoid } = requier('nanoid');
+const { nanoid } = require('nanoid');
 
 
 /**
@@ -11,7 +11,7 @@ const { nanoid } = requier('nanoid');
  * @returns the persisted data or null
  */
 async function postEvent(event) {
-    const id = nanoid();
+    const id = nanoid(5);
     const entity = 'EVENT';
     const sk = entity + '#' + id;
     if (validateEvent(event)) {

@@ -13,7 +13,7 @@ app.use(loggerMiddleware);
 
 // can change /api to something else if desired
 app.use('/api/users', userRoutes);
-app.use('/api/events', eventRoutes);
+app.use('/api/events', authenticateToken, eventRoutes);
 
 // example of middleware usage on a suite of routes
 // app.use('/api/route', authenticateToken, someRoutes);
@@ -22,7 +22,7 @@ app.use('/api/events', eventRoutes);
 // for testing purposes only 
 app.get('/', (req, res) => { 
     res.send('Home Page');
-})
+});
 
 // app.get('/protected', (req, res) => { 
 //     res.json({message: 'Accessed protected route', user: req.user});

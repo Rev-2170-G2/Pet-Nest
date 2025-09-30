@@ -14,7 +14,6 @@ async function registerUser (req, res) {
         }
 
         const newUserdata = await userService.registerUser(req.body);
-        
         return newUserdata
             ? res.status(201).json({message: "Created user", user: newUserdata})
             : res.status(400).json({message: `Invalid request: user not created. Must contain a unique username, password and valid email.`});  

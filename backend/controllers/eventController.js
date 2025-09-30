@@ -9,7 +9,7 @@ const eventService = require('../services/eventService');
 async function PostEvent(req, res) { 
     if (validatePostEvent(req.body)) { 
         // subject to change: pk can either be passed in from the frontend or obtained from the token
-
+        console.log(req.user);
         const { name, description, date, location, pk } = req.body;
         const data = await eventService.postEvent({name, description, date, location, pk});
         if (data) {
