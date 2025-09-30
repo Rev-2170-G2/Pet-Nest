@@ -12,7 +12,7 @@ async function addPet(userId, pet){
     const command = new PutCommand({
         TableName,
         Item: {
-            PK: `u#${userId}`,
+            PK: userId,
             SK: `PET#${pet.id}`,
             ...pet,
             reviews: 0,
@@ -58,7 +58,7 @@ async function deletePet(userId, petId){
 }
 
 // addPet("1", {id: "1", name: "rex", type: "dog", services: ["dance", "sing"], description: "not sure what this is for", reviews: 5, eventsCompleted: 10})
-// deletePet("1","1")
+// deletePet("C8ERW","KBKPG")
 
 module.exports = {
     addPet,
