@@ -5,13 +5,13 @@ const bcrypt = require('bcrypt');
 
 
 async function registerUser (user) {
-    const { username, password, fullName, email } = user;
+    const { username, password, fullName, email, admin } = user;
 
     try {
         if(user && await isValidUsernamePasswordAndEmail(username, password, email)) {
-            const formattedUser = await createFormattedUserProfile(username, password, fullName, email);
+            const formattedUser = await createFormattedUserProfile(username, password, fullName, email, admin);
             const data = await userDAO.registerUser(formattedUser);
-            logger.info({message: `Result data from registerUser in userService: ${data}`})
+            logger.info({message: `Result data from registerUser in userService: ${JSON.stringify(data)}`})
             return formattedUser;
         }
     } catch (error) {
