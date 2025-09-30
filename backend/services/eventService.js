@@ -58,7 +58,7 @@ async function getAllEvents() {
 /**
  * should call the DAO method for retrieving a single event by its id
  * 
- * @param {*} id with which to search
+ * @param {string} id with which to search
  * @returns the event retrieved or null
  */
 async function getEventById(id) {

@@ -74,11 +74,20 @@ async function findEventById(id) {
     }
 }
 
+/**
+ * should attempt to find a list of events pertaining to 
+ * 
+ * @param {string} id 
+ * @returns 
+ */
 async function findEventsByUser(id) {
     const command = new QueryCommand({
         TableName,
         KeyConditionExpression: `pk = :pk AND begins_with(sk, :sk)`,
-        ExpressionAttributeValues: {':pk': 'e' + id}
+        ExpressionAttributeValues: {
+            ':pk': id,
+            ':sk': 'EVENT#'
+        }
     })
     try {
         const data = await documentClient.send(command);
