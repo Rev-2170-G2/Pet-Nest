@@ -36,7 +36,7 @@ async function deletePet(userId, petId){
     const command = new DeleteCommand({
     TableName,
         Key: {
-            PK: `u#${userId}`,
+            PK: userId,
             SK: `PET#${petId}`,
         },
         ReturnValues : "ALL_OLD"

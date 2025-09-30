@@ -20,8 +20,21 @@ async function createPet(userId, pet){
         return null;
 }
 
-// createPet("2", {type: "bird", name: "wing", services: ["catches food", "keeps animals away"], description: "something", images: ["https://th.bing.com/th/id/OIP.r5FMxsn2tzXVBqRG1KbZ9gHaJ4?w=126&h=180&c=7&r=0&o=7&pid=1.7&rm=3", "https://th.bing.com/th/id/OIP.O3U1p-OOC_c4o7QWZj82ZQHaGg?w=190&h=180&c=7&r=0&o=7&pid=1.7&rm=3"] })
+async function removePet(userId, petId){
+    try{ 
+        const data = await petDAO.deletePet(userId, petId);
+        return data;
+    }
+    catch(error){
+        logger.info(`Pet not found or does not belong to user ${userId}: ${petId}`);
+        return null;
+    }
+}
+
+// createPet("2", {type: "bird", name: "wing", services: ["catches food", "keeps animals away"], description: "something", images: [] })
+// removePet("u#C8E1W", "c_moQ")
 
 module.exports = {
     createPet,
+    removePet
 }
