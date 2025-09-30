@@ -55,8 +55,20 @@ async function removeUser(userId) {
     }
 }
 
+async function getUserById(userId) {
+    try {
+        const user = await userDAO.getUserById(userId);
+        if (!user || user.length === 0) return null;
+        return user[0];
+    } catch (err) {
+        logger.error(`Error fetching user by ID ${userId}: ${err}`);
+        return null;
+    }
+}
+
 module.exports = {
     registerUser,
     validateLogin,
-    removeUser
+    removeUser,
+    getUserById
 }

@@ -2,9 +2,9 @@ const { DynamoDBClient } = require("@aws-sdk/client-dynamodb");
 const { DynamoDBDocumentClient, PutCommand, ScanCommand, QueryCommand, BatchWriteCommand } = require("@aws-sdk/lib-dynamodb");
 const { logger } = require("../util/logger");
 
-const client = new DynamoDBClient({region: 'us-east-1'}); // Added region
+const client = new DynamoDBClient({region: 'us-east-1'});
 const ddbDocClient = DynamoDBDocumentClient.from(client);
-const TableName = "PetNest"; // Ask about table name: pet_services_table
+const TableName = "PetNest"; // I'll change my table name to whatever standard later
 
 async function registerUser (user) {
     const command = new PutCommand({
@@ -38,6 +38,25 @@ const getUserByUsername = async (username) => {
         logger.error(`Error in getUserByUsername in userDAO: ${err}`);
     }
     return null; 
+}
+
+async function getUserById(userId) { // Assists with deleting accounts smoothly
+    const pk = `u#${userId}`;
+    
+    try {
+        const command = new QueryCommand({
+            TableName,
+            KeyConditionExpression: 'PK = :pk',
+            ExpressionAttributeValues: {':pk': pk}
+        })
+
+        const data = await ddbDocClient.send(command);
+        logger.info(`Data from getUserById: ${JSON.stringify(data.Items)}`);
+        return data.Items.length ? data.Items : null;
+    } catch (err) {
+        logger.error(`Error in getUserById: ${err}`);
+        return null;
+    }
 }
 
 async function deleteUser(userId) {
@@ -75,5 +94,6 @@ async function deleteUser(userId) {
 module.exports = {
     registerUser,
     getUserByUsername,
+    getUserById,
     deleteUser
 }
