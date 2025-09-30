@@ -1,7 +1,15 @@
 const jwt = require('jsonwebtoken');
 const { logger } = require('./logger');
 
-const secretKey = 'my-secret-key';
+const secretKey = process.env.SECRET_KEY || 'my-secret-key';
+
+const generateToken = (payload) => {
+    return jwt.sign(
+            payload,
+            secretKey,
+            { expiresIn: "1h" }
+        );
+}
 
 async function authenticateToken(req, res, next) {
     const authHeader = req.headers["authorization"];
@@ -31,5 +39,6 @@ function decodeJWT(token) {
 }
 
 module.exports = { 
-    authenticateToken
+    authenticateToken,
+    generateToken
 }
