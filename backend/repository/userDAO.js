@@ -2,9 +2,9 @@ const { DynamoDBClient } = require("@aws-sdk/client-dynamodb");
 const { DynamoDBDocumentClient, PutCommand, ScanCommand } = require("@aws-sdk/lib-dynamodb");
 const { logger } = require("../util/logger");
 
-const client = new DynamoDBClient();
+const client = new DynamoDBClient({region: "us-east-1"});
 const ddbDocClient = DynamoDBDocumentClient.from(client);
-const TableName = "pet_services_table";
+const TableName = "pet-nest";
 
 async function registerUser (user) {
     const command = new PutCommand({
