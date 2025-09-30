@@ -37,7 +37,7 @@ async function isValidUsernamePasswordAndEmail(username, password, email){
     return await isValidUsername(username) && isValidPassword(password) && isValidEmail(email);
 }
 
-async function createFormattedUserProfile (username, userPass, fullName, email, isAdmin = "false") {
+async function createFormattedUserProfile (username, userPass, fullName, email, admin = "false") {
     try {
         const entity = "USER";
         const idNumber = nanoid(5);
@@ -57,7 +57,7 @@ async function createFormattedUserProfile (username, userPass, fullName, email, 
             password,
             fullName,
             email,
-            isAdmin, 
+            admin, 
         };
         return formattedUser;
     } catch (err) {
@@ -68,8 +68,8 @@ async function createFormattedUserProfile (username, userPass, fullName, email, 
 
 async function isAdministrator (username) {
     const currentUser = await userDAO.getUserByUsername(username);
-    logger.info({message: 'from isAdmin in userValidation', user: currentUser});
-    const isAnAdministrator = currentUser.isAdmin === true;
+    logger.info({message: 'from isAdministrator in userValidation', user: currentUser});
+    const isAnAdministrator = currentUser.admin === true;
     return isAnAdministrator;
 }
 
