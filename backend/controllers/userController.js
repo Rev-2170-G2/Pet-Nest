@@ -9,7 +9,7 @@ async function registerUser (req, res) {
     logger.info({message: `Incoming userController registerUser request: ${JSON.stringify(req.body)}`});
 
     try {
-        if ('admin' in req.body && !(await isAdministrator(req.body.admin))) {
+        if (req.body.admin === true && (!req.users || req.user.admin !== true)) {
             res.status(400).json({message: "Only administrators can create admin accounts."});
         }
 
