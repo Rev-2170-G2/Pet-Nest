@@ -16,30 +16,24 @@ async function postEvent(event) {
     const PK = event.pk;
     const SK = entity + '#' + id;
     const photos = !event.photos ? [] : event.photos;
-    const status = 'pending';
-    if (validateEvent(event)) {
-        const data = await eventDAO.createEvent({
-            PK,
-            SK,
-            id,
-            entity,
-            name: event.name,
-            description: event.description,
-            location: event.location,
-            date: event.date,
-            photos: photos,
-            status: status
-        });
-
-        if (data) { 
-            logger.info(`Creating new event | eventService | postEvent | data: ${data}`);
-            return data;
-        } else { 
-            logger.info(`Failed to create event | eventService | postEvent`);
-            return null;
-        }
+    const status = 'pending'; // all events should be set to pending upon creation
+    const data = await eventDAO.createEvent({
+        PK,
+        SK,
+        id,
+        entity,
+        name: event.name,
+        description: event.description,
+        location: event.location,
+        date: event.date,
+        photos: photos,
+        status: status
+    });
+    if (data) { 
+        logger.info(`Creating new event | eventService | postEvent | data: ${data}`);
+        return data;
     } else { 
-        logger.info(`Failed to validate event | eventService | postEvent | error: ${JSON.stringify(event)}`);
+        logger.info(`Failed to create event | eventService | postEvent`);
         return null;
     }
 }
@@ -92,15 +86,6 @@ async function getEventsByUser(id) {
         logger.info(`Failed to find any event | eventService | getEventsByUser`);
         return null;
     }
-}
-
-
-function validateEvent(event) {
-    const nameResult = event.name.length > 0;
-    const descResult = event.description.length > 0;
-    const dateResult = event.date.length > 0;
-    const locationResult = event.location.length > 0;
-    return (nameResult && descResult && dateResult && locationResult);
 }
 
 

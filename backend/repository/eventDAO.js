@@ -15,14 +15,13 @@ const TableName = process.env.TableName || 'pet_nest';
  * @returns the persisted data or null
  */
 async function createEvent(event) { 
-    console.log(`event: ${JSON.stringify(event)}`);
     const command = new PutCommand({
         TableName,
         Item: event
     });
     try {
         const data = await documentClient.send(command);
-        logger.info(`PUT command to database complete | eventDAO | createEvent | data: ${data}`);
+        logger.info(`PUT command to database complete | eventDAO | createEvent | data: ${JSON.stringify(data)}`);
         return data;
     } catch (err) { 
         logger.error(`Error in eventDAO | createEvent | error: ${err}`);
@@ -44,7 +43,7 @@ async function findAllEvents() {
     });
     try {
         const data = await documentClient.send(command);
-        logger.info(`SCAN command to database complete | eventDAO | findAllEvents | data: ${data}`);
+        logger.info(`SCAN command to database complete | eventDAO | findAllEvents | data: ${JSON.stringify(data)}`);
         return data;
     } catch (err) {
         logger.error(`Error in eventDAO | findAllEvents | error: ${err}`);
@@ -67,7 +66,7 @@ async function findEventById(id) {
     });
     try {
         const data = await documentClient.send(command);
-        logger.info(`QUERY command to database complete | eventDAO | findEventById | data: ${data}`);
+        logger.info(`QUERY command to database complete | eventDAO | findEventById | data: ${JSON.stringify(data)}`);
         return data;
     } catch (err) {
         logger.error(`Error in eventDAO | findEventById | error: ${err}`);
@@ -92,7 +91,7 @@ async function findEventsByUser(id) {
     })
     try {
         const data = await documentClient.send(command);
-        logger.info(`QUERY command to database complete | eventDAO | findEventsByUser | data: ${data}`);
+        logger.info(`QUERY command to database complete | eventDAO | findEventsByUser | data: ${JSON.stringify(data)}`);
         return data;
     } catch (err) { 
         logger.error(`Error in eventDAO | findEventsByUser | error: ${err}`);

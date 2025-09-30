@@ -1,4 +1,5 @@
 const eventService = require('../services/eventService');
+const { validateEvent } = require('../util/eventValidation');
 
 /**
  * should call the service layer method to persist an event
@@ -7,7 +8,7 @@ const eventService = require('../services/eventService');
  * @param {JSON} res object to be manipulated and sent back to client
  */
 async function PostEvent(req, res) { 
-    if (validatePostEvent(req.body)) { 
+    if (validateEvent(req.body)) { 
         const pk = req.user.id;
         const { name, description, date, location, photos } = req.body;
         const data = await eventService.postEvent({name, description, date, location, photos, pk});
@@ -66,10 +67,6 @@ async function GetEventsByUser(req, res) {
     } else { 
         res.status(400).json({message: 'No events found'});
     }
-}
-
-function validatePostEvent(event) {
-    return (event.name && event.description && event.date && event.location);
 }
 
 module.exports = {
