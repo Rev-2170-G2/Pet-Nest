@@ -1,6 +1,7 @@
 const eventDAO = require('../repository/eventDAO');
 const { logger } = require('../util/logger');
 const { nanoid } = require('nanoid');
+const { validateEvent } = require('../util/eventValidation');
 
 
 /**
@@ -17,23 +18,28 @@ async function postEvent(event) {
     const SK = entity + '#' + id;
     const photos = !event.photos ? [] : event.photos;
     const status = 'pending'; // all events should be set to pending upon creation
-    const data = await eventDAO.createEvent({
-        PK,
-        SK,
-        id,
-        entity,
-        name: event.name,
-        description: event.description,
-        location: event.location,
-        date: event.date,
-        photos: photos,
-        status: status
-    });
-    if (data) { 
-        logger.info(`Creating new event | eventService | postEvent | data: ${data}`);
-        return data;
+    if (validateEvent(event)) {
+        const data = await eventDAO.createEvent({
+            PK,
+            SK,
+            id,
+            entity,
+            name: event.name,
+            description: event.description,
+            location: event.location,
+            date: event.date,
+            photos: photos,
+            status: status
+        });
+        if (data) { 
+            logger.info(`Creating new event | eventService | postEvent | data: ${data}`);
+            return data;
+        } else { 
+            logger.info(`Failed to create event | eventService | postEvent`);
+            return null;
+        }
     } else { 
-        logger.info(`Failed to create event | eventService | postEvent`);
+        logger.info(`Failed to validate event | eventService | postEvent | error: ${JSON.stringify(event)}`);
         return null;
     }
 }
