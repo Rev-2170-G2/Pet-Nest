@@ -1,9 +1,10 @@
 const petService = require('../services/petService');
 const { logger } = require("../util/logger");
 
-const createPet = async (req, res) => { 
+const createPet = async (req, res) => {
     logger.info({message: `Incoming petController createPet request: ${JSON.stringify(req.body)}`});
-    const {userId, pet} = req.body;
+    const pet = req.body;
+    const userId = req.user.id;
 
     const data = await petService.createPet(userId, pet);
     if(data){

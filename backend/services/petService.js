@@ -6,7 +6,7 @@ async function createPet(userId, pet){
     //check if userId exists, then add Pet
     if(userId){
         const data = await petDAO.addPet(userId, {
-            id: nanoid(),
+            id: nanoid(5),
             type: pet.type,
             name: pet.name,
             services: pet.services,
