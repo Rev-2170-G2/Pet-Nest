@@ -5,7 +5,7 @@ const {logger} = require('../util/logger');
 const client = new DynamoDBClient({region: "us-east-1"});
 const documentClient = DynamoDBDocumentClient.from(client);
 
-const TableName = "pet-nest";
+const TableName = process.env.TableName || 'pet_nest';
 
 // link userId with new pet
 async function createPet(userId, pet){
