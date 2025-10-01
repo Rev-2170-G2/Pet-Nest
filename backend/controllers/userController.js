@@ -48,7 +48,7 @@ async function login (req, res) {
 async function DeleteOwnAccount(req, res) {
     const userId = req.user.id;
 
-    const result = await userService.removeUser(userId);
+    const result = await userService.removeUser(userId, req.user);
 
     if (result.success) {
         return res.status(200).json({message: result.message});
@@ -69,11 +69,11 @@ async function DeleteUserAsAdmin(req, res) {
         return res.status(403).json({error: "Admin access required."});
     }
 
-    if (!targetUserId.admin) {
-        return res.status(403).json({error: "User ID is required."});
+    if (!targetUserId) {
+        return res.status(400).json({ error: "User ID is required." });
     }
 
-    const result = await userService.removeUser(targetUserId);
+    const result = await userService.removeUser(targetUserId, requester);
 
     if (result.success) {
         return res.status(200).json({message: result.message});

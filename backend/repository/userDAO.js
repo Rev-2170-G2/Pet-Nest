@@ -40,23 +40,25 @@ const getUserByUsername = async (username) => {
     return null; 
 }
 
-async function deleteUser(userId) {
-    const pk = userId.startsWith("u#") ? userId : `u#${userId}`;
+async function getUserItems(pk) {
+    const queryCommand = new QueryCommand({
+        TableName,
+        KeyConditionExpression: "PK = :pk",
+        ExpressionAttributeValues: { ":pk": pk },
+    });
 
+    const {Items} = await ddbDocClient.send(queryCommand);
+    return Items || [];
+}
+
+async function deleteUser(pk) {
     try {
-        const queryCommand = new QueryCommand({
-            TableName,
-            KeyConditionExpression: 'PK = :pk',
-            ExpressionAttributeValues: {':pk': pk}
-        });
+        const items = await getUserItems(pk);
+        if (!items || items.length === 0) {
+            return {success: false, message: "User not found."};
+        }
 
-        const {Items} = await ddbDocClient.send(queryCommand);
-        if (!Items || Items.length === 0) return {success: false, message: "User not found."};
-
-        const targetUser = Items.find(item => item.SK.startsWith('USER#'));
-        if (targetUser?.admin) return {success: false, message: "Admins cannot be deleted."};
-
-        const deleteRequests = Items.map(item => ({
+        const deleteRequests = items.map(item => ({
             DeleteRequest: {Key: {PK: item.PK, SK: item.SK}}
         }));
 
@@ -78,5 +80,6 @@ async function deleteUser(userId) {
 module.exports = {
     registerUser,
     getUserByUsername,
-    deleteUser
+    deleteUser,
+    getUserItems
 }

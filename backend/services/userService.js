@@ -38,9 +38,20 @@ const validateLogin = async (username, password) => {
     return null;
 }
 
-async function removeUser(userId) {
+async function removeUser(userId, requester) {
     try {
         const pk = userId.startsWith("u#") ? userId : `u#${userId}`;
+        const userItems = await userDAO.getUserItems(pk);
+        if (!userItems || userItems.length === 0) {
+            return {success: false, message: "User not found."};
+        }
+
+        const targetUser = userItems.find(item => item.SK.startsWith("USER#"));
+
+        if (targetUser.admin && targetUser.PK !== requester.id) {
+            return {success: false, message: "Admins cannot be deleted."};
+        }
+
         const result = await userDAO.deleteUser(pk);
         return result;
     } catch (err) {
