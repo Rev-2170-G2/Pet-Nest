@@ -13,6 +13,21 @@ const createPet = async (req, res) => {
     return res.status(400).json({message: "Pet not created: ", data: pet});
 }
 
+const updatePet = async (req, res) => {
+    logger.info({message: `Incoming petController updatePet request: ${JSON.stringify(req.body)}`});
+    const userId = req.user.id;
+    const petId = req.params.petId;
+    const updates = req.body;
+
+    const data = await petService.updatePet(userId, petId, updates);
+
+    if (data) {
+        return res.status(200).json({ message: `Updated pet: ${petId}`, data });
+    }
+
+    return res.status(400).json({ message: `Unable to update pet: ${petId}`, data: updates });
+};
+
 const deletePet = async (req, res) => {
     logger.info({message: `Incoming petController removePet request`});
     const userId = req.user.id;
@@ -27,5 +42,6 @@ const deletePet = async (req, res) => {
 
 module.exports = {
     createPet,
+    updatePet,
     deletePet
 }

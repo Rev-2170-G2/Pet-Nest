@@ -1,17 +1,15 @@
 const express = require('express');
 const router = express.Router();
 const petController = require('../../controllers/petController');
-const {validatePetData} = require('../../util/petValidation');
-const { authenticateToken } = require('../../util/jwt');
+const {validatePetData, validatePetUpdates} = require('../../util/pet/petValidation');
 
 //create
 router.post('/', validatePetData, petController.createPet);
 
 //update
-// router.patch('/:petId', petController.updatePet);
+router.patch('/:petId', validatePetUpdates, petController.updatePet);
 
 //delete
-router.post('/:petId', petController.deletePet);
-
+router.delete('/:petId', petController.deletePet);
 
 module.exports = router;

@@ -1,9 +1,10 @@
 const petDAO = require("../repository/petDAO");
 const { nanoid } = require('nanoid');
-const {logger} = require('../util/logger')
+const {logger} = require('../util/logger');
+const { buildPetUpdates } = require('../util/pet/petUpdateBuilder');
 
 async function createPet(userId, pet){
-    //check if userId exists, then add Pet
+    //check if userId exists(not needed - already checked in middleware)
     if(userId){
         const data = await petDAO.createPet(userId, {
             id: nanoid(5),
@@ -22,6 +23,23 @@ async function createPet(userId, pet){
         return null;
 }
 
+async function updatePet(userId, petId, updates) {
+    if (!userId || !petId) {
+        logger.info(`Invalid userId or petId: ${userId}, ${petId}`);
+        return null;
+    }
+
+    const dbUpdates = buildPetUpdates(updates);
+
+    try {
+        const data = await petDAO.updatePet(userId, petId, dbUpdates);
+        return data;
+    } catch (error) {
+        console.error(error);
+        return null;
+    }
+}
+
 async function deletePet(userId, petId){
     try{ 
         const data = await petDAO.deletePet(userId, petId);
@@ -33,10 +51,8 @@ async function deletePet(userId, petId){
     }
 }
 
-// createPet("2", {type: "bird", name: "wing", services: ["catches food", "keeps animals away"], description: "something", photos: [] })
-// deletePet("u#C8E1W", "c_moQ")
-
 module.exports = {
     createPet,
+    updatePet,
     deletePet
 }
