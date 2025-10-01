@@ -4,7 +4,7 @@ const { logger } = require("../util/logger");
 
 const client = new DynamoDBClient({region: 'us-east-1'});
 const ddbDocClient = DynamoDBDocumentClient.from(client);
-const TableName = "PetNest"; // I'll change my table name to whatever standard later
+const TableName = process.env.TableName || "pet_nest";
 
 async function registerUser (user) {
     const command = new PutCommand({
