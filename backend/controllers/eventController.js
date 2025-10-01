@@ -9,7 +9,8 @@ const { validateEvent } = require('../util/eventValidation');
  */
 async function PostEvent(req, res) { 
     if (validateEvent(req.body)) { 
-        const pk = req.user.id;
+        // const pk = req.user.id;
+        const pk = 'u#xbNX9';
         const { name, description, date, location, photos } = req.body;
         const data = await eventService.postEvent({name, description, date, location, photos, pk});
         if (data) {

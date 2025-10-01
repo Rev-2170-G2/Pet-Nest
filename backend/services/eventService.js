@@ -12,7 +12,7 @@ const { validateEvent } = require('../util/eventValidation');
  * @returns the persisted data or null
  */
 async function postEvent(event) {
-    const id = nanoid(5);
+    const id = 'e' + nanoid(5);
     const entity = 'EVENT';
     const PK = event.pk;
     const SK = entity + '#' + id;
@@ -32,7 +32,7 @@ async function postEvent(event) {
             status: status
         });
         if (data) { 
-            logger.info(`Creating new event | eventService | postEvent | data: ${data}`);
+            logger.info(`Creating new event | eventService | postEvent | data: ${JSON.stringify(data)}`);
             return data;
         } else { 
             logger.info(`Failed to create event | eventService | postEvent`);
@@ -52,7 +52,7 @@ async function postEvent(event) {
 async function getAllEvents() {
     const data = await eventDAO.findAllEvents();
     if (data) {
-        logger.info(`Events found | eventService | getAllEvents | data: ${data}`);
+        logger.info(`Events found | eventService | getAllEvents | data: ${JSON.stringify(data)}`);
         return data;
     } else { 
         logger.info(`Failed to find events | eventService | getAllEvents`);
@@ -69,7 +69,7 @@ async function getAllEvents() {
 async function getEventById(id) {
     const data = await eventDAO.findEventById(id);
     if (data) {
-        logger.info(`Event found | eventService | getEventById | data: ${data}`);
+        logger.info(`Event found | eventService | getEventById | data: ${JSON.stringify(data)}`);
         return data;
     } else { 
         logger.info(`Failed to find any event | eventService | getEventById`);
@@ -84,9 +84,10 @@ async function getEventById(id) {
  * @returns the retrieved data or null
  */
 async function getEventsByUser(id) {
-    const data = await eventDAO.findEventsByUser(id);
+    const pk = 'u#' + id;
+    const data = await eventDAO.findEventsByUser(pk);
     if (data) {
-        logger.info(`Event found | eventService | getEventsByUser | data: ${data}`);
+        logger.info(`Event found | eventService | getEventsByUser | data: ${JSON.stringify(data)}`);
         return data;
     } else { 
         logger.info(`Failed to find any event | eventService | getEventsByUser`);

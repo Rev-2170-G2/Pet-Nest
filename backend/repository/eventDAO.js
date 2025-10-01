@@ -6,6 +6,7 @@ const client = new DynamoDBClient({region: 'us-east-1'});
 const documentClient = DynamoDBDocumentClient.from(client);
 
 const TableName = process.env.TableName || 'pet_nest';
+const IndexName = process.env.IndexName || 'events-by-id-status-index';
 
 /**
  * should persist an event to the database
@@ -17,7 +18,7 @@ const TableName = process.env.TableName || 'pet_nest';
 async function createEvent(event) { 
     const command = new PutCommand({
         TableName,
-        Item: event
+        Item: event,
     });
     try {
         const data = await documentClient.send(command);
@@ -37,14 +38,15 @@ async function createEvent(event) {
 async function findAllEvents() {
     const command = new ScanCommand({
         TableName,
-        FilterExpression: '#entity = :entity',
-        ExpressionAttributeNames: {'#entity' : 'entity'},
-        ExpressionAttributeValues: {':entity' : 'EVENT'}
+        IndexName,
+        FilterExpression: "begins_with(#id, :id)",
+        ExpressionAttributeNames: {"#id" : "id"},
+        ExpressionAttributeValues: {":id": 'e'}
     });
     try {
         const data = await documentClient.send(command);
         logger.info(`SCAN command to database complete | eventDAO | findAllEvents | data: ${JSON.stringify(data)}`);
-        return data;
+        return data.Items.length > 0 ? data.Items : null;
     } catch (err) {
         logger.error(`Error in eventDAO | findAllEvents | error: ${err}`);
         return null
@@ -52,7 +54,7 @@ async function findAllEvents() {
 }
 
 /**
- * should attempt to find a specific evevnt by its id 
+ * should attempt to find a specific event by its id 
  * 
  * @param {string} id with which to be searched
  * @returns the found event or null
@@ -60,9 +62,9 @@ async function findAllEvents() {
 async function findEventById(id) {
     const command = new QueryCommand({ 
         TableName,
-        IndexName: 'gsi-1',
-        KeyConditionExpression: `pk = :pk`,
-        ExpressionAttributeValues: {':pk': 'e' + id},
+        IndexName,
+        KeyConditionExpression: `id = :id`,
+        ExpressionAttributeValues: {':id': id},
     });
     try {
         const data = await documentClient.send(command);
@@ -75,24 +77,24 @@ async function findEventById(id) {
 }
 
 /**
- * should attempt to find a list of events pertaining to 
+ * should attempt to find a list of events pertaining to a user
  * 
- * @param {string} id 
+ * @param {string} pk of the user to search for
  * @returns 
  */
-async function findEventsByUser(id) {
+async function findEventsByUser(pk) {
     const command = new QueryCommand({
         TableName,
-        KeyConditionExpression: `pk = :pk AND begins_with(sk, :sk)`,
+        KeyConditionExpression: `PK = :pk AND begins_with(SK, :sk)`,
         ExpressionAttributeValues: {
-            ':pk': id,
+            ':pk': pk,
             ':sk': 'EVENT#'
         }
-    })
+    });
     try {
         const data = await documentClient.send(command);
         logger.info(`QUERY command to database complete | eventDAO | findEventsByUser | data: ${JSON.stringify(data)}`);
-        return data;
+        return data.Items.length > 0 ? data.Items : null;
     } catch (err) { 
         logger.error(`Error in eventDAO | findEventsByUser | error: ${err}`);
         return null;
