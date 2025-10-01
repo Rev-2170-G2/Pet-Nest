@@ -24,31 +24,26 @@ async function createPet(userId, pet){
 }
 
 async function updatePet(userId, petId, updates) {
-    if (!userId || !petId) {
-        logger.info(`Invalid userId or petId: ${userId}, ${petId}`);
-        return null;
-    }
-
+    if (!userId || !petId) return null;
+    
     const dbUpdates = buildPetUpdates(updates);
-
-    try {
-        const data = await petDAO.updatePet(userId, petId, dbUpdates);
+    const data = await petDAO.updatePet(userId, petId, dbUpdates);
+    if (data) {
+        logger.info(`Pet ${petId} updated for user ${userId}: ${JSON.stringify(data)}`);
         return data;
-    } catch (error) {
-        console.error(error);
-        return null;
     }
+    logger.info(`Failed to update pet ${petId} for user ${userId}`);
+    return null;
 }
 
-async function deletePet(userId, petId){
-    try{ 
-        const data = await petDAO.deletePet(userId, petId);
+async function deletePet(userId, petId) {
+    const data = await petDAO.deletePet(userId, petId);
+    if (data) {
+        logger.info(`Pet ${petId} deleted for user ${userId}`);
         return data;
     }
-    catch(error){
-        logger.info(`Pet not found or does not belong to user ${userId}: ${petId}`);
-        return null;
-    }
+    logger.info(`Failed to delete pet ${petId} for user ${userId}`);
+    return null;
 }
 
 module.exports = {
