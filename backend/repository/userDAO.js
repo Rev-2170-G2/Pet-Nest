@@ -10,7 +10,7 @@ async function registerUser (user) {
     const command = new PutCommand({
         TableName, 
         Item: user,
-    })
+    });
 
     try {
         const data = await ddbDocClient.send(command);
