@@ -10,5 +10,8 @@ router.post('/admin/register', authenticateToken, userController.registerUser);
 
 router.post('/register', userController.registerUser);
 
+router.delete('/self', authenticateToken, userController.DeleteOwnAccount);
+
+router.delete('/admin/:id', authenticateToken, userController.DeleteUserAsAdmin);
 
 module.exports = router;

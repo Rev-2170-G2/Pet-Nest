@@ -17,16 +17,8 @@ app.use('/api/users', userRoutes);
 app.use('/api/pets', authenticateToken, petRoutes);
 app.use('/api/events', authenticateToken, eventRoutes);
 
-// example of middleware usage on a suite of routes
-// app.use('/api/route', authenticateToken, someRoutes);
-
-// for testing purposes only 
 app.get('/', (req, res) => { 
     res.send('Home Page');
 });
-
-// app.get('/protected', (req, res) => { 
-//     res.json({message: 'Accessed protected route', user: req.user});
-// })
 
 module.exports = app;
