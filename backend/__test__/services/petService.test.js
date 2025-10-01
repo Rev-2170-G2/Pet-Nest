@@ -92,6 +92,13 @@ describe('petService updatePet', () => {
         const result2 = await petService.updatePet('u#abc123', null, updates);
         expect(result2).toBeNull();
     });
+
+    it('should return null if DAO returns null (pet not found)', async () => {
+        petDAO.updatePet.mockResolvedValue(null);
+
+        const result = await petService.updatePet('u#abc123', 'pet123', updates);
+        expect(result).toBeNull();
+    });
 });
 
 describe('petService deletePet', () => {
@@ -105,8 +112,8 @@ describe('petService deletePet', () => {
         expect(result).toBe(dummyData);
     });
 
-    it('should return null if petDAO.deletePet throws', async () => {
-        petDAO.deletePet.mockRejectedValue(new Error('DB error'));
+    it('should return null if DAO returns null (pet not found)', async () => {
+        petDAO.deletePet.mockResolvedValue(null);
 
         const result = await petService.deletePet('u#abc123', 'pet123');
         expect(result).toBeNull();
