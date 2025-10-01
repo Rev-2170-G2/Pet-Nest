@@ -67,12 +67,17 @@ async function getAllEvents() {
  * @returns the event retrieved or null
  */
 async function getEventById(id) {
-    const data = await eventDAO.findEventById(id);
-    if (data) {
-        logger.info(`Event found | eventService | getEventById | data: ${JSON.stringify(data)}`);
-        return data;
+    if (id && id.split('')[0] === 'e') {
+        const data = await eventDAO.findEventById(id);
+        if (data) {
+            logger.info(`Event found | eventService | getEventById | data: ${JSON.stringify(data)}`);
+            return data;
+        } else { 
+            logger.info(`Failed to find any event | eventService | getEventById`);
+            return null;
+        }
     } else { 
-        logger.info(`Failed to find any event | eventService | getEventById`);
+        logger.info(`Invalid id provided | eventService | getEventById | id: ${id}`);
         return null;
     }
 }

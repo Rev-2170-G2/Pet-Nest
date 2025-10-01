@@ -11,7 +11,8 @@ let { nanoid } = require('nanoid');
 
 jest.mock('../../repository/eventDAO', () => ({
     createEvent: jest.fn(),
-    findAllEvents: jest.fn()
+    findAllEvents: jest.fn(),
+    findEventById: jest.fn()
 }));
 
 const eventDAO = require('../../repository/eventDAO');
@@ -226,7 +227,6 @@ describe('Negative testing on postEvent', () => {
 describe('positive testing on getAllEvents', () => {
 
     beforeEach(() => {
-        let dummyEvent = {};
         let dummyData = {};
         jest.clearAllMocks();
     });
@@ -277,5 +277,86 @@ describe('positive testing on getAllEvents', () => {
         expect(eventDAO.findAllEvents).toHaveBeenCalled();
         expect(logger.logger.info).toHaveBeenCalled();
         expect(result).toBe(dummyData);
+    });
+});
+
+describe('negative testing on getAllEvents', () => {
+
+    beforeEach(() => {
+        let dummyData = {};
+        jest.clearAllMocks();
+    });
+
+    it('should return null when no events are found', async () => {
+
+        eventDAO.findAllEvents.mockResolvedValue(null);
+
+        const result = await eventService.getAllEvents();
+
+        expect(eventDAO.findAllEvents).toHaveBeenCalled();
+        expect(logger.logger.info).toHaveBeenCalled();
+        expect(result).toBe(null);
+    });
+});
+
+describe('positive testing on getEventById', () => {
+
+    beforeEach(() => {
+        let dummyId = '';
+        let dummyData = {};
+        jest.clearAllMocks();
+    });
+
+    it('should return an event object when the id is valid', async () => {
+        dummyId = 'e12345';
+        dummyData = {
+            'id': 'e12345',
+            'name': 'event1',
+            'description': 'description',
+            'date': 'right now!',
+            'location': 'right here!',
+            'PK': 'u#fa0s9d8f',
+            'SK': 'EVENT#e12345',
+            'photos': [],
+            'status': 'pending',
+            'entity': 'EVENT',   
+        };
+        eventDAO.findEventById.mockResolvedValue(dummyData);
+
+        const result = await eventService.getEventById(dummyId);
+
+        expect(eventDAO.findEventById).toHaveBeenCalledWith(dummyId);
+        expect(logger.logger.info).toHaveBeenCalled();
+        expect(result).toBe(dummyData);
+    });
+});
+
+describe('negative testing on getEventById', () => {
+
+    beforeEach(() => {
+        let dummyId = '';
+        jest.clearAllMocks();
+    });
+
+    it('should return null when the id is invalid', async () => {
+        dummyId = '12345';
+        // eventDAO.findEventById.mockResolvedValue(null);
+
+        const result = await eventService.getEventById(dummyId);
+
+        // expect(eventDAO.findEventById).toHaveBeenCalledWith(dummyId);
+        expect(logger.logger.info).toHaveBeenCalled();
+        expect(result).toBe(null);
+    });
+
+    it('should return null when the id is invalid', async () => {
+        dummyId = '12345';
+        // eventDAO.findEventById.mockResolvedValue(null);
+
+        const result = await eventService.getEventById(dummyId);
+
+        // expect(eventDAO.findEventById).toHaveBeenCalledWith(dummyId);
+        expect(logger.logger.info).toHaveBeenCalled();
+        expect(result).toBe(null);
     });
 });
