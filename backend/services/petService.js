@@ -7,11 +7,13 @@ async function createPet(userId, pet){
     if(userId){
         const data = await petDAO.createPet(userId, {
             id: nanoid(5),
+            entity: "PET",
             type: pet.type,
             name: pet.name,
             services: pet.services,
             description: pet.description,
-            images: pet.images ?? null
+            photos: pet.images ?? null,
+            location: pet.location ?? null
         })
         logger.info(`${userId} added new pet: ${JSON.stringify(data)}`);
         return data;
@@ -31,7 +33,7 @@ async function deletePet(userId, petId){
     }
 }
 
-// createPet("2", {type: "bird", name: "wing", services: ["catches food", "keeps animals away"], description: "something", images: [] })
+// createPet("2", {type: "bird", name: "wing", services: ["catches food", "keeps animals away"], description: "something", photos: [] })
 // deletePet("u#C8E1W", "c_moQ")
 
 module.exports = {

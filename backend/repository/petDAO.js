@@ -15,8 +15,8 @@ async function createPet(userId, pet){
             PK: userId,
             SK: `PET#${pet.id}`,
             ...pet,
-            reviews: 0,
-            eventsCompleted: 0
+            review: 0,
+            eventsCompleted: 0,
         }
     })
 
