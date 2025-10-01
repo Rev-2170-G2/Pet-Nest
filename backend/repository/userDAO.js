@@ -4,13 +4,13 @@ const { logger } = require("../util/logger");
 
 const client = new DynamoDBClient();
 const ddbDocClient = DynamoDBDocumentClient.from(client);
-const TableName = "pet_services_table";
+const TableName = process.env.TableName || "pet_nest";
 
 async function registerUser (user) {
     const command = new PutCommand({
         TableName, 
         Item: user,
-    })
+    });
 
     try {
         const data = await ddbDocClient.send(command);

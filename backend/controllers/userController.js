@@ -31,9 +31,8 @@ async function login (req, res) {
     try {
         const { username, password } = req.body;
         const user = await userService.validateLogin(username, password); // check this
-
         if (user){
-            const payload = { id: user.user_id, username: username, admin: user.admin };
+            const payload = { id: user.PK, username: username, admin: user.admin };
             const token = generateToken(payload);
             return res.status(200).json({message: "Successful login", token});
         } else {
