@@ -12,13 +12,13 @@ const { validateEvent } = require('../util/eventValidation');
  * @returns the persisted data or null
  */
 async function postEvent(event) {
-    const id = 'e' + nanoid(5);
-    const entity = 'EVENT';
-    const PK = event.pk;
-    const SK = entity + '#' + id;
-    const photos = !event.photos ? [] : event.photos;
-    const status = 'pending'; // all events should be set to pending upon creation
     if (validateEvent(event)) {
+        const id = 'e' + nanoid(5);
+        const entity = 'EVENT';
+        const PK = event.pk;
+        const SK = entity + '#' + id;
+        const photos = !event.photos ? [] : event.photos;
+        const status = 'pending'; // all events should be set to pending upon creation
         const data = await eventDAO.createEvent({
             PK,
             SK,

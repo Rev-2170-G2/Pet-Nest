@@ -10,7 +10,8 @@ jest.mock('nanoid', () => ({
 let { nanoid } = require('nanoid');
 
 jest.mock('../../repository/eventDAO', () => ({
-    createEvent: jest.fn()
+    createEvent: jest.fn(),
+    findAllEvents: jest.fn()
 }));
 
 const eventDAO = require('../../repository/eventDAO');
@@ -33,13 +34,13 @@ describe('Positive testing on postEvent', () => {
             'pk': 'u#fa0s9d8f',
         };
         dummyData = {
-            'id': '12345',
+            'id': 'e12345',
             'name': 'event1',
             'description': 'description',
             'date': 'right now!',
             'location': 'right here!',
             'PK': 'u#fa0s9d8f',
-            'SK': 'EVENT#12345',
+            'SK': 'EVENT#e12345',
             'photos': [],
             'status': 'pending',
             'entity': 'EVENT',
@@ -54,7 +55,7 @@ describe('Positive testing on postEvent', () => {
         expect(result).toBe(dummyData);
     });
 
-        it('should return the created event when required fields are present and a photos field is included', async () => {
+    it('should return the created event when required fields are present and a photos field is included', async () => {
         dummyEvent = {
             'id': '12345',
             'name': 'event1',
@@ -65,13 +66,13 @@ describe('Positive testing on postEvent', () => {
             'pk': 'u#fa0s9d8f',
         };
         dummyData = {
-            'id': '12345',
+            'id': 'e12345',
             'name': 'event1',
             'description': 'description',
             'date': 'right now!',
             'location': 'right here!',
             'PK': 'u#fa0s9d8f',
-            'SK': 'EVENT#12345',
+            'SK': 'EVENT#e12345',
             'photos': ['link1', 'link2', 'link3'],
             'status': 'pending',
             'entity': 'EVENT',
@@ -86,7 +87,7 @@ describe('Positive testing on postEvent', () => {
         expect(result).toBe(dummyData);
     });
 
-        it('should return the created event with a status of pending when provided with a status', async () => {
+    it('should return the created event with a status of pending when provided with a status', async () => {
         dummyEvent = {
             'id': '12345',
             'name': 'event1',
@@ -97,13 +98,13 @@ describe('Positive testing on postEvent', () => {
             'pk': 'u#fa0s9d8f',
         };
         dummyData = {
-            'id': '12345',
+            'id': 'e12345',
             'name': 'event1',
             'description': 'description',
             'date': 'right now!',
             'location': 'right here!',
             'PK': 'u#fa0s9d8f',
-            'SK': 'EVENT#12345',
+            'SK': 'EVENT#e12345',
             'photos': [],
             'status': 'pending',
             'entity': 'EVENT',
@@ -187,5 +188,94 @@ describe('Negative testing on postEvent', () => {
 
         expect(result).toBeFalsy();
         expect(result).toBe(null);
+    });
+
+    it('should return null when an error is encountered in the DAO layer', async () => {
+        dummyEvent = {
+            'id': '12345',
+            'name': 'event1',
+            'description': 'description',
+            'date': 'right now!',
+            'location': 'right here!',
+            'pk': 'u#fa0s9d8f',
+        };
+        dummyData = {
+            'id': 'e12345',
+            'name': 'event1',
+            'description': 'description',
+            'date': 'right now!',
+            'location': 'right here!',
+            'PK': 'u#fa0s9d8f',
+            'SK': 'EVENT#e12345',
+            'photos': [],
+            'status': 'pending',
+            'entity': 'EVENT',
+        };
+        eventDAO.createEvent.mockResolvedValue(null);
+
+        const result = await eventService.postEvent(dummyEvent);
+
+        expect(eventDAO.createEvent).toHaveBeenCalledWith(dummyData);
+        expect(nanoid()).toBe('12345');
+        expect(logger.logger.info).toHaveBeenCalled();
+        expect(result).toBe(null);
+    });
+
+});
+
+describe('positive testing on getAllEvents', () => {
+
+    beforeEach(() => {
+        let dummyEvent = {};
+        let dummyData = {};
+        jest.clearAllMocks();
+    });
+
+    it('should return a list of events if there are events present in the db', async () => {
+        dummyData = [
+            {
+                'id': '12345',
+                'name': 'event1',
+                'description': 'description',
+                'date': 'right now!',
+                'location': 'right here!',
+                'PK': 'u#fa0s9d8f',
+                'SK': 'EVENT#e12345',
+                'photos': [],
+                'status': 'pending',
+                'entity': 'EVENT',
+            },
+            {
+                'id': '12346',
+                'name': 'event2',
+                'description': 'description',
+                'date': 'right now!',
+                'location': 'right here!',
+                'PK': 'u#fa0s9d8f',
+                'SK': 'EVENT#e12346',
+                'photos': [],
+                'status': 'pending',
+                'entity': 'EVENT',
+            },
+            {
+                'id': '12347',
+                'name': 'event3',
+                'description': 'description',
+                'date': 'right now!',
+                'location': 'right here!',
+                'PK': 'u#fa0s9d8f',
+                'SK': 'EVENT#e12347',
+                'photos': [],
+                'status': 'pending',
+                'entity': 'EVENT',
+            }
+        ];
+        eventDAO.findAllEvents.mockResolvedValue(dummyData);
+
+        const result = await eventService.getAllEvents();
+
+        expect(eventDAO.findAllEvents).toHaveBeenCalled();
+        expect(logger.logger.info).toHaveBeenCalled();
+        expect(result).toBe(dummyData);
     });
 });
