@@ -340,22 +340,18 @@ describe('negative testing on getEventById', () => {
 
     it('should return null when the id is invalid', async () => {
         dummyId = '12345';
-        // eventDAO.findEventById.mockResolvedValue(null);
 
         const result = await eventService.getEventById(dummyId);
 
-        // expect(eventDAO.findEventById).toHaveBeenCalledWith(dummyId);
         expect(logger.logger.info).toHaveBeenCalled();
         expect(result).toBe(null);
     });
 
     it('should return null when the id is invalid', async () => {
         dummyId = '12345';
-        // eventDAO.findEventById.mockResolvedValue(null);
 
         const result = await eventService.getEventById(dummyId);
 
-        // expect(eventDAO.findEventById).toHaveBeenCalledWith(dummyId);
         expect(logger.logger.info).toHaveBeenCalled();
         expect(result).toBe(null);
     });
