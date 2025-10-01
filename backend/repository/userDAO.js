@@ -4,13 +4,14 @@ const { logger } = require("../util/logger");
 
 const client = new DynamoDBClient({region: 'us-east-1'}); // Added region
 const ddbDocClient = DynamoDBDocumentClient.from(client);
+
 const TableName = "PetNest"; // Ask about table name: pet_services_table
 
 async function registerUser (user) {
     const command = new PutCommand({
         TableName, 
         Item: user,
-    })
+    });
 
     try {
         const data = await ddbDocClient.send(command);
