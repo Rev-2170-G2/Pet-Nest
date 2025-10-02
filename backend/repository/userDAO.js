@@ -1,17 +1,17 @@
 require("dotenv").config();
 const { DynamoDBClient } = require("@aws-sdk/client-dynamodb");
-const { DynamoDBDocumentClient, PutCommand, ScanCommand } = require("@aws-sdk/lib-dynamodb");
+const { DynamoDBDocumentClient, PutCommand, ScanCommand, QueryCommand, BatchWriteCommand } = require("@aws-sdk/lib-dynamodb");
 const { logger } = require("../util/logger");
 
-const client = new DynamoDBClient();
+const client = new DynamoDBClient({region: 'us-east-1'});
 const ddbDocClient = DynamoDBDocumentClient.from(client);
-const TableName = "pet_services_table";
+const TableName = process.env.TableName || "pet_nest";
 
 async function registerUser (user) {
     const command = new PutCommand({
         TableName, 
         Item: user,
-    })
+    });
 
     try {
         const data = await ddbDocClient.send(command);
@@ -41,7 +41,46 @@ const getUserByUsername = async (username) => {
     return null; 
 }
 
+async function getUserItems(pk) {
+    const queryCommand = new QueryCommand({
+        TableName,
+        KeyConditionExpression: "PK = :pk",
+        ExpressionAttributeValues: { ":pk": pk },
+    });
+
+    const {Items} = await ddbDocClient.send(queryCommand);
+    return Items || [];
+}
+
+async function deleteUser(pk) {
+    try {
+        const items = await getUserItems(pk);
+        if (!items || items.length === 0) {
+            return {success: false, message: "User not found."};
+        }
+
+        const deleteRequests = items.map(item => ({
+            DeleteRequest: {Key: {PK: item.PK, SK: item.SK}}
+        }));
+
+        for (let i = 0; i < deleteRequests.length; i += 25) {
+            const batch = deleteRequests.slice(i, i + 25);
+            await ddbDocClient.send(new BatchWriteCommand({
+                RequestItems: {[TableName]: batch}
+            }));
+        }
+
+        logger.info(`Deleted user ${pk}`);
+        return {success: true, message: `User ${pk} deleted.`};
+    } catch (err) {
+        logger.error(`Failed to delete user ${pk}: ${err}`);
+        return {success: false, message: "Internal server error."};
+    }
+}
+
 module.exports = {
     registerUser,
-    getUserByUsername
+    getUserByUsername,
+    deleteUser,
+    getUserItems
 }

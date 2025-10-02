@@ -57,7 +57,7 @@ async function createFormattedUserProfile (username, userPass, fullName, email, 
             password,
             fullName,
             email,
-            admin, 
+            admin,
         };
         return formattedUser;
     } catch (err) {
