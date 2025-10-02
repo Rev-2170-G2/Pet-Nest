@@ -69,7 +69,7 @@ async function createFormattedUserProfile (username, userPass, fullName, email, 
 async function isAdministrator (username) {
     const currentUser = await userDAO.getUserByUsername(username);
     logger.info({message: 'from isAdministrator in userValidation', user: currentUser});
-    const isAnAdministrator = currentUser.admin === true;
+    const isAnAdministrator = currentUser?.admin && currentUser.admin === true ? true : false;
     return isAnAdministrator;
 }
 
