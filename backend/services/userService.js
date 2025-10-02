@@ -39,25 +39,25 @@ const validateLogin = async (username, password) => {
 }
 
 async function removeUser(userId, requester) {
-    try {
-        const pk = userId.startsWith("u#") ? userId : `u#${userId}`;
-        const userItems = await userDAO.getUserItems(pk);
-        if (!userItems || userItems.length === 0) {
-            return {success: false, message: "User not found."};
-        }
+  try {
+    const pk = userId.startsWith("u#") ? userId : `u#${userId}`;
+    const userItems = await userDAO.getUserItems(pk);
 
-        const targetUser = userItems.find(item => item.SK.startsWith("USER#"));
-
-        if (targetUser.admin && targetUser.PK !== requester.id) {
-            return {success: false, message: "Admins cannot be deleted."};
-        }
-
-        const result = await userDAO.deleteUser(pk);
-        return result;
-    } catch (err) {
-        logger.error(`Error deleting user ${userId}: ${err}`);
-        return {success: false, message: "Internal server error."};
+    if (userItems.length === 0) {
+      return null;
     }
+
+    const targetUser = userItems.find(item => item.SK.startsWith("USER#"));
+
+    if (targetUser?.admin && targetUser.PK !== requester.id) {
+      return false;
+    }
+
+    return await userDAO.deleteUser(pk);
+  } catch (err) {
+    logger.error(`Error deleting user ${userId}: ${err}`);
+    return false;
+  }
 }
 
 module.exports = {
