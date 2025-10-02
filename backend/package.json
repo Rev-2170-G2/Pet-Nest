@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "start": "node server.js",
-    "test": "jest --collectCoverage"
+    "test": "jest --collectCoverage",
+    "test:eventService": "jest --collectCoverage -- './backend/services/eventService.test.js'"
   },
   "keywords": [],
   "author": "",
@@ -15,6 +16,7 @@
     "@aws-sdk/lib-dynamodb": "^3.896.0",
     "bcrypt": "^6.0.0",
     "body-parser": "^2.2.0",
+    "dotenv": "^17.2.3",
     "email-validator": "^2.0.4",
     "express": "^5.1.0",
     "jest": "^30.1.3",
