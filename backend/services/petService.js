@@ -11,7 +11,10 @@ async function createPet(userId, pet){
             entity: "PET",
             type: pet.type,
             name: pet.name,
-            services: pet.services,
+            services: pet.services.map(s => ({
+                service: s.service,
+                price: s.price
+            })),
             description: pet.description,
             photos: pet.images ?? null,
             location: pet.location ?? null

@@ -1,14 +1,12 @@
-//check if pet attributes are not empty
+//check if any attributes are missing or empty before creation
 function validatePetData(req, res, next) {
-    const {type, name, description, services} = req.body;
-
-    const typeResult = type && type.length > 0;
-    const nameResult = name && name.length > 0;
-    const descResult = description && description.length > 0;
-    const servicesResult = services && services.length > 0;
-
-    if (!(typeResult && nameResult && descResult && servicesResult)) {
-        return res.status(400).json({ message: "Missing or empty fields.", data: req.body });
+    const { type, name, description, services } = req.body;
+    
+    if (!type || !type.trim() || 
+        !name || !name.trim() || 
+        !description || !description.trim() ||
+        !services || services.length === 0 || services.some(s => !s.service || !s.service.trim() || s.price === undefined)) {
+        return res.status(400).json({ message: "Missing or invalid fields.", data: req.body });
     }
 
     next();
