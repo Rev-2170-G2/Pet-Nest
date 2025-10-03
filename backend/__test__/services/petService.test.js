@@ -28,7 +28,7 @@ describe('petService createPet', () => {
         dummyPet = {
             type: 'dog',
             name: 'Rex',
-            services: ['walking'],
+            services: [{ service: 'walking', price: 20 }],
             description: 'friendly dog',
             images: ['img1.jpg'],
             location: 'NYC'
@@ -68,13 +68,13 @@ describe('petService updatePet', () => {
 
     beforeEach(() => {
         jest.clearAllMocks();
-        updates = { location: 'LA', photos: ['img2.jpg'], services: ['grooming'] };
+        updates = { location: 'LA', photos: ['img2.jpg'], services: [{ service: 'grooming', price: 30 }] };
         dbUpdates = {
             expression: 'SET #location = :location, #photos = :photos, #services = :services',
             names: { '#location': 'location', '#photos': 'photos', '#services': 'services' },
-            values: { ':location': 'LA', ':photos': ['img2.jpg'], ':services': ['grooming'] }
-        };
-    });
+            values: { ':location': 'LA', ':photos': ['img2.jpg'], ':services': [{ service: 'grooming', price: 30 }]}
+        }
+        });
 
     it('should update a pet successfully', async () => {
         petDAO.updatePet.mockResolvedValue(dbUpdates);
