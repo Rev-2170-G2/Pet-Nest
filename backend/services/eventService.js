@@ -103,7 +103,9 @@ async function getEventsByUser(id, status) {
 /**
  * should call the DAO method for patching an event by it's id
  * 
- * @param {string} id of the event item to be patched
+ * @param {string} id 
+ * @param {string} pk to be combined with id for a composite key
+ * @param {JSON} event object to update with
  * @returns the patched data or null
  */
 async function patchEventById(id, pk, event) {
@@ -118,7 +120,30 @@ async function patchEventById(id, pk, event) {
             return null;
         }
     } else { 
-        logger.info(`Given id is incorrect/invalid or event validation failed`);
+        logger.info(`Given id is incorrect/invalid or event validation failed | eventService | patchEventById | id: ${id}`);
+        return null;
+    }
+}
+
+/**
+ * shoudld call the DAO method to delete an event by id
+ * 
+ * @param {string} id 
+ * @param {string} pk to combine with id for a composite key
+ * @returns unsure
+ */
+async function deleteEventById (id, pk) {
+    if (id && id.split('')[0] === 'e') {
+        const data = await eventDAO.removeEventById(id, pk);
+        if (data) { 
+            logger.info(`Event deleted | eventService | deleteEventById | data: ${JSON.stringify(data)}`);
+            return data;
+        } else { 
+            logger.info(`Failed to delete event | eventService | patchEventById`);
+            return null;
+        }
+    } else { 
+        logger.info(`Given id is incorrect/invalid | eventService | deleteEventById | id: ${id}`);
         return null;
     }
 }
@@ -128,5 +153,6 @@ module.exports = {
     getAllEvents,
     getEventById,
     getEventsByUser,
-    patchEventById
+    patchEventById,
+    deleteEventById
 }

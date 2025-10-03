@@ -74,20 +74,38 @@ async function GetEventsByUser(req, res) {
 /**
  * should call the service layer method for patching events by the id
  * 
- * @param {*} req object containing the id to be parsed
- * @param {*} res object to be manipulated and sent back to client
+ * @param {JSON} req object containing the id and event to be parsed
+ * @param {JSON} res object to be manipulated and sent back to client
  */
 async function PatchEventById(req, res) { 
     const event = req.body;
-    // const id = req.params.id;
-    // const pk = req.user.id;
-    const id = 'e8sBH_';
-    const pk = 'u#xbNX9';
+    const id = req.params.id;
+    const pk = req.user.id;
+    // const id = 'e8sBH_';
+    // const pk = 'u#xbNX9';
     const data = await eventService.patchEventById(id, pk, event);
     if (data) {
         res.status(200).json({message: 'Event patched', data});
     } else {
         res.status(400).json({message: 'Patch failed'});
+    }
+}
+
+/**
+ * should call the service layer method for deleting events by their id
+ * 
+ * @param {JSON} req object containing the id to be parsed
+ * @param {JSON} res object to be manipulated and sent back to client
+ */
+async function DeleteEventById(req, res) {
+    const id = req.params.id;
+    const pk = req.user.id;
+
+    const data = await eventService.deleteEventById(id, pk);
+    if (data) { 
+        res.status(200).json({message: 'Event deleted', data});
+    } else { 
+        res.status(400).json({message: 'Delete failed'});
     }
 }
 
@@ -97,4 +115,5 @@ module.exports = {
     GetEventById,
     GetEventsByUser,
     PatchEventById,
+    DeleteEventById
 }

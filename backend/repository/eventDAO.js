@@ -1,6 +1,6 @@
 require("dotenv").config();
 const { DynamoDBClient } = require('@aws-sdk/client-dynamodb');
-const { DynamoDBDocumentClient, UpdateCommand, PutCommand, ScanCommand, QueryCommand } = require('@aws-sdk/lib-dynamodb');
+const { DynamoDBDocumentClient, UpdateCommand, PutCommand, ScanCommand, QueryCommand, DeleteCommand } = require('@aws-sdk/lib-dynamodb');
 const { logger } = require('../util/logger');
 
 const client = new DynamoDBClient({region: 'us-east-1'});
@@ -24,7 +24,7 @@ async function createEvent(event) {
     try {
         const data = await documentClient.send(command);
         logger.info(`PUT command to database complete | eventDAO | createEvent | data: ${JSON.stringify(data.Items)}`);
-        return data.Items;
+        return data;
     } catch (err) { 
         logger.error(`Error in eventDAO | createEvent | error: ${err}`);
         return null;
@@ -142,16 +142,37 @@ async function patchEventById(id, pk, event) {
             ':date' : event.date,
             ':photos' : event.photos
         },
-        ReturnValues: 'UPDATED_NEW'
+        ConditionExpression: "attribute_exists(PK) AND attribute_exists(SK)",
+        ReturnValues: 'ALL_NEW'
     });
 
     try {
         const data = documentClient.send(command);
         logger.info(`UPDATE command to database complete | eventDAO | patchEventById | data: ${JSON.stringify(data.Items)}`);
-        return data.Items;
+        return data;
     } catch (err) { 
         logger.error(`Error in eventDAO | patchEventById | error: ${JSON.stringify(err)}`);
         return null;
+    }
+}
+
+async function removeEventById(id, pk) { 
+    const command = new DeleteCommand({ 
+        TableName,
+        Key: {
+            PK: pk,
+            SK: `EVENT#${id}`,
+        },
+        ReturnValues : 'ALL_OLD'
+    });
+
+    try { 
+        const data = documentClient.send(command);
+        logger.info(`DELETE command to database complete | eventDAO | removeEventById | data: ${JSON.stringify(data.Items)}`);
+        return data;
+    } catch (err) { 
+        logger.error(`Error in eventDAO | removeEventById | error: ${JSON.stringify(err)}`);
+        return null
     }
 }
 
@@ -160,5 +181,6 @@ module.exports = {
     findAllEvents,
     findEventById,
     findEventsByUser,
-    patchEventById
+    patchEventById,
+    removeEventById
 }

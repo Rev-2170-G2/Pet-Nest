@@ -14,7 +14,8 @@ jest.mock('../../repository/eventDAO', () => ({
     findAllEvents: jest.fn(),
     findEventById: jest.fn(),
     findEventsByUser: jest.fn(),
-    patchEventById: jest.fn()
+    patchEventById: jest.fn(),
+    removeEventById: jest.fn()
 }));
 
 const eventDAO = require('../../repository/eventDAO');
@@ -520,4 +521,68 @@ describe('negative testing on patchEventById', () => {
         expect(logger.logger.info).toHaveBeenCalled();
         expect(result).toBe(null);
     });
-})
+});
+
+describe('positive testing on deleteEventById', () => {
+    
+    beforeEach(() => {
+        let dummyId = '';
+        let dummyPK = '';
+        dummyData = {};
+        jest.clearAllMocks();
+    });
+
+    it('should return some information when id is valid and pk is obtained', async () => {
+        dummyPK = '12345';
+        dummyId = 'e12345';
+        dummyData = {
+            "photos":[],
+            "date":"tonight!",
+            "location":"my place!",
+            "description":"some desc",
+            "name":"something"
+        }
+
+        eventDAO.removeEventById.mockResolvedValue(dummyData);
+
+        const result = await eventService.deleteEventById(dummyId, dummyPK);
+
+        expect(eventDAO.removeEventById).toHaveBeenCalledWith(dummyId, dummyPK);
+        expect(logger.logger.info).toHaveBeenCalled();
+        expect(result).toBe(dummyData);
+    });
+});
+
+describe('negative testing on deleteEventById', () => {
+
+    beforeEach(() => {
+        let dummyId = '';
+        let dummyPK = '';
+        jest.clearAllMocks();
+    });
+
+    it('should return null when id is invalid', async () => { 
+        dummyPK = '12345';
+        dummyId = '12345';
+
+        eventDAO.removeEventById.mockResolvedValue(null);
+
+        const result = await eventService.deleteEventById(dummyId, dummyPK);
+
+        expect(logger.logger.info).toHaveBeenCalled();
+        expect(result).toBe(null);
+    });
+
+    it('should return null when pk is unobtained', async () => { 
+        dummyPK = '';
+        dummyId = 'e12345';
+
+        eventDAO.removeEventById.mockResolvedValue(null);
+
+        const result = await eventService.deleteEventById(dummyId, dummyPK);
+
+        expect(eventDAO.removeEventById).toHaveBeenCalledWith(dummyId, dummyPK);
+        expect(logger.logger.info).toHaveBeenCalled();
+        expect(result).toBe(null);
+    });
+});
