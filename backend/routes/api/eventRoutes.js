@@ -11,4 +11,6 @@ router.get('/:id', eventController.GetEventById);
 
 router.get('/user/:id', eventController.GetEventsByUser);
 
+router.patch('/admin/:id', eventController.UpdateEventStatusById);
+
 module.exports = router;
