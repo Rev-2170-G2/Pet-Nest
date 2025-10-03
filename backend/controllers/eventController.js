@@ -69,9 +69,26 @@ async function GetEventsByUser(req, res) {
     }
 }
 
+/**
+ * should call the service layer method for updating a single event status
+ * 
+ * @param {JSON} req object containing the id to be parsed
+ * @param {JSON} res object to be manipulated and sent back to client
+ */
+async function UpdateEventStatusById(req, res){
+    const id = req.params.id;
+    const data = await eventService.updateEventStatusById(id);
+    if (data){
+        res.status(200).json({message: "Event deleted", data});
+    } else {
+        res.status(400).json({message: "No events found"})
+    }
+}
+
 module.exports = {
     PostEvent,
     GetAllEvents,
     GetEventById,
     GetEventsByUser,
+    UpdateEventStatusById,
 }
