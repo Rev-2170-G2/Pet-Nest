@@ -5,6 +5,13 @@ const { generateToken } = require("../util/jwt");
 const { isAdministrator } = require("../util/userValidation");
 const { logger } = require("../util/logger");
 
+
+/**
+ * should call the service layer method to persist a user
+ * 
+ * @param {JSON} req object containing the request information to be parsed
+ * @param {JSON} res object to be manipulated and sent back to client
+ */
 async function registerUser (req, res) {
     logger.info({message: `Incoming userController registerUser request: ${JSON.stringify(req.body)}`});
 
@@ -25,6 +32,13 @@ async function registerUser (req, res) {
     }
 };
 
+
+/**
+ * should call the service layer method to login a user
+ * 
+ * @param {JSON} req object containing the request information to be parsed
+ * @param {JSON} res object to be manipulated and sent back to client
+ */
 async function login (req, res) {
     logger.info({message: `Incoming userController login request: ${JSON.stringify(req.body)}`});
 
@@ -43,7 +57,63 @@ async function login (req, res) {
     }
 };
 
+
+/**
+ * should call the service layer method to delete their user account
+ * 
+ * @param {JSON} req object containing the request information to be parsed
+ * @param {JSON} res object to be manipulated and sent back to client
+ */
+async function DeleteOwnAccount(req, res) {
+    const userId = req.user.id;
+
+    const result = await userService.removeUser(userId, req.user);
+
+    if (result.success) {
+        return res.status(200).json({message: result.message});
+    } else if (result.message === "User not found.") {
+        return res.status(404).json({error: result.message});
+    } else if (result.message === "Admins cannot be deleted.") {
+        return res.status(403).json({error: result.message});
+    } else {
+        return res.status(500).json({error: result.message});
+    }
+}
+
+/**
+ * should call the service layer method to delete user (as admin)
+ * 
+ * @param {JSON} req object containing the request information to be parsed
+ * @param {JSON} res object to be manipulated and sent back to client
+ */
+async function DeleteUserAsAdmin(req, res) {
+    const requester = req.user;
+    const targetUserId = req.params.id;
+
+    if (!requester.admin) {
+        return res.status(403).json({error: "Admin access required."});
+    }
+
+    if (!targetUserId) {
+        return res.status(400).json({ error: "User ID is required." });
+    }
+
+    const result = await userService.removeUser(targetUserId, requester);
+
+    if (result.success) {
+        return res.status(200).json({message: result.message});
+    } else if (result.message === "User not found.") {
+        return res.status(404).json({error: result.message});
+    } else if (result.message === "Admins cannot be deleted.") {
+        return res.status(403).json({error: result.message});
+    } else {
+        return res.status(500).json({error: result.message});
+    }
+}
+
 module.exports = {
     login,
     registerUser,
+    DeleteOwnAccount,
+    DeleteUserAsAdmin
 }

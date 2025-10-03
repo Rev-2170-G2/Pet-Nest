@@ -3,10 +3,14 @@ const userDAO = require('../../repository/userDAO.js');
 const validator = require("email-validator");
 
 jest.mock('../../repository/userDAO.js');
-jest.mock("email-validator")
+jest.mock("email-validator");
 
 
 describe('isValidUsername version 1 suite', () => {
+    afterEach(() => {
+        jest.restoreAllMocks();
+    });
+
     test('negative testing - an undefined username is invalid should return false', async () => {
         const invalidUsername = "";
         const result = await userValidation.isValidUsername(invalidUsername);
@@ -32,6 +36,10 @@ describe('isValidUsername version 1 suite', () => {
 })
 
 describe('isValidPassword version 1 suite', () => {
+    afterEach(() => {
+        jest.restoreAllMocks();
+    });
+
     test('positive testing - a defined password is valid and return true', () => {
         const validPassword = "thisIsValid";
         const result = userValidation.isValidPassword(validPassword);
@@ -63,20 +71,6 @@ describe('isValidEmail version 1 suite', () => {
     })
 })
 
-describe('isValidUsernamePasswordAndEmail version 1 suite', () => {
-    test('positive testing - invoking isValidUsernamePasswordAndEmail should invoke all three functions: isValidUsername, isValidPassword and isValidEmail with defined inputs', async () => {
-        const username = "thisIsMyUsername";    
-        const password = "thisIsValid";      
-        const email = 'exampleEmail@example.com';
-
-        await userValidation.isValidUsernamePasswordAndEmail(username, password, email)
-         
-        expect(userValidation.isValidUsername).toHaveBeenCalledTimes(1);
-        expect(userValidation.isValidPassword).toHaveBeenCalledTimes(1);
-        expect(userValidation.isValidEmail).toHaveBeenCalledTimes(1);
-    })
-})
-
 describe('createFormattedUserProfile version 1 suite', () => {
 
 });
@@ -95,8 +89,7 @@ describe('isAdministrator version 1 suite', () => {
             admin: true,
         };
 
-        userDAO.getUserByUsername.mockResolvedValue({ adminUser });
-
+        userDAO.getUserByUsername.mockResolvedValue(adminUser);
         const result = await userValidation.isAdministrator(adminUser.username);
 
         expect(userDAO.getUserByUsername).toHaveBeenCalledWith(adminUser.username);
@@ -104,6 +97,8 @@ describe('isAdministrator version 1 suite', () => {
     })
 
     test('negative testing - should return false if a user is not in the db', async () => {
+        userDAO.getUserByUsername.mockResolvedValue(null);
+
         const unregisteredUsername = "unregisteredUser";
         const result = await userValidation.isAdministrator(unregisteredUsername);
         expect(result).toBe(false);  

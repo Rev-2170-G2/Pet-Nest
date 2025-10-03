@@ -3,7 +3,13 @@ const { isValidUsernamePasswordAndEmail, createFormattedUserProfile } = require(
 const { logger }  = require('../util/logger');
 const bcrypt = require('bcrypt'); 
 
-
+/**
+ * should call the userDAO method to persist a user and return the persisted data
+ *
+ * takes in the user object from controller layer
+ * @param {JSON} user object to be sent to the DAO
+ * @returns the persisted data or null
+ */
 async function registerUser (user) {
     const { username, password, fullName, email, admin } = user;
 
@@ -20,7 +26,14 @@ async function registerUser (user) {
     return null;
 }
 
-
+/**
+ * should call the userDAO method to verify login information and return the persisted data
+ *
+ * takes in the username and string object from controller layer
+ * @param {JSON} username string to be be sent to retrieve user object
+ * @param {JSON} password string to be verified against user object from DAO
+ * @returns the persisted data or null
+ */
 const validateLogin = async (username, password) => {
     try {
         const user = await userDAO.getUserByUsername(username);
@@ -38,8 +51,38 @@ const validateLogin = async (username, password) => {
     return null;
 }
 
+/**
+ * should call the userDAO method to verify removed user is the same as requester 
+ *
+ * takes in the uuserId and user object from controller layer
+ * @param {JSON} userId string from req.users
+ * @param {JSON} requester object stored on req.users to compare to id from userDAO
+ * @returns the metdata object confirming success
+ */
+async function removeUser(userId, requester) {
+    try {
+        const pk = userId.startsWith("u#") ? userId : `u#${userId}`;
+        const userItems = await userDAO.getUserItems(pk);
+        if (!userItems || userItems.length === 0) {
+            return {success: false, message: "User not found."};
+        }
+
+        const targetUser = userItems.find(item => item.SK.startsWith("USER#"));
+
+        if (targetUser.admin && targetUser.PK !== requester.id) {
+            return {success: false, message: "Admins cannot be deleted."};
+        }
+
+        const result = await userDAO.deleteUser(pk);
+        return result;
+    } catch (err) {
+        logger.error(`Error deleting user ${userId}: ${err}`);
+        return {success: false, message: "Internal server error."};
+    }
+}
 
 module.exports = {
     registerUser,
-    validateLogin
+    validateLogin,
+    removeUser
 }
