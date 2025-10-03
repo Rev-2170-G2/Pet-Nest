@@ -71,9 +71,28 @@ async function GetEventsByUser(req, res) {
     }
 }
 
+/**
+ * should call the service layer method for patching events by the id
+ * 
+ * @param {*} req object containing the id to be parsed
+ * @param {*} res object to be manipulated and sent back to client
+ */
+async function PatchEventById(req, res) { 
+    const event = req.body;
+    const id = req.params.id;
+    const pk = req.user.id;
+    const data = await eventService.patchEventById(id, pk, event);
+    if (data) {
+        res.status(200).json({message: 'Event patched', data});
+    } else {
+        res.status(400).json({message: 'Patch failed'});
+    }
+}
+
 module.exports = {
     PostEvent,
     GetAllEvents,
     GetEventById,
     GetEventsByUser,
+    PatchEventById,
 }

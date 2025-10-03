@@ -11,4 +11,6 @@ router.get('/:id', eventController.GetEventById);
 
 router.get('/users/:id', eventController.GetEventsByUser);
 
+router.patch('/:id', eventController.PatchEventById);
+
 module.exports = router;

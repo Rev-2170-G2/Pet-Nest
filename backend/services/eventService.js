@@ -100,9 +100,30 @@ async function getEventsByUser(id, status) {
     }
 }
 
+/**
+ * should call the DAO method for patching an event by it's id
+ * 
+ * @param {string} id of the event item to be patched
+ * @returns the patched data or null
+ */
+async function patchEventById(id, pk, event) {
+    // make sure the id matches the correct entity type
+    if ((id && id.split('')[0] === 'e') && validateEvent(event)) {
+        const data = await eventDAO.patchEventById(id, pk, event);
+        if (data) { 
+            logger.info(`Event patched | eventService | patchEventById | data: ${JSON.stringify(data)}`);
+            return data;
+        } else { 
+            logger.info(`Failed to patch event | eventService | patchEventById`);
+            return null;
+        }
+    }
+}
+
 module.exports = {
     postEvent,
     getAllEvents,
     getEventById,
     getEventsByUser,
+    patchEventById
 }

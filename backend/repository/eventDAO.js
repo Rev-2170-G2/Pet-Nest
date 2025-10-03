@@ -115,9 +115,50 @@ async function findEventsByUser(pk, status) {
     }
 }
 
+/**
+ * should attempt to patch an item by its primary key
+ * 
+ * @param {string} id of the event object
+ * @param {string} pk of the currently logged in user
+ * @param {JSON} event to patch with
+ * @returns the updated item or null
+ */
+async function patchEventById(id, pk, event) { 
+    const command = new UpdateCommand({
+        TableName,
+        Key: { PK : pk, SK: `EVENT#${id}` },
+        UpdateExpression: 'SET #name = :name, #description = :description, #location = :location, #date = :date, #photos = :photos',
+        ExpressionAttributeNames: {
+            '#name' : 'name',
+            '#description' : 'description',
+            '#location' : 'location',
+            '#date' : 'date',
+            '#photos' : 'photos'
+        },
+        ExpressionAttributeValues: {
+            ':name' : event.name,
+            ':description' : event.description,
+            ':location' : event.location,
+            ':date' : event.date,
+            ':photos' : event.photos
+        },
+        ReturnValues: 'UPDATED_NEW'
+    });
+
+    try {
+        const data = documentClient.send(command);
+        logger.info(`UPDATE command to database complete | eventDAO | patchEventById | data: ${JSON.stringify(data)}`);
+        return data;
+    } catch (err) { 
+        logger.error(`Error in eventDAO | patchEventById | error: ${JSON.stringify(err)}`);
+        return null;
+    }
+}
+
 module.exports = {
     createEvent,
     findAllEvents,
     findEventById,
     findEventsByUser,
+    patchEventById
 }
