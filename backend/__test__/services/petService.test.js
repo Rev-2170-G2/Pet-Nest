@@ -118,4 +118,34 @@ describe('petService deletePet', () => {
         const result = await petService.deletePet('u#abc123', 'pet123');
         expect(result).toBeNull();
     });
+
+describe('petService getAllPetServices', () => { 
+    beforeEach(() => {
+        jest.clearAllMocks();
+    });
+
+    it('should return pet services when DAO returns data', async () => {
+        const dummyData = [
+            { service: 'walking', price: 20 },
+            { service: 'grooming', price: 30 }
+        ];
+        petDAO.getAllPetServices = jest.fn().mockResolvedValue(dummyData);
+
+        const result = await petService.getAllPetServices();
+
+        expect(petDAO.getAllPetServices).toHaveBeenCalled();
+        expect(logger.info).toHaveBeenCalledWith(`(petService) Pet services found: ${JSON.stringify(dummyData)}`);
+        expect(result).toBe(dummyData);
+    });
+
+    it('should return null when DAO returns null', async () => {
+        petDAO.getAllPetServices = jest.fn().mockResolvedValue(null);
+
+        const result = await petService.getAllPetServices();
+
+        expect(petDAO.getAllPetServices).toHaveBeenCalled();
+        expect(logger.info).toHaveBeenCalledWith(`(petService) No pet services found.`);
+        expect(result).toBeNull();
+    });
+});
 });
