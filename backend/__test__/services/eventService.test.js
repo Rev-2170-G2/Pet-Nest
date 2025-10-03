@@ -347,8 +347,8 @@ describe('negative testing on getEventById', () => {
         expect(result).toBe(null);
     });
 
-    it('should return null when the id is invalid', async () => {
-        dummyId = '12345';
+    it('should return null when the id is empty', async () => {
+        dummyId = '';
 
         const result = await eventService.getEventById(dummyId);
 

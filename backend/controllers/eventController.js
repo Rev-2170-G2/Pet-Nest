@@ -9,8 +9,8 @@ const { validateEvent } = require('../util/eventValidation');
  */
 async function PostEvent(req, res) { 
     if (validateEvent(req.body)) { 
-        // const pk = req.user.id;
-        const pk = 'u#xbNX9';
+        const pk = req.user.id;
+        // const pk = 'u#xbNX9';
         const { name, description, date, location, photos } = req.body;
         const data = await eventService.postEvent({name, description, date, location, photos, pk});
         if (data) {
@@ -62,7 +62,8 @@ async function GetEventById(req, res) {
  */
 async function GetEventsByUser(req, res) {
     const id = req.params.id;
-    const data = await eventService.getEventsByUser(id);
+    const status = req.query.status ? req.query.status : null;
+    const data = await eventService.getEventsByUser(id, status);
     if (data) {
         res.status(200).json({message: 'Events found ', data});
     } else { 

@@ -88,18 +88,18 @@ async function getEventById(id) {
  * @param {string} id with which to query 
  * @returns the retrieved data or null
  */
-async function getEventsByUser(id) {
+async function getEventsByUser(id, status) {
     const pk = 'u#' + id;
-    const data = await eventDAO.findEventsByUser(pk);
+    const options = {}
+    const data = await eventDAO.findEventsByUser(pk, status);
     if (data) {
-        logger.info(`Event found | eventService | getEventsByUser | data: ${JSON.stringify(data)}`);
+        logger.info(`Events found | eventService | getEventsByUser | data: ${JSON.stringify(data)}`);
         return data;
     } else { 
         logger.info(`Failed to find any event | eventService | getEventsByUser`);
         return null;
     }
 }
-
 
 module.exports = {
     postEvent,

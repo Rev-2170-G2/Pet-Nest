@@ -23,7 +23,7 @@ async function createEvent(event) {
     });
     try {
         const data = await documentClient.send(command);
-        logger.info(`PUT command to database complete | eventDAO | createEvent | data: ${JSON.stringify(data)}`);
+        logger.info(`PUT command to database complete | eventDAO | createEvent | data: ${JSON.stringify(data.Items)}`);
         return data;
     } catch (err) { 
         logger.error(`Error in eventDAO | createEvent | error: ${err}`);
@@ -46,7 +46,7 @@ async function findAllEvents() {
     });
     try {
         const data = await documentClient.send(command);
-        logger.info(`SCAN command to database complete | eventDAO | findAllEvents | data: ${JSON.stringify(data)}`);
+        logger.info(`SCAN command to database complete | eventDAO | findAllEvents | data: ${JSON.stringify(data.Items)}`);
         return data.Items.length > 0 ? data.Items : null;
     } catch (err) {
         logger.error(`Error in eventDAO | findAllEvents | error: ${err}`);
@@ -69,7 +69,7 @@ async function findEventById(id) {
     });
     try {
         const data = await documentClient.send(command);
-        logger.info(`QUERY command to database complete | eventDAO | findEventById | data: ${JSON.stringify(data)}`);
+        logger.info(`QUERY command to database complete | eventDAO | findEventById | data: ${JSON.stringify(data.Items)}`);
         return data;
     } catch (err) {
         logger.error(`Error in eventDAO | findEventById | error: ${err}`);
@@ -83,18 +83,31 @@ async function findEventById(id) {
  * @param {string} pk of the user to search for
  * @returns 
  */
-async function findEventsByUser(pk) {
-    const command = new QueryCommand({
+async function findEventsByUser(pk, status) {
+    let options = {
         TableName,
         KeyConditionExpression: `PK = :pk AND begins_with(SK, :sk)`,
-        ExpressionAttributeValues: {
+    };
+    if (status) {
+        options.FilterExpression = '#status = :status',
+        options.ExpressionAttributeNames = {
+            '#status': 'status'
+        },
+        options.ExpressionAttributeValues = {
+            ':pk': pk,
+            ':sk': 'EVENT#',
+            ':status': status
+        }
+    } else {
+        options.ExpressionAttributeValues = {
             ':pk': pk,
             ':sk': 'EVENT#'
         }
-    });
+    }
+    const command = new QueryCommand(options);
     try {
         const data = await documentClient.send(command);
-        logger.info(`QUERY command to database complete | eventDAO | findEventsByUser | data: ${JSON.stringify(data)}`);
+        logger.info(`QUERY command to database complete | eventDAO | findEventsByUser | data: ${JSON.stringify(data.Items)}`);
         return data.Items.length > 0 ? data.Items : null;
     } catch (err) { 
         logger.error(`Error in eventDAO | findEventsByUser | error: ${err}`);
