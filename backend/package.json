@@ -5,8 +5,8 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "test": "jest --collectCoverage",
-    "test:eventService": "jest --collectCoverage -- './backend/services/eventService.test.js'"
+    "test": "jest --collectCoverage --",
+    "test:eventService": "jest --collectCoverage -- './__test__/services/eventService.test.js'"
   },
   "keywords": [],
   "author": "",
