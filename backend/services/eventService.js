@@ -94,10 +94,17 @@ async function getEventsByUser(id) {
     }
 }
 
+async function updateEventStatusById(id) {
+    const data = await eventDAO.findEventById(id);
+
+    
+}
+
 
 module.exports = {
     postEvent,
     getAllEvents,
     getEventById,
     getEventsByUser,
+    updateEventStatusById,
 }
