@@ -13,7 +13,8 @@ jest.mock('../../repository/eventDAO', () => ({
     createEvent: jest.fn(),
     findAllEvents: jest.fn(),
     findEventById: jest.fn(),
-    findEventsByUser: jest.fn()
+    findEventsByUser: jest.fn(),
+    patchEventById: jest.fn()
 }));
 
 const eventDAO = require('../../repository/eventDAO');
@@ -410,7 +411,7 @@ describe('negative testing on getEventsByUser', () => {
         dummyId = '12345';
         dummyStatus ='';
         eventDAO.findEventsByUser.mockResolvedValue(null);
-        
+
         const result = await eventService.getEventsByUser(dummyId, dummyStatus);
 
         expect(eventDAO.findEventsByUser).toHaveBeenCalledWith('u#' + dummyId, dummyStatus);
@@ -418,3 +419,105 @@ describe('negative testing on getEventsByUser', () => {
         expect(result).toBe(null);
     });
 });
+
+describe('positive testing on patchEventsById', () => {
+
+        beforeEach(() => {
+        let dummyId = '';
+        let dummyPK = '';
+        let dummyEvent = {};
+        let dummyData = {};
+        jest.clearAllMocks();
+    });
+
+    it('should return the updated event item', async () => {
+        dummyEvent = {
+            'name': 'event1',
+            'description': 'description',
+            'date': 'right now!',
+            'location': 'right here!',
+            'pk': 'u#fa0s9d8f',
+        };
+        dummyData = {
+            "photos":[],
+            "date":"tonight!",
+            "location":"my place!",
+            "description":"some desc",
+            "name":"something"
+        };
+        dummyId = 'e12345';
+        dummyPK = 'dummyPk';
+
+        eventDAO.patchEventById.mockResolvedValue(dummyData);
+
+        const result = await eventService.patchEventById(dummyId, dummyPK, dummyEvent);
+
+        expect(eventDAO.patchEventById).toHaveBeenCalledWith(dummyId, dummyPK,dummyEvent);
+        expect(logger.logger.info).toHaveBeenCalled();
+        expect(result).toBe(dummyData);
+    });
+});
+
+describe('negative testing on patchEventById', () => {
+
+    beforeEach(() => {
+        let dummyId = '';
+        let dummyPK = '';
+        let dummyEvent = {};
+        jest.clearAllMocks();
+    });
+    it('should return null if no pk is obtained', async () => {
+        dummyEvent = {
+            'name': 'event1',
+            'description': 'description',
+            'date': 'right now!',
+            'location': 'right here!',
+        };
+        dummyId = 'e12345';
+        dummyPK = '';
+
+        eventDAO.patchEventById.mockResolvedValue(null);
+
+        const result = await eventService.patchEventById(dummyId, dummyPK, dummyEvent);
+
+        expect(eventDAO.patchEventById).toHaveBeenCalledWith(dummyId, dummyPK,dummyEvent);
+        expect(logger.logger.info).toHaveBeenCalled();
+        expect(result).toBe(null);
+    });
+    
+    it('should return null if event validation fails', async () => {
+        dummyEvent = {
+            'name': '',
+            'description': '',
+            'date': '',
+            'location': '',
+        };
+        dummyId = 'e12345';
+        dummyPK = 'dummyPK';
+
+        const result = await eventService.patchEventById(dummyId, dummyPK, dummyEvent);
+
+        expect(eventDAO.patchEventById).not.toHaveBeenCalled();
+        expect(logger.logger.info).toHaveBeenCalled();
+        expect(result).toBe(null);
+    });
+
+        it('should return null if the given event id is invalid', async () => {
+        dummyEvent = {
+            'name': 'event1',
+            'description': 'description',
+            'date': 'right now!',
+            'location': 'right here!',
+            'pk': 'u#fa0s9d8f',
+        };
+        dummyId = '12345';
+        dummyPK = 'dummyPK';
+
+
+        const result = await eventService.patchEventById(dummyId, dummyPK, dummyEvent);
+
+        expect(eventDAO.patchEventById).not.toHaveBeenCalled();
+        expect(logger.logger.info).toHaveBeenCalled();
+        expect(result).toBe(null);
+    });
+})

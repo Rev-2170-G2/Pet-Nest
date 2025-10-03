@@ -24,7 +24,7 @@ async function createEvent(event) {
     try {
         const data = await documentClient.send(command);
         logger.info(`PUT command to database complete | eventDAO | createEvent | data: ${JSON.stringify(data.Items)}`);
-        return data;
+        return data.Items;
     } catch (err) { 
         logger.error(`Error in eventDAO | createEvent | error: ${err}`);
         return null;
@@ -70,7 +70,7 @@ async function findEventById(id) {
     try {
         const data = await documentClient.send(command);
         logger.info(`QUERY command to database complete | eventDAO | findEventById | data: ${JSON.stringify(data.Items)}`);
-        return data;
+        return data.Items;
     } catch (err) {
         logger.error(`Error in eventDAO | findEventById | error: ${err}`);
         return null;
@@ -147,8 +147,8 @@ async function patchEventById(id, pk, event) {
 
     try {
         const data = documentClient.send(command);
-        logger.info(`UPDATE command to database complete | eventDAO | patchEventById | data: ${JSON.stringify(data)}`);
-        return data;
+        logger.info(`UPDATE command to database complete | eventDAO | patchEventById | data: ${JSON.stringify(data.Items)}`);
+        return data.Items;
     } catch (err) { 
         logger.error(`Error in eventDAO | patchEventById | error: ${JSON.stringify(err)}`);
         return null;

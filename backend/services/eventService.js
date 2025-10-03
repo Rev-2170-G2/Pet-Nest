@@ -117,6 +117,9 @@ async function patchEventById(id, pk, event) {
             logger.info(`Failed to patch event | eventService | patchEventById`);
             return null;
         }
+    } else { 
+        logger.info(`Given id is incorrect/invalid or event validation failed`);
+        return null;
     }
 }
 
