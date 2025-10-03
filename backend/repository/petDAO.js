@@ -1,12 +1,12 @@
 require("dotenv").config();
 const { DynamoDBClient} = require("@aws-sdk/client-dynamodb");
-const { DynamoDBDocumentClient, PutCommand, UpdateCommand, DeleteCommand} = require("@aws-sdk/lib-dynamodb")
+const { DynamoDBDocumentClient, PutCommand, UpdateCommand, DeleteCommand, GetCommand} = require("@aws-sdk/lib-dynamodb")
 const {logger} = require('../util/logger');
 
 const client = new DynamoDBClient({region: "us-east-1"});
 const documentClient = DynamoDBDocumentClient.from(client);
 
-const TableName = process.env.TableName || 'pet_nest';
+const TableName = process.env.TableName || 'PetNest';
 
 // link userId with new pet
 async function createPet(userId, pet){
@@ -88,8 +88,25 @@ async function deletePet(userId, petId){
     }
 }
 
+// helper to get a single pet; assists in creating offers
+async function getPetById(ownerId, petId) {
+    const command = new GetCommand({
+        TableName,
+        Key: {PK: ownerId, SK: `PET#${petId}`}
+    });
+
+    try {
+        const {Item} = await documentClient.send(command);
+        return Item || null;
+    } catch (err) {
+        logger.error(`Error fetching pet ${petId} for owner ${ownerId}: ${err}`);
+        return null;
+    }
+}
+
 module.exports = {
     createPet,
     updatePet,
-    deletePet
+    deletePet,
+    getPetById
 }

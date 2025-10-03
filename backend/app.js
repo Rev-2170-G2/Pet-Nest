@@ -6,6 +6,7 @@ const { authenticateToken } = require('./util/jwt');
 const userRoutes = require('./routes/api/userRoutes');
 const petRoutes = require('./routes/api/petRoutes');
 const eventRoutes = require('./routes/api/eventRoutes');
+const offerRoutes = require('./routes/api/offerRoutes');
 
 const app = express();
 
@@ -16,6 +17,7 @@ app.use(loggerMiddleware);
 app.use('/api/users', userRoutes);
 app.use('/api/pets', authenticateToken, petRoutes);
 app.use('/api/events', authenticateToken, eventRoutes);
+app.use('/api/offers', offerRoutes);
 
 app.get('/', (req, res) => { 
     res.send('Home Page');

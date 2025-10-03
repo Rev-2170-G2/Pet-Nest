@@ -65,6 +65,7 @@ async function login (req, res) {
  * @param {JSON} res object to be manipulated and sent back to client
  */
 async function DeleteOwnAccount(req, res) {
+    logger.info({message: `Incoming userController DeleteOwnAccount request: ${JSON.stringify(req.body)}`});
     const userId = req.user.id;
 
     const result = await userService.removeUser(userId, req.user);
@@ -87,6 +88,7 @@ async function DeleteOwnAccount(req, res) {
  * @param {JSON} res object to be manipulated and sent back to client
  */
 async function DeleteUserAsAdmin(req, res) {
+    logger.info({message: `Incoming userController DeleteUserAsAdmin request: ${JSON.stringify(req.body)}`});
     const requester = req.user;
     const targetUserId = req.params.id;
 
