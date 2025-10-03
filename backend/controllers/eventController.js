@@ -79,8 +79,10 @@ async function GetEventsByUser(req, res) {
  */
 async function PatchEventById(req, res) { 
     const event = req.body;
-    const id = req.params.id;
-    const pk = req.user.id;
+    // const id = req.params.id;
+    // const pk = req.user.id;
+    const id = 'e8sBH_';
+    const pk = 'u#xbNX9';
     const data = await eventService.patchEventById(id, pk, event);
     if (data) {
         res.status(200).json({message: 'Event patched', data});
