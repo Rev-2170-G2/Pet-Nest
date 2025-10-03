@@ -90,7 +90,6 @@ async function getEventById(id) {
  */
 async function getEventsByUser(id, status) {
     const pk = 'u#' + id;
-    const options = {}
     const data = await eventDAO.findEventsByUser(pk, status);
     if (data) {
         logger.info(`Events found | eventService | getEventsByUser | data: ${JSON.stringify(data)}`);

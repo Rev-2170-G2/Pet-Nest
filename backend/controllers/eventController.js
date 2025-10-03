@@ -62,7 +62,7 @@ async function GetEventById(req, res) {
  */
 async function GetEventsByUser(req, res) {
     const id = req.params.id;
-    const status = req.query.status ? req.query.status : null;
+    const status = req.query.status && typeof req.query.status == 'string' ? req.query.status : null;
     const data = await eventService.getEventsByUser(id, status);
     if (data) {
         res.status(200).json({message: 'Events found ', data});
