@@ -24,20 +24,21 @@ describe("removeUser testing", () => {
 
     test("should delete normal user successfully", async () => {
         userDAO.getUserItems.mockResolvedValue(normalUserItems);
-        userDAO.deleteUser.mockResolvedValue({success: true, message: "Deleted"});
+        userDAO.deleteUser.mockResolvedValue(true);
 
-        const result = await userService.removeUser("u#user1", requesterUser);
-        expect(result).toEqual({success: true, message: "Deleted"});
+        const result = await userService.removeUser("u#user1", requesterAdmin);
+
+        expect(result).toBe(true);
         expect(userDAO.getUserItems).toHaveBeenCalledWith("u#user1");
         expect(userDAO.deleteUser).toHaveBeenCalledWith("u#user1");
     });
 
     test("should allow admin to delete normal user", async () => {
         userDAO.getUserItems.mockResolvedValue(normalUserItems);
-        userDAO.deleteUser.mockResolvedValue({success: true, message: "Deleted"});
+        userDAO.deleteUser.mockResolvedValue(true);
 
         const result = await userService.removeUser("u#user1", requesterAdmin);
-        expect(result.success).toBe(true);
+        expect(result).toBe(true);
         expect(userDAO.deleteUser).toHaveBeenCalledWith("u#user1");
     });
 
@@ -46,10 +47,11 @@ describe("removeUser testing", () => {
         {PK: "u#admin1", SK: "USER#admin1", admin: true},
         ];
         userDAO.getUserItems.mockResolvedValue(adminSelfItems);
-        userDAO.deleteUser.mockResolvedValue({success: true, message: "Deleted"});
+        userDAO.deleteUser.mockResolvedValue(true);
 
         const result = await userService.removeUser("u#admin1", requesterAdmin);
-        expect(result.success).toBe(true);
+
+        expect(result).toBe(true);
         expect(userDAO.deleteUser).toHaveBeenCalledWith("u#admin1");
     });
 
@@ -57,7 +59,8 @@ describe("removeUser testing", () => {
         userDAO.getUserItems.mockResolvedValue(adminUserItems);
 
         const result = await userService.removeUser("u#admin2", requesterAdmin);
-        expect(result).toEqual({success: false, message: "Admins cannot be deleted."});
+
+        expect(result).toBe(false);
         expect(userDAO.deleteUser).not.toHaveBeenCalled();
     });
 
@@ -65,7 +68,8 @@ describe("removeUser testing", () => {
         userDAO.getUserItems.mockResolvedValue([]);
 
         const result = await userService.removeUser("u#user", requesterUser);
-        expect(result).toEqual({success: false, message: "User not found."});
+
+        expect(result).toBeNull();
         expect(userDAO.deleteUser).not.toHaveBeenCalled();
     });
 
@@ -73,6 +77,7 @@ describe("removeUser testing", () => {
         userDAO.getUserItems.mockRejectedValue(new Error("Database failure"));
 
         const result = await userService.removeUser("u#user1", requesterUser);
-        expect(result).toEqual({success: false, message: "Internal server error."});
+
+        expect(result).toBe(false);
     });
 });

@@ -5,7 +5,7 @@ const { logger } = require("../util/logger");
 
 const client = new DynamoDBClient({region: 'us-east-1'});
 const ddbDocClient = DynamoDBDocumentClient.from(client);
-const TableName = process.env.TableName || "pet_nest";
+const TableName = process.env.TableName || "PetNest";
 
 /**
  * should persist an event to the database
@@ -66,11 +66,16 @@ async function getUserItems(pk) {
     const queryCommand = new QueryCommand({
         TableName,
         KeyConditionExpression: "PK = :pk",
-        ExpressionAttributeValues: { ":pk": pk },
+        ExpressionAttributeValues: {":pk": pk},
     });
 
-    const {Items} = await ddbDocClient.send(queryCommand);
-    return Items || [];
+    try {
+        const {Items} = await ddbDocClient.send(queryCommand);
+        return Items || [];
+    } catch (err) {
+        logger.error(`Error fetching items for ${pk}: ${err}`);
+        return [];
+    }
 }
 
 /**
@@ -81,29 +86,29 @@ async function getUserItems(pk) {
  * @returns the metadata object confirming success
  */
 async function deleteUser(pk) {
-    try {
-        const items = await getUserItems(pk);
-        if (!items || items.length === 0) {
-            return {success: false, message: "User not found."};
-        }
-
-        const deleteRequests = items.map(item => ({
-            DeleteRequest: {Key: {PK: item.PK, SK: item.SK}}
-        }));
-
-        for (let i = 0; i < deleteRequests.length; i += 25) {
-            const batch = deleteRequests.slice(i, i + 25);
-            await ddbDocClient.send(new BatchWriteCommand({
-                RequestItems: {[TableName]: batch}
-            }));
-        }
-
-        logger.info(`Deleted user ${pk}`);
-        return {success: true, message: `User ${pk} deleted.`};
-    } catch (err) {
-        logger.error(`Failed to delete user ${pk}: ${err}`);
-        return {success: false, message: "Internal server error."};
+  try {
+    const items = await getUserItems(pk);
+    if (items.length === 0) {
+      return null;
     }
+
+    const deleteRequests = items.map(item => ({
+      DeleteRequest: {Key: {PK: item.PK, SK: item.SK}}
+    }));
+
+    for (let i = 0; i < deleteRequests.length; i += 25) {
+      const batch = deleteRequests.slice(i, i + 25);
+      await ddbDocClient.send(new BatchWriteCommand({
+        RequestItems: {[TableName]: batch}
+      }));
+    }
+
+    logger.info(`Deleted user ${pk}`);
+    return true;
+  } catch (err) {
+    logger.error(`Failed to delete user ${pk}: ${err}`);
+    return false;
+  }
 }
 
 module.exports = {
