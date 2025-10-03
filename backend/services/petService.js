@@ -46,8 +46,19 @@ async function deletePet(userId, petId) {
     return null;
 }
 
+async function getAllPetServices(){
+    const data = await petDAO.getAllPetServices();
+    if(data){
+        logger.info(`(petService) Pet services found: ${JSON.stringify(data)}`);
+        return data;
+    }
+    logger.info(`(petService) No pet services found.`);
+    return null;
+}
+
 module.exports = {
     createPet,
     updatePet,
-    deletePet
+    deletePet,
+    getAllPetServices
 }
