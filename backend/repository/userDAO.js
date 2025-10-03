@@ -1,3 +1,4 @@
+require("dotenv").config();
 const { DynamoDBClient } = require("@aws-sdk/client-dynamodb");
 const { DynamoDBDocumentClient, PutCommand, ScanCommand, QueryCommand, BatchWriteCommand } = require("@aws-sdk/lib-dynamodb");
 const { logger } = require("../util/logger");
@@ -6,6 +7,13 @@ const client = new DynamoDBClient({region: 'us-east-1'});
 const ddbDocClient = DynamoDBDocumentClient.from(client);
 const TableName = process.env.TableName || "pet_nest";
 
+/**
+ * should persist an event to the database
+ *
+ * takes in the user object from userService
+ * @param {JSON} user object to persist
+ * @returns the metadata object confirming success or null
+ */
 async function registerUser (user) {
     const command = new PutCommand({
         TableName, 
@@ -22,6 +30,13 @@ async function registerUser (user) {
     return null;
 }
 
+/**
+ * retrieves a user object from the database
+ *
+ * takes in the username from userService
+ * @param {JSON} username string to get a user
+ * @returns the persisted data or null
+ */
 const getUserByUsername = async (username) => {
     const command = new ScanCommand({
         TableName,
@@ -40,6 +55,13 @@ const getUserByUsername = async (username) => {
     return null; 
 }
 
+/**
+ * retrieves a list with a matching user item the database
+ *
+ * takes in the PK from userService
+ * @param {JSON} PK string to get a list of user items 
+ * @returns the persisted data or empty array
+ */
 async function getUserItems(pk) {
     const queryCommand = new QueryCommand({
         TableName,
@@ -51,6 +73,13 @@ async function getUserItems(pk) {
     return Items || [];
 }
 
+/**
+ * deletes a user object from the database
+ *
+ * takes in the PK from userService
+ * @param {JSON} PK string to get a list of user items 
+ * @returns the metadata object confirming success
+ */
 async function deleteUser(pk) {
     try {
         const items = await getUserItems(pk);
