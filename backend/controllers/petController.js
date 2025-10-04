@@ -40,8 +40,19 @@ const deletePet = async (req, res) => {
     return res.status(400).json({message: "Unable to remove pet: ", data: petId});
 }
 
+const getAllPetServices = async (req, res) => {
+    logger.info({message: `Incoming petController getAllPetServices request`});
+
+    const data = await petService.getAllPetServices();
+    if(data){
+        return res.status(200).json({ message: "Pet Services found", data });
+    }
+    return res.status(400).json({message: "No pet services found"});
+}
+
 module.exports = {
     createPet,
     updatePet,
-    deletePet
+    deletePet,
+    getAllPetServices
 }
