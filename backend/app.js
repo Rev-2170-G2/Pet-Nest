@@ -17,7 +17,7 @@ app.use(loggerMiddleware);
 app.use('/api/users', userRoutes);
 app.use('/api/pets', authenticateToken, petRoutes);
 app.use('/api/events', authenticateToken, eventRoutes);
-app.use('/api/offers', offerRoutes);
+app.use('/api/offers', authenticateToken, offerRoutes);
 
 app.get('/', (req, res) => { 
     res.send('Home Page');

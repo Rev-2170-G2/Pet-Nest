@@ -29,7 +29,9 @@ async function postEvent(event) {
             location: event.location,
             date: event.date,
             photos: photos,
-            status: status
+            status: status,
+            offersSent: [],
+            offersReceived: []
         });
         if (data) { 
             logger.info(`Creating new event | eventService | postEvent | data: ${data}`);
