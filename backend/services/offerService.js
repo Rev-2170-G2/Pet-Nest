@@ -2,48 +2,89 @@ const offerDAO = require("../repository/offerDAO");
 const { nanoid } = require("nanoid");
 const { logger } = require("../util/logger");
 
-async function createOffer(body, requesterId) {
-    const {requested, requestedOwnerId, services, description} = body;
+const PREFIXES = { PET: "PET#", EVENT: "EVENT#", USER: "USER#" };
 
-    if (!requested || !requestedOwnerId || !Array.isArray(services) || services.length === 0) {
-        logger.info("Missing or invalid fields in offer creation.");
+async function createOffer(body, loggedInUserPK) {
+    const { requesterType, requesterId, requestedType, requestedId, requestedOwnerId, services, description } = body;
+
+    if (!requesterType || !requesterId || !requestedType || !requestedId || !requestedOwnerId || !Array.isArray(services) || services.length === 0) {
+        logger.info("Invalid offer body format:", body);
         return null;
     }
 
-    const offer = {
+    const requesterPK = loggedInUserPK;
+    const requesterSK = PREFIXES[requesterType.toUpperCase()] + requesterId;
+    const requestedPK = requestedOwnerId.startsWith("u#") ? requestedOwnerId : `u#${requestedOwnerId}`;
+    const requestedSK = PREFIXES[requestedType.toUpperCase()] + requestedId;
+
+    const requesterEntity = await offerDAO.getEntity(requesterPK, requesterSK);
+    if (!requesterEntity) {
+        logger.info(`Requester entity ${requesterSK} does not belong to user ${loggedInUserPK}`);
+        return null;
+    }
+
+    const requestedEntity = await offerDAO.getEntity(requestedPK, requestedSK);
+    if (!requestedEntity) {
+        logger.info(`Requested entity ${requestedSK} does not exist for owner ${requestedPK}`);
+        return null;
+    }
+
+    const newOffer = {
         id: nanoid(5),
-        requester: requesterId,
-        requested,
+        requesterPK,
+        requesterSK,
+        requestedPK,
+        requestedSK,
         services,
         description,
         status: "pending",
         createdAt: new Date().toISOString()
     };
 
-    try {
-        await offerDAO.addOffer(requestedOwnerId, requested, offer);
-        logger.info(`Offer ${offer.id} added to ${requested}`);
-        return offer;
-    } catch (err) {
-        logger.error(`Failed to create offer: ${err}`);
-        return null;
-    }
+    const added = await offerDAO.addOffer(requestedPK, requestedSK, newOffer);
+    if (!added) return null;
+
+    logger.info(`Offer ${newOffer.id} created from ${requesterSK} to ${requestedSK}`);
+    return newOffer;
 }
 
 async function deleteOffer(senderId, ownerId, entityId, offerId) {
     const PK = `u#${ownerId}`;
-    const updatedEntity = await offerDAO.removeOfferBySender(PK, entityId, offerId, senderId);
-
-    if (!updatedEntity) {
-        logger.info(`User ${senderId} attempted to delete offer ${offerId} for owner ${PK} - not allowed`);
-        return null;
+    const entityType = ["PET#", "EVENT#"];
+    for (const prefix of entityType) {
+        const SK = prefix + entityId;
+        const deleted = await offerDAO.removeOfferBySender(PK, SK, offerId, senderId);
+        if (deleted) return deleted;
     }
+    return null;
+}
 
-    logger.info(`Offer ${offerId} deleted by sender ${senderId}`);
-    return updatedEntity;
+async function getOffersForEntity(ownerId, entityId) {
+    try {
+        const prefixes = ["PET#", "EVENT#"];
+        for (const prefix of prefixes) {
+            const offers = await offerDAO.getOffersByEntity(ownerId, prefix + entityId);
+            if (offers) return offers;
+        }
+        return [];
+    } catch (err) {
+        logger.error(`Error fetching offers for entity ${entityId}: ${err}`);
+        return [];
+    }
+}
+
+async function getOffersSentByUser(userId) {
+    try {
+        return await offerDAO.getOffersSentByUser(userId);
+    } catch (err) {
+        logger.error(`Error fetching offers sent by user ${userId}: ${err}`);
+        return [];
+    }
 }
 
 module.exports = {
     createOffer,
-    deleteOffer
+    deleteOffer,
+    getOffersForEntity,
+    getOffersSentByUser
 };

@@ -1,65 +1,101 @@
 require("dotenv").config();
 const { DynamoDBClient } = require("@aws-sdk/client-dynamodb");
-const { DynamoDBDocumentClient, UpdateCommand, ScanCommand, GetCommand } = require("@aws-sdk/lib-dynamodb");
+const { DynamoDBDocumentClient, UpdateCommand, ScanCommand, GetCommand, QueryCommand } = require("@aws-sdk/lib-dynamodb");
 const { logger } = require("../util/logger");
 
 const client = new DynamoDBClient({region: 'us-east-1'});
 const documentClient = DynamoDBDocumentClient.from(client);
 
-const TableName = process.env.TableName || 'PetNest';
+const TableName = process.env.TableName || 'pet_nest';
 
-async function addOffer(ownerId, entityId, offer) {
-    const command = new UpdateCommand({
-        TableName,
-        Key: { PK: ownerId, SK: entityId },
-        UpdateExpression: "SET offers = list_append(if_not_exists(offers, :emptyList), :newOffer)",
-        ExpressionAttributeValues: {
-            ":newOffer": [offer],
-            ":emptyList": []
-        },
-        ReturnValues: "ALL_NEW"
-    });
+async function addOffer(PK, SK, offer) {
+    try {
+        const command = new UpdateCommand({
+            TableName,
+            Key: { PK, SK },
+            UpdateExpression: "SET offers = list_append(if_not_exists(offers, :emptyList), :newOffer)",
+            ExpressionAttributeValues: {
+                ":newOffer": [offer],
+                ":emptyList": []
+            },
+            ReturnValues: "ALL_NEW"
+        });
 
-    const data = await documentClient.send(command);
-    return data.Attributes;
+        const data = await documentClient.send(command);
+        return data.Attributes;
+    } catch (err) {
+        logger.error("Error adding offer:", err);
+        return null;
+    }
 }
 
-async function removeOfferBySender(PK, entityId, offerId, senderId) {
-    const prefixes = ['PET#', 'EVENT#'];
-    let entity = null;
-    let SK = null;
+async function removeOfferBySender(PK, SK, offerId, senderPK) {
+    try {
+        const data = await documentClient.send(new GetCommand({ TableName, Key: { PK, SK } }));
+        if (!data.Item || !Array.isArray(data.Item.offers)) return null;
 
-    for (const prefix of prefixes) {
-        const skCandidate = `${prefix}${entityId}`;
-        const data = await documentClient.send(new GetCommand({ TableName, Key: { PK, SK: skCandidate } }));
-        if (data.Item) {
-            entity = data.Item;
-            SK = skCandidate;
-            break;
-        }
+        const exists = data.Item.offers.some(o => o.id === offerId && o.requesterPK === senderPK);
+        if (!exists) return null;
+
+        const filteredOffers = data.Item.offers.filter(o => o.id !== offerId);
+        const updateCommand = new UpdateCommand({
+            TableName,
+            Key: { PK, SK },
+            UpdateExpression: "SET offers = :offers",
+            ExpressionAttributeValues: { ":offers": filteredOffers },
+            ReturnValues: "ALL_NEW"
+        });
+
+        const updated = await documentClient.send(updateCommand);
+        return updated.Attributes;
+    } catch (err) {
+        logger.error("Error removing offer:", err);
+        return null;
     }
+}
 
-    if (!entity || !entity.offers || !Array.isArray(entity.offers)) return null;
+async function getOffersByEntity(PK, SK) {
+    try {
+        const data = await documentClient.send(new GetCommand({ TableName, Key: { PK, SK } }));
+        return data.Item?.offers ?? [];
+    } catch (err) {
+        logger.error("Error fetching offers for entity:", err);
+        return [];
+    }
+}
 
-    const offerExists = entity.offers.some(o => o.id === offerId && o.requester === senderId);
-    if (!offerExists) return null;
+async function getOffersSentByUser(userId) {
+    try {
+        const data = await documentClient.send(new ScanCommand({ TableName }));
+        const offersSent = [];
+        data.Items.forEach(item => {
+            if (Array.isArray(item.offers)) {
+                item.offers.forEach(o => {
+                    if (o.requesterPK === userId) offersSent.push({ ...o, entityId: item.SK });
+                });
+            }
+        });
+        return offersSent;
+    } catch (err) {
+        logger.error("Error fetching offers sent by user:", err);
+        return [];
+    }
+}
 
-    const filteredOffers = entity.offers.filter(o => o.id !== offerId);
-
-    const updateCommand = new UpdateCommand({
-        TableName,
-        Key: { PK, SK },
-        UpdateExpression: "SET offers = :offers",
-        ExpressionAttributeValues: { ":offers": filteredOffers },
-        ReturnValues: "ALL_NEW"
-    });
-
-    const updated = await documentClient.send(updateCommand);
-    logger.info(`Offer ${offerId} removed from ${SK} by sender ${senderId}`);
-    return updated.Attributes;
+async function getEntity(PK, SK) {
+    try {
+        const data = await documentClient.send(new GetCommand({ TableName, Key: { PK, SK } }));
+        return data.Item ?? null;
+    } catch (err) {
+        logger.error("Error fetching entity:", err);
+        return null;
+    }
 }
 
 module.exports = {
     addOffer,
-    removeOfferBySender
+    removeOfferBySender,
+    getOffersByEntity,
+    getOffersSentByUser,
+    getEntity
 };

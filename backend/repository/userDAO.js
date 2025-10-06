@@ -5,7 +5,7 @@ const { logger } = require("../util/logger");
 
 const client = new DynamoDBClient({region: 'us-east-1'});
 const ddbDocClient = DynamoDBDocumentClient.from(client);
-const TableName = process.env.TableName || "PetNest";
+const TableName = process.env.TableName || "pet_nest";
 
 /**
  * should persist an event to the database

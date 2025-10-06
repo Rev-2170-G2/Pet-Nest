@@ -18,8 +18,7 @@ async function createPet(userId, pet){
             description: pet.description,
             photos: pet.images ?? null,
             location: pet.location ?? null,
-            offersSent: [],
-            offersReceived: []
+            offers: []
 
         })
         logger.info(`${userId} added new pet: ${JSON.stringify(data)}`);
