@@ -60,17 +60,15 @@ async function deleteOffer(senderId, ownerId, entityId, offerId) {
 }
 
 async function getOffersForEntity(ownerId, entityId) {
-    try {
-        const prefixes = ["PET#", "EVENT#"];
-        for (const prefix of prefixes) {
-            const offers = await offerDAO.getOffersByEntity(ownerId, prefix + entityId);
-            if (offers) return offers;
-        }
-        return [];
-    } catch (err) {
-        logger.error(`Error fetching offers for entity ${entityId}: ${err}`);
-        return [];
-    }
+    const PK = `u#${ownerId}`;
+    
+    const petOffers = await offerDAO.getOffersByEntity(PK, `PET#${entityId}`);
+    if (petOffers.length > 0) return petOffers;
+
+    const eventOffers = await offerDAO.getOffersByEntity(PK, `EVENT#${entityId}`);
+    if (eventOffers.length > 0) return eventOffers;
+
+    return [];
 }
 
 async function getOffersSentByUser(userId) {

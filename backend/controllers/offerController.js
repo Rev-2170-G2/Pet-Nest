@@ -32,17 +32,23 @@ async function deleteOffer(req, res) {
     }
 }
 
-async function getOffersForEntity(req, res) {
-    const { ownerId, entityId } = req.params;
-
+const getOffersForEntity = async (req, res) => {
     try {
+        const loggedInUserId = req.user.id;
+        const ownerId = req.params.ownerId;
+        const entityId = req.params.entityId;
+
+        if (loggedInUserId.split('#')[1] !== ownerId) {
+            return res.status(403).json({ message: "Forbidden: you cannot view these offers." });
+        }
+
         const offers = await offerService.getOffersForEntity(ownerId, entityId);
         return res.status(200).json({ offers });
     } catch (err) {
         logger.error(`Error in getOffersForEntity: ${err}`);
-        return res.status(500).json({ message: "Server error" });
+        return res.status(500).json({ message: "Server error." });
     }
-}
+};
 
 async function getOffersSentByUser(req, res) {
     const userId = req.user.id;
