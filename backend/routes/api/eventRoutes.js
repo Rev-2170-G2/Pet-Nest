@@ -6,7 +6,7 @@ const eventController = require('../../controllers/eventController');
 
 router.post('/', authenticateToken, eventController.PostEvent);
 
-router.get('/user', eventController.GetEventsByUser); 
+router.get('/user/:id', eventController.GetEventsByUser); 
 
 router.get('/:id', eventController.GetEventById);
 
