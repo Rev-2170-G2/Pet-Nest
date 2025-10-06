@@ -28,7 +28,7 @@ describe('petService createPet', () => {
         dummyPet = {
             type: 'dog',
             name: 'Rex',
-            services: ['walking'],
+            services: [{ service: 'walking', price: 20 }],
             description: 'friendly dog',
             images: ['img1.jpg'],
             location: 'NYC'
@@ -68,13 +68,13 @@ describe('petService updatePet', () => {
 
     beforeEach(() => {
         jest.clearAllMocks();
-        updates = { location: 'LA', photos: ['img2.jpg'], services: ['grooming'] };
+        updates = { location: 'LA', photos: ['img2.jpg'], services: [{ service: 'grooming', price: 30 }] };
         dbUpdates = {
             expression: 'SET #location = :location, #photos = :photos, #services = :services',
             names: { '#location': 'location', '#photos': 'photos', '#services': 'services' },
-            values: { ':location': 'LA', ':photos': ['img2.jpg'], ':services': ['grooming'] }
-        };
-    });
+            values: { ':location': 'LA', ':photos': ['img2.jpg'], ':services': [{ service: 'grooming', price: 30 }]}
+        }
+        });
 
     it('should update a pet successfully', async () => {
         petDAO.updatePet.mockResolvedValue(dbUpdates);
@@ -118,4 +118,34 @@ describe('petService deletePet', () => {
         const result = await petService.deletePet('u#abc123', 'pet123');
         expect(result).toBeNull();
     });
+
+describe('petService getAllPetServices', () => { 
+    beforeEach(() => {
+        jest.clearAllMocks();
+    });
+
+    it('should return pet services when DAO returns data', async () => {
+        const dummyData = [
+            { service: 'walking', price: 20 },
+            { service: 'grooming', price: 30 }
+        ];
+        petDAO.getAllPetServices = jest.fn().mockResolvedValue(dummyData);
+
+        const result = await petService.getAllPetServices();
+
+        expect(petDAO.getAllPetServices).toHaveBeenCalled();
+        expect(logger.info).toHaveBeenCalledWith(`(petService) Pet services found: ${JSON.stringify(dummyData)}`);
+        expect(result).toBe(dummyData);
+    });
+
+    it('should return null when DAO returns null', async () => {
+        petDAO.getAllPetServices = jest.fn().mockResolvedValue(null);
+
+        const result = await petService.getAllPetServices();
+
+        expect(petDAO.getAllPetServices).toHaveBeenCalled();
+        expect(logger.info).toHaveBeenCalledWith(`(petService) No pet services found.`);
+        expect(result).toBeNull();
+    });
+});
 });
