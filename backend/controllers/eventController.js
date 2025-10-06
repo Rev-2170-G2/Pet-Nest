@@ -110,11 +110,36 @@ async function DeleteEventById(req, res) {
     }
 }
 
+/**
+ * should call the service layer method for updating a single event status
+ * 
+ * @param {JSON} req object containing the id to be parsed
+ * @param {JSON} res object to be manipulated and sent back to client
+ */
+async function UpdateEventStatusById(req, res){
+    const eventId = req.params.id;
+    const { status } = req.body;
+    const isAdmin = req.user?.admin === "true" || req.user?.admin === true;
+
+    if (!isAdmin) {
+        res.status(400).json({message: "Only administrators can update event status."});
+    } else {
+        const data = await eventService.updateEventStatusById(eventId, status);
+        if (data){
+            res.status(200).json({message: "Event status updated", data});
+        } else {
+            res.status(400).json({message: "No events found"})
+        }
+    }
+}
+
+
 module.exports = {
     PostEvent,
     GetAllEvents,
     GetEventById,
     GetEventsByUser,
     PatchEventById,
-    DeleteEventById
+    DeleteEventById,
+    UpdateEventStatusById,
 }

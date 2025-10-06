@@ -101,28 +101,6 @@ async function getEventsByUser(id, status) {
 }
 
 /**
- * should call the DAO method for updating status of event (approved/denied)
- * 
- * @param {string} PK of event with which to query 
- * @param {string} SK of event with which to query  
- * @param {string} status with which to update attribute
- * @returns the retrieved data or null
- */
-async function updateEventStatusById(eventId, status) {
-    const event = await getEventById(eventId);
-    const data = await eventDAO.updateTicketStatusById(event.Items[0].PK, event.Items[0].SK, status);
-
-    if (data) {
-        logger.info(`Event found | eventService | updateEventStatusById | data: ${data}`);
-        return data;
-    } else { 
-        logger.info(`Failed to find any event | eventService | updateEventStatusById`);
-        return null;
-    }
-    
-}
-
-/**
  * should call the DAO method for patching an event by it's id
  * 
  * @param {string} id 
@@ -170,12 +148,34 @@ async function deleteEventById (id, pk) {
     }
 }
 
+/**
+ * should call the DAO method for updating status of event (approved/denied)
+ * 
+ * @param {string} PK of event with which to query 
+ * @param {string} SK of event with which to query  
+ * @param {string} status with which to update attribute
+ * @returns the retrieved data or null
+ */
+async function updateEventStatusById(eventId, status) {
+    const event = await eventDAO.findEventById(eventId);
+    const data = await eventDAO.updateTicketStatusById(event[0].PK, event[0].SK, status);
+
+    if (data) {
+        logger.info(`Event found | eventService | updateEventStatusById | data: ${data}`);
+        return data;
+    } else { 
+        logger.info(`Failed to find any event | eventService | updateEventStatusById`);
+        return null;
+    }
+    
+}
+
 module.exports = {
     postEvent,
     getAllEvents,
     getEventById,
     getEventsByUser,
     patchEventById,
-    deleteEventById
+    deleteEventById,
     updateEventStatusById,
 }

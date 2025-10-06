@@ -218,6 +218,6 @@ module.exports = {
     findEventById,
     findEventsByUser,
     patchEventById,
-    removeEventById
+    removeEventById,
     updateTicketStatusById,
 }

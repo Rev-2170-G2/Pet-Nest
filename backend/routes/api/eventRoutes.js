@@ -12,7 +12,7 @@ router.get('/:id', eventController.GetEventById);
 
 router.get('/', eventController.GetAllEvents);
 
-router.patch('/admins/:id', eventController.UpdateEventStatusById);
+router.patch('/admin/:id', authenticateToken, eventController.UpdateEventStatusById);
 
 router.patch('/:id', authenticateToken, eventController.PatchEventById);
 
