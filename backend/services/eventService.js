@@ -157,17 +157,26 @@ async function deleteEventById (id, pk) {
  * @returns the retrieved data or null
  */
 async function updateEventStatusById(eventId, status) {
-    const event = await eventDAO.findEventById(eventId);
-    const data = await eventDAO.updateTicketStatusById(event[0].PK, event[0].SK, status);
+    try {
+        const event = await eventDAO.findEventById(eventId);
 
-    if (data) {
-        logger.info(`Event found | eventService | updateEventStatusById | data: ${data}`);
-        return data;
-    } else { 
-        logger.info(`Failed to find any event | eventService | updateEventStatusById`);
+        if (!event || event.length === 0) {
+            logger.info(`No event found with ID: ${eventId} | eventService | updateEventStatusById`); 
+            return null;         
+        }
+
+        const data = await eventDAO.updateTicketStatusById(event[0].PK, event[0].SK, status);  
+        if (data) {
+            logger.info(`Event found | eventService | updateEventStatusById | data: ${data}`);
+            return data;
+        } else { 
+            logger.info(`Failed to find any event | eventService | updateEventStatusById`);
+            return null;
+        }      
+    } catch (error) {
+        logger.info(`Error updating event status | eventService | updateEventStatusById | eventId: ${eventId} | error: ${error}`);
         return null;
-    }
-    
+    } 
 }
 
 module.exports = {
