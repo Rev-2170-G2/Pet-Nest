@@ -1,6 +1,6 @@
 require("dotenv").config();
 const { DynamoDBClient} = require("@aws-sdk/client-dynamodb");
-const { DynamoDBDocumentClient, PutCommand, UpdateCommand, DeleteCommand} = require("@aws-sdk/lib-dynamodb")
+const { DynamoDBDocumentClient, PutCommand, UpdateCommand, DeleteCommand, ScanCommand} = require("@aws-sdk/lib-dynamodb")
 const {logger} = require('../util/logger');
 
 const client = new DynamoDBClient({region: "us-east-1"});
@@ -88,8 +88,34 @@ async function deletePet(userId, petId){
     }
 }
 
+// allows guests to view ALL available pet services
+async function getAllPetServices(){
+    const command = new ScanCommand({
+        TableName,
+        FilterExpression: "begins_with(SK, :pet)",
+        ExpressionAttributeValues: {
+            ":pet": "PET#"
+        }
+    })
+
+    try{
+        const data = await documentClient.send(command);
+        if(data){
+            logger.info(`(petDAO) Pet services found`);
+        }else{
+            logger.info(`(petDAO) No pet services found`);
+        }
+        return data;
+    }
+    catch(error){
+        console.log(error);
+        return null;
+    }
+}
+
 module.exports = {
     createPet,
     updatePet,
-    deletePet
+    deletePet,
+    getAllPetServices
 }

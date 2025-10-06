@@ -15,9 +15,13 @@ function buildPetUpdates({ location, photos, services }) {
         values[":photos"] = photos;
     }
     if (services !== undefined) {
+        const mappedServices = services.map(s => ({
+            service: s.service,
+            price: s.price
+        }));
         expressionParts.push("#services = :services");
         names["#services"] = "services";
-        values[":services"] = services;
+        values[":services"] = mappedServices;
     }
 
     if (!expressionParts.length) return null;

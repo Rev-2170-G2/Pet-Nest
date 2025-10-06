@@ -12,13 +12,13 @@ const { validateEvent } = require('../util/eventValidation');
  * @returns the persisted data or null
  */
 async function postEvent(event) {
-    const id = nanoid(5);
-    const entity = 'EVENT';
-    const PK = event.pk;
-    const SK = entity + '#' + id;
-    const photos = !event.photos ? [] : event.photos;
-    const status = 'pending'; // all events should be set to pending upon creation
     if (validateEvent(event)) {
+        const id = 'e' + nanoid(5);
+        const entity = 'EVENT';
+        const PK = event.pk;
+        const SK = entity + '#' + id;
+        const photos = !event.photos ? [] : event.photos;
+        const status = 'pending'; // all events should be set to pending upon creation
         const data = await eventDAO.createEvent({
             PK,
             SK,
@@ -32,7 +32,7 @@ async function postEvent(event) {
             status: status
         });
         if (data) { 
-            logger.info(`Creating new event | eventService | postEvent | data: ${data}`);
+            logger.info(`Creating new event | eventService | postEvent | data: ${JSON.stringify(data)}`);
             return data;
         } else { 
             logger.info(`Failed to create event | eventService | postEvent`);
@@ -52,7 +52,7 @@ async function postEvent(event) {
 async function getAllEvents() {
     const data = await eventDAO.findAllEvents();
     if (data) {
-        logger.info(`Events found | eventService | getAllEvents | data: ${data}`);
+        logger.info(`Events found | eventService | getAllEvents | data: ${JSON.stringify(data)}`);
         return data;
     } else { 
         logger.info(`Failed to find events | eventService | getAllEvents`);
@@ -67,12 +67,17 @@ async function getAllEvents() {
  * @returns the event retrieved or null
  */
 async function getEventById(id) {
-    const data = await eventDAO.findEventById(id);
-    if (data) {
-        logger.info(`Event found | eventService | getEventById | data: ${data}`);
-        return data;
+    if (id && id.split('')[0] === 'e') {
+        const data = await eventDAO.findEventById(id);
+        if (data) {
+            logger.info(`Event found | eventService | getEventById | data: ${JSON.stringify(data)}`);
+            return data;
+        } else { 
+            logger.info(`Failed to find any event | eventService | getEventById`);
+            return null;
+        }
     } else { 
-        logger.info(`Failed to find any event | eventService | getEventById`);
+        logger.info(`Invalid id provided | eventService | getEventById | id: ${id}`);
         return null;
     }
 }
@@ -83,10 +88,11 @@ async function getEventById(id) {
  * @param {string} id with which to query 
  * @returns the retrieved data or null
  */
-async function getEventsByUser(id) {
-    const data = await eventDAO.findEventsByUser(id);
+async function getEventsByUser(id, status) {
+    const pk = 'u#' + id;
+    const data = await eventDAO.findEventsByUser(pk, status);
     if (data) {
-        logger.info(`Event found | eventService | getEventsByUser | data: ${data}`);
+        logger.info(`Events found | eventService | getEventsByUser | data: ${JSON.stringify(data)}`);
         return data;
     } else { 
         logger.info(`Failed to find any event | eventService | getEventsByUser`);
@@ -116,11 +122,60 @@ async function updateEventStatusById(eventId, status) {
     
 }
 
+/**
+ * should call the DAO method for patching an event by it's id
+ * 
+ * @param {string} id 
+ * @param {string} pk to be combined with id for a composite key
+ * @param {JSON} event object to update with
+ * @returns the patched data or null
+ */
+async function patchEventById(id, pk, event) {
+    // make sure the id matches the correct entity type
+    if ((id && id.split('')[0] === 'e') && validateEvent(event)) {
+        const data = await eventDAO.patchEventById(id, pk, event);
+        if (data) { 
+            logger.info(`Event patched | eventService | patchEventById | data: ${JSON.stringify(data)}`);
+            return data;
+        } else { 
+            logger.info(`Failed to patch event | eventService | patchEventById`);
+            return null;
+        }
+    } else { 
+        logger.info(`Given id is incorrect/invalid or event validation failed | eventService | patchEventById | id: ${id}`);
+        return null;
+    }
+}
+
+/**
+ * shoudld call the DAO method to delete an event by id
+ * 
+ * @param {string} id 
+ * @param {string} pk to combine with id for a composite key
+ * @returns unsure
+ */
+async function deleteEventById (id, pk) {
+    if (id && id.split('')[0] === 'e') {
+        const data = await eventDAO.removeEventById(id, pk);
+        if (data) { 
+            logger.info(`Event deleted | eventService | deleteEventById | data: ${JSON.stringify(data)}`);
+            return data;
+        } else { 
+            logger.info(`Failed to delete event | eventService | patchEventById`);
+            return null;
+        }
+    } else { 
+        logger.info(`Given id is incorrect/invalid | eventService | deleteEventById | id: ${id}`);
+        return null;
+    }
+}
 
 module.exports = {
     postEvent,
     getAllEvents,
     getEventById,
     getEventsByUser,
+    patchEventById,
+    deleteEventById
     updateEventStatusById,
 }
