@@ -11,7 +11,10 @@ async function createPet(userId, pet){
             entity: "PET",
             type: pet.type,
             name: pet.name,
-            services: pet.services,
+            services: pet.services.map(s => ({
+                service: s.service,
+                price: s.price
+            })),
             description: pet.description,
             photos: pet.images ?? null,
             location: pet.location ?? null
@@ -46,8 +49,19 @@ async function deletePet(userId, petId) {
     return null;
 }
 
+async function getAllPetServices(){
+    const data = await petDAO.getAllPetServices();
+    if(data){
+        logger.info(`(petService) Pet services found: ${JSON.stringify(data)}`);
+        return data;
+    }
+    logger.info(`(petService) No pet services found.`);
+    return null;
+}
+
 module.exports = {
     createPet,
     updatePet,
-    deletePet
+    deletePet,
+    getAllPetServices
 }
