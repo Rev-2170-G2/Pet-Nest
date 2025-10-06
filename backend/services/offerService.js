@@ -8,7 +8,7 @@ async function createOffer(body, loggedInUserPK) {
     const { requesterType, requesterId, requestedType, requestedId, requestedOwnerId, services, description } = body;
 
     if (!requesterType || !requesterId || !requestedType || !requestedId || !requestedOwnerId || !Array.isArray(services) || services.length === 0) {
-        logger.info("Invalid offer body format:", body);
+        logger.info(`Invalid offer body from ${loggedInUserPK}: ${JSON.stringify(body)}`);
         return null;
     }
 
@@ -50,23 +50,25 @@ async function createOffer(body, loggedInUserPK) {
 
 async function deleteOffer(senderId, ownerId, entityId, offerId) {
     const PK = `u#${ownerId}`;
-    const entityType = ["PET#", "EVENT#"];
-    for (const prefix of entityType) {
+    const entityPrefixes = ["PET#", "EVENT#"];
+
+    for (const prefix of entityPrefixes) {
         const SK = prefix + entityId;
         const deleted = await offerDAO.removeOfferBySender(PK, SK, offerId, senderId);
         if (deleted) return deleted;
     }
+
     return null;
 }
 
 async function getOffersForEntity(ownerId, entityId) {
     const PK = `u#${ownerId}`;
-    
+
     const petOffers = await offerDAO.getOffersByEntity(PK, `PET#${entityId}`);
-    if (petOffers.length > 0) return petOffers;
+    if (petOffers.length) return petOffers;
 
     const eventOffers = await offerDAO.getOffersByEntity(PK, `EVENT#${entityId}`);
-    if (eventOffers.length > 0) return eventOffers;
+    if (eventOffers.length) return eventOffers;
 
     return [];
 }
