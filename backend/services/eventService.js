@@ -30,7 +30,8 @@ async function postEvent(event) {
             location: event.location,
             date: event.date,
             photos: photos,
-            status: status
+            status: status,
+            approved: approved
         });
         if (data) { 
             logger.info(`Creating new event | eventService | postEvent | data: ${JSON.stringify(data)}`);
