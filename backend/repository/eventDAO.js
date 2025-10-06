@@ -184,7 +184,7 @@ async function removeEventById(id, pk) {
  * @param {string} status with which to update
  * @returns the metadata object confirming success or null
  */
-const updateTicketStatusById = async (PK, SK, status) => {
+const updateEventStatusById = async (PK, SK, status) => {
     const command = new UpdateCommand({
         TableName,
         Key: {
@@ -203,10 +203,10 @@ const updateTicketStatusById = async (PK, SK, status) => {
 
     try {
         const data = await documentClient.send(command);
-        logger.info(`Data from updateTicketStatusById in eventDAO: ${JSON.stringify(data)}`);
+        logger.info(`Data from updateEventStatusById in eventDAO: ${JSON.stringify(data)}`);
         return data;
     } catch (err) {
-        logger.error(`Error in updateTicketStatusById in eventDAO: ${err}`);
+        logger.error(`Error in updateEventStatusById in eventDAO: ${err}`);
     }
     return null;
 }
@@ -219,5 +219,5 @@ module.exports = {
     findEventsByUser,
     patchEventById,
     removeEventById,
-    updateTicketStatusById,
+    updateEventStatusById,
 }

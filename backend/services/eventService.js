@@ -165,7 +165,7 @@ async function updateEventStatusById(eventId, status) {
             return null;         
         }
 
-        const data = await eventDAO.updateTicketStatusById(event[0].PK, event[0].SK, status);  
+        const data = await eventDAO.updateEventStatusById(event[0].PK, event[0].SK, status);  
         if (data) {
             logger.info(`Event found | eventService | updateEventStatusById | data: ${data}`);
             return data;
