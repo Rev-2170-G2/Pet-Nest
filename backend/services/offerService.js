@@ -2,10 +2,10 @@ const offerDAO = require("../repository/offerDAO");
 const { nanoid } = require("nanoid");
 const { logger } = require("../util/logger");
 
-const PREFIXES = { PET: "PET#", EVENT: "EVENT#", USER: "USER#" };
+const PREFIXES = {PET: "PET#", EVENT: "EVENT#", USER: "USER#"};
 
 async function createOffer(body, loggedInUserPK) {
-    const { requesterType, requesterId, requestedType, requestedId, requestedOwnerId, services, description } = body;
+    const {requesterType, requesterId, requestedType, requestedId, requestedOwnerId, services, description} = body;
 
     if (!requesterType || !requesterId || !requestedType || !requestedId || !requestedOwnerId || !Array.isArray(services) || services.length === 0) {
         logger.info(`Invalid offer body from ${loggedInUserPK}: ${JSON.stringify(body)}`);
