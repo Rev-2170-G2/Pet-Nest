@@ -184,29 +184,29 @@ async function removeEventById(id, pk) {
  * @param {string} status with which to update
  * @returns the metadata object confirming success or null
  */
-const updateEventApprovalById = async (PK, SK, status) => {
+const updateEventApprovalById = async (PK, SK, approved) => {
     const command = new UpdateCommand({
         TableName,
         Key: {
             PK,
             SK
         },
-        UpdateExpression: "SET #status = :statusUpdate",
+        UpdateExpression: "SET #approved = :approved",
         ExpressionAttributeNames: {
-            "#status": "status",
+            "#approved": "approved",
         },
         ExpressionAttributeValues: {
-            ":statusUpdate": status,
+            ":approved": approved,
         },
         ReturnValues: "ALL_NEW",
     });
 
     try {
         const data = await documentClient.send(command);
-        logger.info(`Data from updateEventStatusById in eventDAO: ${JSON.stringify(data)}`);
+        logger.info(`Data from updateEventApprovalById in eventDAO: ${JSON.stringify(data)}`);
         return data;
     } catch (err) {
-        logger.error(`Error in updateEventStatusById in eventDAO: ${err}`);
+        logger.error(`Error in updateEventApprovalById in eventDAO: ${err}`);
     }
     return null;
 }

@@ -158,25 +158,25 @@ async function deleteEventById (id, pk) {
  * @param {string} status with which to update attribute
  * @returns the retrieved data or null
  */
-async function updateEventApprovalById(eventId, status) {
+async function updateEventApprovalById(eventId, approved) {
     try {
         const event = await eventDAO.findEventById(eventId);
 
         if (!event || event.length === 0) {
-            logger.info(`No event found with ID: ${eventId} | eventService | updateEventStatusById`); 
+            logger.info(`No event found with ID: ${eventId} | eventService | updateEventApprovalById`); 
             return null;         
         }
 
-        const data = await eventDAO.updateEventApprovalById(event[0].PK, event[0].SK, status);  
+        const data = await eventDAO.updateEventApprovalById(event[0].PK, event[0].SK, approved);  
         if (data) {
-            logger.info(`Event found | eventService | updateEventStatusById | data: ${data}`);
+            logger.info(`Event found | eventService | updateEventApprovalById | data: ${data}`);
             return data;
         } else { 
-            logger.info(`Failed to find any event | eventService | updateEventStatusById`);
+            logger.info(`Failed to find any event | eventService | updateEventApprovalById`);
             return null;
         }      
     } catch (error) {
-        logger.info(`Error updating event status | eventService | updateEventStatusById | eventId: ${eventId} | error: ${error}`);
+        logger.info(`Error updating event status | eventService | updateEventApprovalById | eventId: ${eventId} | error: ${error}`);
         return null;
     } 
 }

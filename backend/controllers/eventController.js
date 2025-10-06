@@ -118,13 +118,13 @@ async function DeleteEventById(req, res) {
  */
 async function UpdateEventApprovalById(req, res){
     const eventId = req.params.id;
-    const { status } = req.body;
+    const { approved } = req.body;
     const isAdmin = req.user?.admin === "true" || req.user?.admin === true;
 
     if (!isAdmin) {
         res.status(400).json({message: "Only administrators can update event status."});
     } else {
-        const data = await eventService.updateEventStatusById(eventId, status);
+        const data = await eventService.updateEventApprovalById(eventId, approved);
         if (data){
             res.status(200).json({message: "Event status updated", data});
         } else {
