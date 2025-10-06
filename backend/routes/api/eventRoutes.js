@@ -5,11 +5,11 @@ const eventController = require('../../controllers/eventController');
 
 router.post('/', eventController.PostEvent);
 
-router.get('/', eventController.GetAllEvents);
+router.get('/user', eventController.GetEventsByUser); //more specific routes first due to how Express reads routes 
 
 router.get('/:id', eventController.GetEventById);
 
-router.get('/user/:id', eventController.GetEventsByUser);
+router.get('/', eventController.GetAllEvents);
 
 router.patch('/admin/:id', eventController.UpdateEventStatusById);
 

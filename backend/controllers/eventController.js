@@ -45,6 +45,7 @@ async function GetAllEvents(req, res) {
  */
 async function GetEventById(req, res) { 
     const id = req.params.id;
+    console.log("ID from getEventsById in CONTROLLER", id)
     const data = await eventService.getEventById(id);
     if (data) {
         res.status(200).json({message: 'Event found ', data});
@@ -60,10 +61,10 @@ async function GetEventById(req, res) {
  * @param {JSON} res object to be manipulated and sent back to client
  */
 async function GetEventsByUser(req, res) {
-    const id = req.params.id;
+    const id = req.query.id;
+    console.log("ID from controller: is ", id);
     const data = await eventService.getEventsByUser(id);
-    if (data) {
-        res.status(200).json({message: 'Events found ', data});
+``       res.status(200).json({message: 'Events found ', data});
     } else { 
         res.status(400).json({message: 'No events found'});
     }
@@ -76,12 +77,19 @@ async function GetEventsByUser(req, res) {
  * @param {JSON} res object to be manipulated and sent back to client
  */
 async function UpdateEventStatusById(req, res){
-    const id = req.params.id;
-    const data = await eventService.updateEventStatusById(id);
-    if (data){
-        res.status(200).json({message: "Event deleted", data});
+    const eventId = req.params.id;
+    const { status } = req.body;
+    const isAdmin = req.user?.admin === "true" || req.user?.admin === true;
+
+    if (!isAdmin) {
+        res.status(400).json({message: "Only administrators can update event status."});
     } else {
-        res.status(400).json({message: "No events found"})
+        const data = await eventService.updateEventStatusById(eventId, status);
+        if (data){
+            res.status(200).json({message: "Event status updated", data});
+        } else {
+            res.status(400).json({message: "No events found"})
+        }
     }
 }
 

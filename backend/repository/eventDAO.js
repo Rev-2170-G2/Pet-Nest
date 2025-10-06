@@ -62,8 +62,8 @@ async function findEventById(id) {
     const command = new QueryCommand({ 
         TableName,
         IndexName: 'gsi-1',
-        KeyConditionExpression: `pk = :pk`,
-        ExpressionAttributeValues: {':pk': 'e' + id},
+        KeyConditionExpression: `id = :id`,
+        ExpressionAttributeValues: {':id': id},
     });
     try {
         const data = await documentClient.send(command);
@@ -79,12 +79,13 @@ async function findEventById(id) {
  * should attempt to find a list of events pertaining to 
  * 
  * @param {string} id 
- * @returns 
+ * @returns the found event or null
  */
 async function findEventsByUser(id) {
+    console.log("id from findEventsByUser", id)
     const command = new QueryCommand({
         TableName,
-        KeyConditionExpression: `pk = :pk AND begins_with(sk, :sk)`,
+        KeyConditionExpression: `PK = :pk AND begins_with(SK, :sk)`,
         ExpressionAttributeValues: {
             ':pk': id,
             ':sk': 'EVENT#'
@@ -100,9 +101,46 @@ async function findEventsByUser(id) {
     }
 }
 
+/**
+ * should attempt to find a specific evevnt by its id 
+ * 
+ * @param {string} PK with which to serve as Key
+ * @param {string} SK with which to serve as Key
+ * @param {string} status with which to update
+ * @returns the metadata object confirming success or null
+ */
+const updateTicketStatusById = async (PK, SK, status) => {
+    const command = new UpdateCommand({
+        TableName,
+        Key: {
+            PK,
+            SK
+        },
+        UpdateExpression: "SET #status = :statusUpdate",
+        ExpressionAttributeNames: {
+            "#status": "status",
+        },
+        ExpressionAttributeValues: {
+            ":statusUpdate": status,
+        },
+        ReturnValues: "ALL_NEW",
+    });
+
+    try {
+        const data = await documentClient.send(command);
+        logger.info(`Data from updateTicketStatusById in eventDAO: ${JSON.stringify(data)}`);
+        return data;
+    } catch (err) {
+        logger.error(`Error in updateTicketStatusById in eventDAO: ${err}`);
+    }
+    return null;
+}
+
+
 module.exports = {
     createEvent,
     findAllEvents,
     findEventById,
     findEventsByUser,
+    updateTicketStatusById,
 }
