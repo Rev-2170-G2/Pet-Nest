@@ -55,7 +55,7 @@ async function GetEventById(req, res) {
 }
 
 /**
- * should call the service layer method for retrieving events by user who posted
+ * should call the service layer method for retrieving events by user who posted with optional query params for status
  * 
  * @param {JSON} req object containing the id to be parsed
  * @param {JSON} res object to be manipulated and sent back to client
