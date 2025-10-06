@@ -147,9 +147,9 @@ async function patchEventById(id, pk, event) {
     });
 
     try {
-        const data = documentClient.send(command);
+        const data = await documentClient.send(command);
         logger.info(`UPDATE command to database complete | eventDAO | patchEventById | data: ${JSON.stringify(data.Items)}`);
-        return data;
+        return data.Attributes;
     } catch (err) { 
         logger.error(`Error in eventDAO | patchEventById | error: ${JSON.stringify(err)}`);
         return null;
@@ -167,9 +167,9 @@ async function removeEventById(id, pk) {
     });
 
     try { 
-        const data = documentClient.send(command);
+        const data = await documentClient.send(command);
         logger.info(`DELETE command to database complete | eventDAO | removeEventById | data: ${JSON.stringify(data.Items)}`);
-        return data;
+        return data.Attributes;
     } catch (err) { 
         logger.error(`Error in eventDAO | removeEventById | error: ${JSON.stringify(err)}`);
         return null
