@@ -116,7 +116,7 @@ async function DeleteEventById(req, res) {
  * @param {JSON} req object containing the id to be parsed
  * @param {JSON} res object to be manipulated and sent back to client
  */
-async function UpdateEventStatusById(req, res){
+async function UpdateEventApprovalById(req, res){
     const eventId = req.params.id;
     const { status } = req.body;
     const isAdmin = req.user?.admin === "true" || req.user?.admin === true;
@@ -141,5 +141,5 @@ module.exports = {
     GetEventsByUser,
     PatchEventById,
     DeleteEventById,
-    UpdateEventStatusById,
+    UpdateEventApprovalById,
 }

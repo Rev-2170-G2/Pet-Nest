@@ -184,7 +184,7 @@ async function removeEventById(id, pk) {
  * @param {string} status with which to update
  * @returns the metadata object confirming success or null
  */
-const updateEventStatusById = async (PK, SK, status) => {
+const updateEventApprovalById = async (PK, SK, status) => {
     const command = new UpdateCommand({
         TableName,
         Key: {
@@ -219,5 +219,5 @@ module.exports = {
     findEventsByUser,
     patchEventById,
     removeEventById,
-    updateEventStatusById,
+    updateEventApprovalById,
 }
