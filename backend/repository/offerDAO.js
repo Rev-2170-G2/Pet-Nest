@@ -1,6 +1,6 @@
 require("dotenv").config();
 const { DynamoDBClient } = require("@aws-sdk/client-dynamodb");
-const { DynamoDBDocumentClient, UpdateCommand, GetCommand } = require("@aws-sdk/lib-dynamodb");
+const { DynamoDBDocumentClient, UpdateCommand, ScanCommand, GetCommand } = require("@aws-sdk/lib-dynamodb");
 const { logger } = require("../util/logger");
 
 const client = new DynamoDBClient({region: 'us-east-1'});
@@ -24,7 +24,42 @@ async function addOffer(ownerId, entityId, offer) {
     return data.Attributes;
 }
 
+async function removeOfferBySender(PK, entityId, offerId, senderId) {
+    const prefixes = ['PET#', 'EVENT#'];
+    let entity = null;
+    let SK = null;
+
+    for (const prefix of prefixes) {
+        const skCandidate = `${prefix}${entityId}`;
+        const data = await documentClient.send(new GetCommand({ TableName, Key: { PK, SK: skCandidate } }));
+        if (data.Item) {
+            entity = data.Item;
+            SK = skCandidate;
+            break;
+        }
+    }
+
+    if (!entity || !entity.offers || !Array.isArray(entity.offers)) return null;
+
+    const offerExists = entity.offers.some(o => o.id === offerId && o.requester === senderId);
+    if (!offerExists) return null;
+
+    const filteredOffers = entity.offers.filter(o => o.id !== offerId);
+
+    const updateCommand = new UpdateCommand({
+        TableName,
+        Key: { PK, SK },
+        UpdateExpression: "SET offers = :offers",
+        ExpressionAttributeValues: { ":offers": filteredOffers },
+        ReturnValues: "ALL_NEW"
+    });
+
+    const updated = await documentClient.send(updateCommand);
+    logger.info(`Offer ${offerId} removed from ${SK} by sender ${senderId}`);
+    return updated.Attributes;
+}
+
 module.exports = {
-    // getItem,
-    addOffer
+    addOffer,
+    removeOfferBySender
 };

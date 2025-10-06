@@ -30,6 +30,20 @@ async function createOffer(body, requesterId) {
     }
 }
 
+async function deleteOffer(senderId, ownerId, entityId, offerId) {
+    const PK = `u#${ownerId}`;
+    const updatedEntity = await offerDAO.removeOfferBySender(PK, entityId, offerId, senderId);
+
+    if (!updatedEntity) {
+        logger.info(`User ${senderId} attempted to delete offer ${offerId} for owner ${PK} - not allowed`);
+        return null;
+    }
+
+    logger.info(`Offer ${offerId} deleted by sender ${senderId}`);
+    return updatedEntity;
+}
+
 module.exports = {
-    createOffer
+    createOffer,
+    deleteOffer
 };
