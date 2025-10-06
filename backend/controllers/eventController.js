@@ -46,6 +46,7 @@ async function GetAllEvents(req, res) {
  */
 async function GetEventById(req, res) { 
     const id = req.params.id;
+    console.log("ID from getEventsById in CONTROLLER", id)
     const data = await eventService.getEventById(id);
     if (data) {
         res.status(200).json({message: 'Event found ', data});
@@ -109,11 +110,36 @@ async function DeleteEventById(req, res) {
     }
 }
 
+/**
+ * should call the service layer method for updating a single event status
+ * 
+ * @param {JSON} req object containing the id to be parsed
+ * @param {JSON} res object to be manipulated and sent back to client
+ */
+async function UpdateEventApprovalById(req, res){
+    const eventId = req.params.id;
+    const { approved } = req.body;
+    const isAdmin = req.user?.admin === "true" || req.user?.admin === true;
+
+    if (!isAdmin) {
+        res.status(400).json({message: "Only administrators can update event status."});
+    } else {
+        const data = await eventService.updateEventApprovalById(eventId, approved);
+        if (data){
+            res.status(200).json({message: "Event status updated", data});
+        } else {
+            res.status(400).json({message: "No events found"})
+        }
+    }
+}
+
+
 module.exports = {
     PostEvent,
     GetAllEvents,
     GetEventById,
     GetEventsByUser,
     PatchEventById,
-    DeleteEventById
+    DeleteEventById,
+    UpdateEventApprovalById,
 }

@@ -176,11 +176,48 @@ async function removeEventById(id, pk) {
     }
 }
 
+/**
+ * should attempt to find a specific evevnt by its id 
+ * 
+ * @param {string} PK with which to serve as Key
+ * @param {string} SK with which to serve as Key
+ * @param {string} status with which to update
+ * @returns the metadata object confirming success or null
+ */
+const updateEventApprovalById = async (PK, SK, approved) => {
+    const command = new UpdateCommand({
+        TableName,
+        Key: {
+            PK,
+            SK
+        },
+        UpdateExpression: "SET #approved = :approved",
+        ExpressionAttributeNames: {
+            "#approved": "approved",
+        },
+        ExpressionAttributeValues: {
+            ":approved": approved,
+        },
+        ReturnValues: "ALL_NEW",
+    });
+
+    try {
+        const data = await documentClient.send(command);
+        logger.info(`Data from updateEventApprovalById in eventDAO: ${JSON.stringify(data)}`);
+        return data;
+    } catch (err) {
+        logger.error(`Error in updateEventApprovalById in eventDAO: ${err}`);
+    }
+    return null;
+}
+
+
 module.exports = {
     createEvent,
     findAllEvents,
     findEventById,
     findEventsByUser,
     patchEventById,
-    removeEventById
+    removeEventById,
+    updateEventApprovalById,
 }

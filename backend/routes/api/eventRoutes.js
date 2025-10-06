@@ -6,11 +6,13 @@ const eventController = require('../../controllers/eventController');
 
 router.post('/', authenticateToken, eventController.PostEvent);
 
-router.get('/', eventController.GetAllEvents);
+router.get('/user/:id', eventController.GetEventsByUser); 
 
 router.get('/:id', eventController.GetEventById);
 
-router.get('/users/:id', eventController.GetEventsByUser);
+router.get('/', eventController.GetAllEvents);
+
+router.patch('/admin/:id', authenticateToken, eventController.UpdateEventApprovalById);
 
 router.patch('/:id', authenticateToken, eventController.PatchEventById);
 
