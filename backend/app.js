@@ -15,9 +15,9 @@ app.use(loggerMiddleware);
 
 // can change /api to something else if desired
 app.use('/api/users', userRoutes);
-app.use('/api/pets', authenticateToken, petRoutes);
-app.use('/api/events', authenticateToken, eventRoutes);
-app.use('/api/offers', authenticateToken, offerRoutes);
+app.use('/api/offers', offerRoutes);
+app.use('/api/pets',  petRoutes);
+app.use('/api/events', eventRoutes);
 
 app.get('/', (req, res) => { 
     res.send('Home Page');

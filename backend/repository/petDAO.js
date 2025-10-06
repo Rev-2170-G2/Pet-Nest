@@ -1,6 +1,6 @@
 require("dotenv").config();
 const { DynamoDBClient} = require("@aws-sdk/client-dynamodb");
-const { DynamoDBDocumentClient, PutCommand, UpdateCommand, DeleteCommand, GetCommand} = require("@aws-sdk/lib-dynamodb")
+const { DynamoDBDocumentClient, PutCommand, UpdateCommand, DeleteCommand, ScanCommand} = require("@aws-sdk/lib-dynamodb")
 const {logger} = require('../util/logger');
 
 const client = new DynamoDBClient({region: "us-east-1"});
@@ -88,18 +88,27 @@ async function deletePet(userId, petId){
     }
 }
 
-// helper to get a single pet; assists in creating offers
-async function getPetById(ownerId, petId) {
-    const command = new GetCommand({
+// allows guests to view ALL available pet services
+async function getAllPetServices(){
+    const command = new ScanCommand({
         TableName,
-        Key: {PK: ownerId, SK: `PET#${petId}`}
-    });
+        FilterExpression: "begins_with(SK, :pet)",
+        ExpressionAttributeValues: {
+            ":pet": "PET#"
+        }
+    })
 
-    try {
-        const {Item} = await documentClient.send(command);
-        return Item || null;
-    } catch (err) {
-        logger.error(`Error fetching pet ${petId} for owner ${ownerId}: ${err}`);
+    try{
+        const data = await documentClient.send(command);
+        if(data){
+            logger.info(`(petDAO) Pet services found`);
+        }else{
+            logger.info(`(petDAO) No pet services found`);
+        }
+        return data;
+    }
+    catch(error){
+        console.log(error);
         return null;
     }
 }
@@ -108,5 +117,5 @@ module.exports = {
     createPet,
     updatePet,
     deletePet,
-    getPetById
+    getAllPetServices
 }
