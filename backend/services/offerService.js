@@ -2,20 +2,16 @@ const offerDAO = require("../repository/offerDAO");
 const { nanoid } = require("nanoid");
 const { logger } = require("../util/logger");
 
-const PREFIXES = {PET: "PET#", EVENT: "EVENT#", USER: "USER#"};
-
 async function createOffer(body, loggedInUserPK) {
-    const {requesterType, requesterId, requestedType, requestedId, requestedOwnerId, services, description} = body;
+    const {requesterSK, requestedSK, requestedOwnerId, services, description} = body;
 
-    if (!requesterType || !requesterId || !requestedType || !requestedId || !requestedOwnerId || !Array.isArray(services) || services.length === 0) {
+    if (!requesterSK || !requestedSK || !requestedOwnerId || !Array.isArray(services) || services.length === 0) {
         logger.info(`Invalid offer body from ${loggedInUserPK}: ${JSON.stringify(body)}`);
         return null;
     }
 
     const requesterPK = loggedInUserPK;
-    const requesterSK = PREFIXES[requesterType.toUpperCase()] + requesterId;
     const requestedPK = requestedOwnerId.startsWith("u#") ? requestedOwnerId : `u#${requestedOwnerId}`;
-    const requestedSK = PREFIXES[requestedType.toUpperCase()] + requestedId;
 
     const requesterEntity = await offerDAO.getEntity(requesterPK, requesterSK);
     if (!requesterEntity) {
