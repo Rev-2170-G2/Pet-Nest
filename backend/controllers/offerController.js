@@ -30,20 +30,15 @@ async function createOffer(req, res) {
  * @param {JSON} res object to be manipulated and sent back to client
  */
 async function deleteOffer(req, res) {
-    const senderId = req.user.id;
-    const {ownerId, entityId, offerId} = req.params;
+    const userId = req.user.id;
+    const {petId, offerId} = req.params; // note the route change below
 
-    try {
-        const deleted = await offerService.deleteOffer(senderId, ownerId, entityId, offerId);
-        if (!deleted) {
-            logger.info(`${senderId} failed to delete offer ${offerId} on entity ${entityId}`);
-            return res.status(404).json({message: `Offer ${offerId} not found or not allowed.`});
-        }
-        logger.info(`${senderId} deleted offer ${offerId} from entity ${entityId}`);
-        return res.status(200).json({message: `Offer ${offerId} deleted`, data: deleted});
-    } catch (err) {
-        logger.error(`Error deleting offer ${offerId} by user ${senderId}: ${err}`);
-        return res.status(500).json({message: "Server error."});
+    const result = await offerService.deleteOffer(userId, petId, offerId);
+
+    if (result) {
+        res.status(200).json({message: `Offer ${offerId} deleted`, data: result });
+    } else {
+        res.status(400).json({message: `Failed to delete offer ${offerId}` });
     }
 }
 

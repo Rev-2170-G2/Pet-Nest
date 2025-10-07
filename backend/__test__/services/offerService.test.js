@@ -151,17 +151,27 @@ describe("offerService tests", () => {
     });
 
     describe("deleteOffer", () => {
+        const userId = "u#owner1";
+        const petId = "PET001";
+        const offerId = "offer123";
+
         test("should delete the offer if it exists", async () => {
-            offerDAO.removeOfferBySender.mockResolvedValue(true);
-            const result = await offerService.deleteOffer("sender1", "owner1", "pet001", "offer1");
-            expect(result).toBe(true);
-            expect(offerDAO.removeOfferBySender).toHaveBeenCalled();
+            const mockUpdatedPet = {PK: userId, SK: `PET#${petId}`, offers: []};
+            offerDAO.removeOffer.mockResolvedValue(mockUpdatedPet);
+
+            const result = await offerService.deleteOffer(userId, petId, offerId);
+
+            expect(result).toEqual(mockUpdatedPet);
+            expect(offerDAO.removeOffer).toHaveBeenCalledWith(userId, petId, offerId);
         });
 
         test("should return null if the offer does not exist", async () => {
-            offerDAO.removeOfferBySender.mockResolvedValue(null);
-            const result = await offerService.deleteOffer("sender1", "owner1", "pet001", "offer1");
+            offerDAO.removeOffer.mockResolvedValue(null);
+
+            const result = await offerService.deleteOffer(userId, petId, offerId);
+
             expect(result).toBeNull();
+            expect(offerDAO.removeOffer).toHaveBeenCalledWith(userId, petId, offerId);
         });
     });
 

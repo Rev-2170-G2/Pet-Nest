@@ -6,7 +6,7 @@ const { authenticateToken } = require("../../util/jwt");
 
 router.post("/", authenticateToken, offerController.createOffer);
 
-router.delete('/:ownerId/:entityId/:offerId', authenticateToken, offerController.deleteOffer);
+router.delete('/:petId/:offerId', authenticateToken, offerController.deleteOffer);
 
 router.get("/sent", authenticateToken, offerController.getOffersSentByUser);
 

@@ -46,16 +46,16 @@ async function createOffer(body, loggedInUserPK) {
     return newOffer;
 }
 
-async function deleteOffer(senderId, ownerId, entityId, offerId) {
-    const PK = `u#${ownerId}`;
-    const prefixes = ["PET#", "EVENT#"];
+async function deleteOffer(userId, petId, offerId) {
+    const data = await offerDAO.removeOffer(userId, petId, offerId);
 
-    for (const prefix of prefixes) {
-        const SK = prefix + entityId;
-        const deleted = await offerDAO.removeOfferBySender(PK, SK, offerId, senderId);
-        if (deleted) return deleted;
+    if (data) {
+        logger.info(`Offer ${offerId} successfully deleted | service`);
+        return data;
+    } else {
+        logger.info(`Offer ${offerId} could not be deleted | service`);
+        return null;
     }
-    return null;
 }
 
 async function getOffersSentByUser(userId) {

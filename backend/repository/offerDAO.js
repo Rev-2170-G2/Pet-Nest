@@ -1,6 +1,6 @@
 require("dotenv").config();
 const { DynamoDBClient } = require("@aws-sdk/client-dynamodb");
-const { DynamoDBDocumentClient, UpdateCommand, GetCommand, ScanCommand } = require("@aws-sdk/lib-dynamodb");
+const { DynamoDBDocumentClient, UpdateCommand, GetCommand, ScanCommand, DeleteCommand } = require("@aws-sdk/lib-dynamodb");
 const { logger } = require("../util/logger");
 
 const client = new DynamoDBClient({region: "us-east-1"});
@@ -25,27 +25,48 @@ async function addOffer(PK, SK, offer) {
     }
 }
 
-async function removeOfferBySender(PK, SK, offerId, senderPK) {
+async function removeOffer(userId, petId, offerId) {
+    // Step 1: Get the PET item
+    const getCommand = new GetCommand({
+        TableName,
+        Key: {PK: userId, SK: `PET#${petId}`},
+    });
+
     try {
-        const {Item} = await documentClient.send(new GetCommand({TableName, Key: {PK, SK}}));
-        if (!Item?.offers) return null;
+        const petData = await documentClient.send(getCommand);
+        if (!petData.Item) {
+            logger.info(`Pet ${petId} not found for user ${userId}`);
+            return null;
+        }
 
-        const exists = Item.offers.some(o => o.id === offerId && o.requesterPK === senderPK);
-        if (!exists) return null;
+        const pet = petData.Item;
 
-        const updatedOffers = Item.offers.filter(o => o.id !== offerId);
-        const updateCmd = new UpdateCommand({
+        // Step 2: Check if offer exists
+        const offerIndex = pet.offers.findIndex(o => o.id === offerId);
+        if (offerIndex === -1) {
+            logger.info(`Offer ${offerId} not found for pet ${petId}`);
+            return null;
+        }
+
+        // Step 3: Remove the offer from the array
+        pet.offers.splice(offerIndex, 1);
+
+        // Step 4: Update the PET item
+        const updateCommand = new UpdateCommand({
             TableName,
-            Key: {PK, SK},
-            UpdateExpression: "SET offers = :offers",
-            ExpressionAttributeValues: {":offers": updatedOffers},
-            ReturnValues: "ALL_NEW"
+            Key: {PK: userId, SK: `PET#${petId}`},
+            UpdateExpression: "SET #offers = :offers",
+            ExpressionAttributeNames: {"#offers": "offers"},
+            ExpressionAttributeValues: {":offers": pet.offers},
+            ReturnValues: "ALL_NEW",
         });
 
-        const updated = await documentClient.send(updateCmd);
-        return updated.Attributes;
-    } catch (err) {
-        logger.error(`Error removing offer ${offerId} from ${SK}: ${err}`);
+        const updatedData = await documentClient.send(updateCommand);
+        logger.info(`Offer ${offerId} removed from pet ${petId} for user ${userId}`);
+        return updatedData.Attributes;
+
+    } catch (error) {
+        logger.error(`Error removing offer ${offerId} | DAO | error: ${error}`);
         return null;
     }
 }
@@ -123,7 +144,9 @@ async function updateEntityOffers(PK, SK, updatedOffers) {
 
 module.exports = {
     addOffer,
-    removeOfferBySender,
+    removeOffer,
+    // removeOfferById,
+    // removeOfferBySender,
     getOffersSentByUser,
     updateEntityOffers,
     getEntitiesByOwner,
