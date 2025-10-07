@@ -1,12 +1,21 @@
 require("dotenv").config();
 const { DynamoDBClient } = require("@aws-sdk/client-dynamodb");
-const { DynamoDBDocumentClient, UpdateCommand, GetCommand, ScanCommand, DeleteCommand } = require("@aws-sdk/lib-dynamodb");
+const { DynamoDBDocumentClient, UpdateCommand, GetCommand, ScanCommand} = require("@aws-sdk/lib-dynamodb");
 const { logger } = require("../util/logger");
 
 const client = new DynamoDBClient({region: "us-east-1"});
 const documentClient = DynamoDBDocumentClient.from(client);
 const TableName = process.env.TableName || "pet_nest";
 
+/**
+ * should persist an offer in a pet or event
+ *
+ * takes in the PK and SK of the requested entity and the offer object
+ * @param {string} PK primary key of the owner of the entity
+ * @param {string} SK sort key of the entity (PET#id or EVENT#id)
+ * @param {JSON} offer the offer object to persist
+ * @returns the updated entity with the new offer or null if failed
+ */
 async function addOffer(PK, SK, offer) {
     try {
         const command = new UpdateCommand({
@@ -25,8 +34,16 @@ async function addOffer(PK, SK, offer) {
     }
 }
 
+/**
+ * should remove a specific offer from a pet
+ *
+ * takes in the userId, petId, and offerId
+ * @param {string} userId PK of the owner
+ * @param {string} petId ID of the pet entity
+ * @param {string} offerId ID of the offer to remove
+ * @returns the updated entity or null if not found
+ */
 async function removeOffer(userId, petId, offerId) {
-    // Step 1: Get the PET item
     const getCommand = new GetCommand({
         TableName,
         Key: {PK: userId, SK: `PET#${petId}`},
@@ -41,17 +58,14 @@ async function removeOffer(userId, petId, offerId) {
 
         const pet = petData.Item;
 
-        // Step 2: Check if offer exists
         const offerIndex = pet.offers.findIndex(o => o.id === offerId);
         if (offerIndex === -1) {
             logger.info(`Offer ${offerId} not found for pet ${petId}`);
             return null;
         }
 
-        // Step 3: Remove the offer from the array
         pet.offers.splice(offerIndex, 1);
 
-        // Step 4: Update the PET item
         const updateCommand = new UpdateCommand({
             TableName,
             Key: {PK: userId, SK: `PET#${petId}`},
@@ -71,6 +85,13 @@ async function removeOffer(userId, petId, offerId) {
     }
 }
 
+/**
+ * should retrieve all offers sent by a specific user
+ *
+ * takes in the requesterPK
+ * @param {string} userId PK of the requester
+ * @returns array of offers or empty array
+ */
 async function getOffersSentByUser(userId) {
     try {
         const {Items} = await documentClient.send(new ScanCommand({TableName}));
@@ -91,6 +112,13 @@ async function getOffersSentByUser(userId) {
     }
 }
 
+/**
+ * should retrieve a single entity (pet or event) by PK and SK
+ *
+ * @param {string} PK primary key of the owner
+ * @param {string} SK sort key of the entity
+ * @returns the entity object or null if not found
+ */
 async function getEntity(PK, SK) {
     try {
         const {Item} = await documentClient.send(new GetCommand({TableName, Key: {PK, SK}}));
@@ -101,6 +129,15 @@ async function getEntity(PK, SK) {
     }
 }
 
+/**
+ * should update the offers list of a specific entity
+ *
+ * takes in PK, SK, and the updated offers array
+ * @param {string} PK primary key of the owner
+ * @param {string} SK sort key of the entity
+ * @param {Array} updatedOffers updated list of offers
+ * @returns the updated entity object or null if failed
+ */
 async function getEntitiesByOwner(ownerId) {
     const cleanOwnerId = ownerId.startsWith("u#") ? ownerId.slice(2) : ownerId;
     const PK = `u#${cleanOwnerId}`;
@@ -145,8 +182,6 @@ async function updateEntityOffers(PK, SK, updatedOffers) {
 module.exports = {
     addOffer,
     removeOffer,
-    // removeOfferById,
-    // removeOfferBySender,
     getOffersSentByUser,
     updateEntityOffers,
     getEntitiesByOwner,

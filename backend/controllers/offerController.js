@@ -31,7 +31,7 @@ async function createOffer(req, res) {
  */
 async function deleteOffer(req, res) {
     const userId = req.user.id;
-    const {petId, offerId} = req.params; // note the route change below
+    const {petId, offerId} = req.params;
 
     const result = await offerService.deleteOffer(userId, petId, offerId);
 
