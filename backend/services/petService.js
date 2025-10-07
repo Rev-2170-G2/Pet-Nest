@@ -7,7 +7,7 @@ async function createPet(userId, pet){
     //check if userId exists(not needed - already checked in middleware)
     if(userId){
         const data = await petDAO.createPet(userId, {
-            id: nanoid(5),
+            id: 'p' + nanoid(5),
             entity: "PET",
             type: pet.type,
             name: pet.name,

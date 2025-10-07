@@ -18,7 +18,8 @@ async function postEvent(event) {
         const PK = event.pk;
         const SK = entity + '#' + id;
         const photos = !event.photos ? [] : event.photos;
-        const status = 'pending'; // all events should be set to pending upon creation
+        const status = 'open'; // all events should be set to open upon creation and closed when event is completed
+        const approved = false; // boolean to represent whether an admin has approved or denied an event to be displayed
         const data = await eventDAO.createEvent({
             PK,
             SK,
@@ -30,7 +31,8 @@ async function postEvent(event) {
             date: event.date,
             photos: photos,
             status: status,
-            offers: []
+            offers: [],
+            approved: approved
         });
         if (data) { 
             logger.info(`Creating new event | eventService | postEvent | data: ${JSON.stringify(data)}`);
@@ -149,11 +151,43 @@ async function deleteEventById (id, pk) {
     }
 }
 
+/**
+ * should call the DAO method for updating status of event (approved/denied)
+ * 
+ * @param {string} PK of event with which to query 
+ * @param {string} SK of event with which to query  
+ * @param {string} status with which to update attribute
+ * @returns the retrieved data or null
+ */
+async function updateEventApprovalById(eventId, approved) {
+    try {
+        const event = await eventDAO.findEventById(eventId);
+
+        if (!event || event.length === 0) {
+            logger.info(`No event found with ID: ${eventId} | eventService | updateEventApprovalById`); 
+            return null;         
+        }
+
+        const data = await eventDAO.updateEventApprovalById(event[0].PK, event[0].SK, approved);  
+        if (data) {
+            logger.info(`Event found | eventService | updateEventApprovalById | data: ${data}`);
+            return data;
+        } else { 
+            logger.info(`Failed to find any event | eventService | updateEventApprovalById`);
+            return null;
+        }      
+    } catch (error) {
+        logger.info(`Error updating event status | eventService | updateEventApprovalById | eventId: ${eventId} | error: ${error}`);
+        return null;
+    } 
+}
+
 module.exports = {
     postEvent,
     getAllEvents,
     getEventById,
     getEventsByUser,
     patchEventById,
-    deleteEventById
+    deleteEventById,
+    updateEventApprovalById,
 }
