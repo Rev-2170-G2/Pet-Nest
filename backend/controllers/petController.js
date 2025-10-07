@@ -50,9 +50,21 @@ const getAllPetServices = async (req, res) => {
     return res.status(400).json({message: "No pet services found"});
 }
 
+const getPetById = async (req, res) => {
+    const petId = req.params.petId;
+    logger.info({message: `Incoming petController getPetById request: ${JSON.stringify(petId)}`});
+    const data = await petService.getPetById(petId);
+    if (data) {
+        res.status(200).json({message: 'Pet found ', data});
+    } else { 
+        res.status(400).json({message: 'No pet found'});
+    }
+}
+
 module.exports = {
     createPet,
     updatePet,
     deletePet,
-    getAllPetServices
+    getAllPetServices,
+    getPetById
 }
