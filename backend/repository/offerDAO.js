@@ -90,10 +90,51 @@ async function getEntity(PK, SK) {
     }
 }
 
+async function getEntitiesByOwner(ownerId) {
+    const PK = `u#${ownerId}`;
+    const command = new ScanCommand({
+        TableName,
+        FilterExpression: "PK = :pk AND (begins_with(SK, :petPrefix) OR begins_with(SK, :eventPrefix))",
+        ExpressionAttributeValues: {
+            ":pk": PK,
+            ":petPrefix": "PET#",
+            ":eventPrefix": "EVENT#"
+        }
+    });
+
+    try {
+        const result = await documentClient.send(command);
+        return result.Items || [];
+    } catch (err) {
+        logger.error(`Error scanning entities for ${ownerId}: ${err}`);
+        return [];
+    }
+}
+
+async function updateEntityOffers(PK, SK, updatedOffers) {
+    try {
+        const command = new UpdateCommand({
+            TableName,
+            Key: {PK, SK},
+            UpdateExpression: "SET offers = :offers",
+            ExpressionAttributeValues: {":offers": updatedOffers},
+            ReturnValues: "ALL_NEW"
+        });
+
+        const result = await documentClient.send(command);
+        return result.Attributes;
+    } catch (err) {
+        logger.error(`Error updating offers for ${SK}: ${err}`);
+        return null;
+    }
+}
+
 module.exports = {
     addOffer,
     removeOfferBySender,
     getOffersByEntity,
     getOffersSentByUser,
-    getEntity
+    getEntity,
+    getEntitiesByOwner,
+    updateEntityOffers
 };

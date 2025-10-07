@@ -12,4 +12,6 @@ router.get("/:ownerId/:entityId", authenticateToken, offerController.getOffersFo
 
 router.get("/sent", authenticateToken, offerController.getOffersSentByUser);
 
+router.put('/:offerId/status', authenticateToken, offerController.updateOfferStatus);
+
 module.exports = router;

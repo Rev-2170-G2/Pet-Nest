@@ -82,9 +82,44 @@ async function getOffersSentByUser(userId) {
     }
 }
 
+async function updateOfferStatus(ownerId, entityId, offerId, newStatus) {
+    if (!["approved", "denied"].includes(newStatus)) {
+        logger.info(`Invalid status '${newStatus}' for offer ${offerId}`);
+        return null;
+    }
+
+    const entityPrefixes = ["PET#", "EVENT#"];
+    for (const prefix of entityPrefixes) {
+        const SK = prefix + entityId;
+        const entity = await offerDAO.getEntity(ownerId, SK);
+        if (!entity || !entity.offers) continue;
+
+        const offerIndex = entity.offers.findIndex(o => o.id === offerId);
+        if (offerIndex === -1) continue;
+
+        const offer = entity.offers[offerIndex];
+        if (offer.requestedPK !== ownerId) {
+            logger.info(`User ${ownerId} attempted to update offer ${offerId} not belonging to them`);
+            return null;
+        }
+
+        entity.offers[offerIndex].status = newStatus;
+
+        const updatedEntity = await offerDAO.updateEntityOffers(ownerId, SK, entity.offers);
+        if (!updatedEntity) return null;
+
+        logger.info(`Offer ${offerId} status updated to ${newStatus} by ${ownerId}`);
+        return updatedEntity.offers[offerIndex];
+    }
+
+    logger.info(`Offer ${offerId} not found for user ${ownerId}`);
+    return null;
+}
+
 module.exports = {
     createOffer,
     deleteOffer,
     getOffersForEntity,
-    getOffersSentByUser
+    getOffersSentByUser,
+    updateOfferStatus
 };

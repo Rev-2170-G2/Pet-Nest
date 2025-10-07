@@ -67,9 +67,27 @@ async function getOffersSentByUser(req, res) {
     }
 }
 
+const updateOfferStatus = async (req, res) => {
+    const {offerId} = req.params;
+    const {entityId, status} = req.body;
+    const userId = req.user.id;
+
+    if (!offerId || !entityId || !status) {
+        return res.status(400).json({message: "Offer ID, entity ID, and status are required"});
+    }
+
+    const updatedOffer = await offerService.updateOfferStatus(userId, entityId, offerId, status);
+    if (!updatedOffer) {
+        return res.status(404).json({message: "Offer not found or unauthorized"});
+    }
+
+    return res.status(200).json({message: `Offer ${status}`, offer: updatedOffer});
+};
+
 module.exports = {
     createOffer,
     deleteOffer,
     getOffersForEntity,
-    getOffersSentByUser
+    getOffersSentByUser,
+    updateOfferStatus
 };
