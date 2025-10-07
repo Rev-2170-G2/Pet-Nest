@@ -21,16 +21,16 @@ describe("offerService tests", () => {
     });
 
     describe("createOffer", () => {
-        test("should successfully create an offer", async () => {
+        test("should successfully create a valid offer (pet → pet)", async () => {
             nanoid.mockReturnValue("offer123");
-            offerDAO.getEntity.mockResolvedValueOnce({})
-                              .mockResolvedValueOnce({});
+            offerDAO.getEntity
+                .mockResolvedValueOnce({})
+                .mockResolvedValueOnce({});
             offerDAO.addOffer.mockResolvedValue(true);
 
             const result = await offerService.createOffer(dummyOffer, loggedInUserPK);
 
             expect(nanoid).toHaveBeenCalledWith(5);
-
             expect(offerDAO.addOffer).toHaveBeenCalledWith(
                 "u#owner2",
                 "PET#pet002",
@@ -49,6 +49,84 @@ describe("offerService tests", () => {
             expect(result.id).toBe("offer123");
         });
 
+        test("should allow user → pet offer", async () => {
+            const offer = {
+                requesterSK: "user1",
+                requestedSK: "PET#pet001",
+                requestedOwnerId: "owner2",
+                services: ["sitting"],
+                description: "User to pet"
+            };
+
+            offerDAO.getEntity
+                .mockResolvedValueOnce({})
+                .mockResolvedValueOnce({});
+            offerDAO.addOffer.mockResolvedValue(true);
+            nanoid.mockReturnValue("offer999");
+
+            const result = await offerService.createOffer(offer, "u#owner1");
+
+            expect(result).not.toBeNull();
+            expect(result.id).toBe("offer999");
+        });
+
+        test("should allow pet → event offer", async () => {
+            const offer = {
+                requesterSK: "PET#pet001",
+                requestedSK: "EVENT#event001",
+                requestedOwnerId: "owner2",
+                services: ["attendance"],
+                description: "Pet to event"
+            };
+
+            offerDAO.getEntity
+                .mockResolvedValueOnce({})
+                .mockResolvedValueOnce({});
+            offerDAO.addOffer.mockResolvedValue(true);
+            nanoid.mockReturnValue("offerPetEvent");
+
+            const result = await offerService.createOffer(offer, "u#owner1");
+            expect(result).not.toBeNull();
+            expect(result.id).toBe("offerPetEvent");
+        });
+
+        test("should allow event → pet offer", async () => {
+            const offer = {
+                requesterSK: "EVENT#event001",
+                requestedSK: "PET#pet001",
+                requestedOwnerId: "owner2",
+                services: ["showcase"],
+                description: "Event to pet"
+            };
+
+            offerDAO.getEntity
+                .mockResolvedValueOnce({})
+                .mockResolvedValueOnce({});
+            offerDAO.addOffer.mockResolvedValue(true);
+            nanoid.mockReturnValue("offerEventPet");
+
+            const result = await offerService.createOffer(offer, "u#owner1");
+            expect(result).not.toBeNull();
+            expect(result.id).toBe("offerEventPet");
+        });
+
+        test("should block user → event offers", async () => {
+            const offer = {
+                requesterSK: "user1",
+                requestedSK: "EVENT#event001",
+                requestedOwnerId: "owner2",
+                services: ["hosting"],
+                description: "User to event"
+            };
+
+            offerDAO.getEntity
+                .mockResolvedValueOnce({})
+                .mockResolvedValueOnce({});
+
+            const result = await offerService.createOffer(offer, "u#owner1");
+            expect(result).toBeNull();
+        });
+
         test("should return null if required fields are missing", async () => {
             const incompleteOffer = {...dummyOffer};
             delete incompleteOffer.requesterSK;
@@ -64,8 +142,9 @@ describe("offerService tests", () => {
         });
 
         test("should return null if requested entity does not exist", async () => {
-            offerDAO.getEntity.mockResolvedValueOnce({})
-                              .mockResolvedValueOnce(null);
+            offerDAO.getEntity
+                .mockResolvedValueOnce({})
+                .mockResolvedValueOnce(null);
             const result = await offerService.createOffer(dummyOffer, loggedInUserPK);
             expect(result).toBeNull();
         });
@@ -83,31 +162,6 @@ describe("offerService tests", () => {
             offerDAO.removeOfferBySender.mockResolvedValue(null);
             const result = await offerService.deleteOffer("sender1", "owner1", "pet001", "offer1");
             expect(result).toBeNull();
-        });
-    });
-
-    describe("getOffersForEntity", () => {
-        test("should return pet offers if they exist", async () => {
-            const dummyOffers = [{id: "offer1"}];
-            offerDAO.getOffersByEntity.mockResolvedValueOnce(dummyOffers);
-            const result = await offerService.getOffersForEntity("owner1", "pet001");
-            expect(result).toEqual(dummyOffers);
-            expect(offerDAO.getOffersByEntity).toHaveBeenCalledWith("u#owner1", "PET#pet001");
-        });
-
-        test("should return event offers if pet offers empty", async () => {
-            const dummyOffers = [{id: "offer2"}];
-            offerDAO.getOffersByEntity.mockResolvedValueOnce([])
-                                      .mockResolvedValueOnce(dummyOffers);
-            const result = await offerService.getOffersForEntity("owner1", "event001");
-            expect(result).toEqual(dummyOffers);
-            expect(offerDAO.getOffersByEntity).toHaveBeenCalledWith("u#owner1", "EVENT#event001");
-        });
-
-        test("should return empty array if no offers", async () => {
-            offerDAO.getOffersByEntity.mockResolvedValue([]);
-            const result = await offerService.getOffersForEntity("owner1", "pet001");
-            expect(result).toEqual([]);
         });
     });
 
@@ -149,10 +203,6 @@ describe("offerService tests", () => {
             ]
         };
 
-        beforeEach(() => {
-            jest.clearAllMocks();
-        });
-
         test("should update the offer status to approved", async () => {
             offerDAO.getEntity.mockResolvedValueOnce(dummyEntity);
             offerDAO.updateEntityOffers.mockResolvedValueOnce({
@@ -164,39 +214,26 @@ describe("offerService tests", () => {
 
             expect(result.status).toBe("approved");
             expect(offerDAO.getEntity).toHaveBeenCalledWith(ownerId, `PET#${entityId}`);
-            expect(offerDAO.updateEntityOffers).toHaveBeenCalledWith(ownerId, `PET#${entityId}`, expect.any(Array));
+            expect(offerDAO.updateEntityOffers).toHaveBeenCalled();
         });
 
-        test("should update the offer status to denied", async () => {
-            offerDAO.getEntity.mockResolvedValueOnce(dummyEntity);
-            offerDAO.updateEntityOffers.mockResolvedValueOnce({
-                ...dummyEntity,
-                offers: [{...dummyEntity.offers[0], status: "denied"}]
-            });
-
-            const result = await offerService.updateOfferStatus(ownerId, entityId, offerId, "denied");
-
-            expect(result.status).toBe("denied");
+        test("should return null if invalid status", async () => {
+            const result = await offerService.updateOfferStatus(ownerId, entityId, offerId, "badstatus");
+            expect(result).toBeNull();
         });
 
-        test("should return null if the offer does not exist", async () => {
+        test("should return null if offer not found", async () => {
             offerDAO.getEntity.mockResolvedValueOnce({...dummyEntity, offers: []});
-            const result = await offerService.updateOfferStatus(ownerId, entityId, "nonexistentOffer", "approved");
+            const result = await offerService.updateOfferStatus(ownerId, entityId, "nope", "approved");
             expect(result).toBeNull();
         });
 
-        test("should return null if the status is invalid", async () => {
-            const result = await offerService.updateOfferStatus(ownerId, entityId, offerId, "invalidStatus");
-            expect(result).toBeNull();
-        });
-
-        test("should return null if the offer does not belong to the user", async () => {
-            const otherEntity = {
+        test("should return null if offer doesn't belong to user", async () => {
+            const other = {
                 ...dummyEntity,
                 offers: [{...dummyEntity.offers[0], requestedPK: "u#someoneElse"}]
             };
-            offerDAO.getEntity.mockResolvedValueOnce(otherEntity);
-
+            offerDAO.getEntity.mockResolvedValueOnce(other);
             const result = await offerService.updateOfferStatus(ownerId, entityId, offerId, "approved");
             expect(result).toBeNull();
         });

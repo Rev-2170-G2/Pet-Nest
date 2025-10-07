@@ -3,7 +3,7 @@ const { nanoid } = require("nanoid");
 const { logger } = require("../util/logger");
 
 async function createOffer(body, loggedInUserPK) {
-    const { requesterSK, requestedSK, requestedOwnerId, services, description } = body;
+    const {requesterSK, requestedSK, requestedOwnerId, services, description} = body;
 
     if (!requesterSK || !requestedSK || !requestedOwnerId || !Array.isArray(services) || services.length === 0) {
         logger.info(`Invalid offer body from ${loggedInUserPK}: ${JSON.stringify(body)}`);
@@ -18,6 +18,14 @@ async function createOffer(body, loggedInUserPK) {
 
     const requestedEntity = await offerDAO.getEntity(requestedPK, requestedSK);
     if (!requestedEntity) return null;
+
+    const isUserSender = !requesterSK.startsWith("PET#") && !requesterSK.startsWith("EVENT#");
+    const isEventReceiver = requestedSK.startsWith("EVENT#");
+
+    if (isUserSender && isEventReceiver) {
+        logger.info(`User ${loggedInUserPK} attempted to send offer directly to an event (${requestedSK}) — blocked.`);
+        return null;
+    }
 
     const newOffer = {
         id: nanoid(5),
@@ -51,7 +59,12 @@ async function deleteOffer(senderId, ownerId, entityId, offerId) {
 }
 
 async function getOffersSentByUser(userId) {
-    return await offerDAO.getOffersSentByUser(userId);
+    try {
+        return await offerDAO.getOffersSentByUser(userId);
+    } catch (error) {
+        logger.error(error);
+        return [];
+    }
 }
 
 async function updateOfferStatus(ownerId, entityId, offerId, newStatus) {

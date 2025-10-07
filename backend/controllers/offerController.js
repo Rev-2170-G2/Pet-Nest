@@ -74,10 +74,10 @@ async function getAllReceivedOffers(req, res) {
     const userId = req.user.id;
     try {
         const offers = await offerService.getAllReceivedOffers(userId);
-        return res.status(200).json({ message: "All received offers retrieved", data: offers });
+        return res.status(200).json({message: "All received offers retrieved", data: offers});
     } catch (err) {
         logger.error(`Error retrieving received offers for user ${userId}: ${err}`);
-        return res.status(500).json({ message: "Server error." });
+        return res.status(500).json({message: "Server error."});
     }
 }
 
