@@ -16,7 +16,7 @@ async function createPet(userId, pet){
                 price: s.price
             })),
             description: pet.description,
-            photos: pet.images ?? null,
+            photos: pet.photos ?? null,
             location: pet.location ?? null
         })
         logger.info(`${userId} added new pet: ${JSON.stringify(data)}`);
@@ -59,9 +59,26 @@ async function getAllPetServices(){
     return null;
 }
 
+async function getPetById(petId) {
+    if (petId && petId.split('')[0] === 'p') {
+        const data = await petDAO.getPetById(petId);
+        if (data) {
+            logger.info(`Pet found | petService | getPetById | data: ${JSON.stringify(data)}`);
+            return data;
+        } else { 
+            logger.info(`Failed to find any pet | petService | getPetById`);
+            return null;
+        }
+    } else { 
+        logger.info(`Invalid id provided | petService | getPetById | id: ${petId}`);
+        return null;
+    }
+}
+
 module.exports = {
     createPet,
     updatePet,
     deletePet,
-    getAllPetServices
+    getAllPetServices,
+    getPetById
 }
