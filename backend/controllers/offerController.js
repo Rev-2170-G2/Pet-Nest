@@ -1,6 +1,12 @@
 const offerService = require("../services/offerService");
 const { logger } = require("../util/logger");
 
+/**
+ * should calls the service layer to create an offer
+ * 
+ * @param {JSON} req object containing user info and offer details
+ * @param {JSON} res object to be manipulated and sent back to client
+ */
 async function createOffer(req, res) {
     const userId = req.user.id;
     try {
@@ -19,6 +25,12 @@ async function createOffer(req, res) {
     }
 }
 
+/**
+ * should call the service layer to delete an offer for the given sender and entity
+ * 
+ * @param {JSON} req object containing sender info and params
+ * @param {JSON} res object to be manipulated and sent back to client
+ */
 async function deleteOffer(req, res) {
     const senderId = req.user.id;
     const {ownerId, entityId, offerId} = req.params;
@@ -38,6 +50,12 @@ async function deleteOffer(req, res) {
     }
 }
 
+/**
+ * should call the service layer to retrieve offers for the specified entity, ensuring user is authorized
+ * 
+ * @param {JSON} req object containing user info and entity params
+ * @param {JSON} res object to be manipulated and sent back to client
+ */
 async function getOffersForEntity(req, res) {
     const userId = req.user.id;
     const {ownerId, entityId} = req.params;
@@ -56,6 +74,12 @@ async function getOffersForEntity(req, res) {
     }
 }
 
+/**
+ * should call the service layer to retrieve all offers sent by the user
+ * 
+ * @param {JSON} req object containing user info
+ * @param {JSON} res object to be manipulated and sent back to client
+ */
 async function getOffersSentByUser(req, res) {
     const userId = req.user.id;
     try {
@@ -67,6 +91,12 @@ async function getOffersSentByUser(req, res) {
     }
 }
 
+/**
+ * should call the service layer to update the status of an offer if the user owns it
+ * 
+ * @param {JSON} req object containing offerId in params and entityId and status in body
+ * @param {JSON} res object to be manipulated and sent back to client
+ */
 const updateOfferStatus = async (req, res) => {
     const {offerId} = req.params;
     const {entityId, status} = req.body;
