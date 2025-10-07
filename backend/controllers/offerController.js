@@ -11,12 +11,10 @@ async function createOffer(req, res) {
     const userId = req.user.id;
     try {
         const offer = await offerService.createOffer(req.body, userId);
-
         if (!offer) {
             logger.info(`${userId} attempted to create an invalid offer: ${JSON.stringify(req.body)}`);
             return res.status(400).json({message: "Invalid offer or permission denied."});
         }
-
         logger.info(`${userId} created new offer: ${JSON.stringify(offer)}`);
         return res.status(201).json({message: "Offer created", data: offer});
     } catch (err) {
@@ -41,35 +39,10 @@ async function deleteOffer(req, res) {
             logger.info(`${senderId} failed to delete offer ${offerId} on entity ${entityId}`);
             return res.status(404).json({message: `Offer ${offerId} not found or not allowed.`});
         }
-
         logger.info(`${senderId} deleted offer ${offerId} from entity ${entityId}`);
         return res.status(200).json({message: `Offer ${offerId} deleted`, data: deleted});
     } catch (err) {
         logger.error(`Error deleting offer ${offerId} by user ${senderId}: ${err}`);
-        return res.status(500).json({message: "Server error."});
-    }
-}
-
-/**
- * should call the service layer to retrieve offers for the specified entity, ensuring user is authorized
- * 
- * @param {JSON} req object containing user info and entity params
- * @param {JSON} res object to be manipulated and sent back to client
- */
-async function getOffersForEntity(req, res) {
-    const userId = req.user.id;
-    const {ownerId, entityId} = req.params;
-
-    if (userId.split('#')[1] !== ownerId) {
-        logger.info(`${userId} attempted to view offers for owner ${ownerId}`);
-        return res.status(403).json({message: "Forbidden: you cannot view these offers."});
-    }
-
-    try {
-        const offers = await offerService.getOffersForEntity(ownerId, entityId);
-        return res.status(200).json({message: "Offers retrieved", data: offers});
-    } catch (err) {
-        logger.error(`Error retrieving offers for entity ${entityId}: ${err}`);
         return res.status(500).json({message: "Server error."});
     }
 }
@@ -88,6 +61,23 @@ async function getOffersSentByUser(req, res) {
     } catch (err) {
         logger.error(`Error retrieving offers sent by user ${userId}: ${err}`);
         return res.status(500).json({message: "Server error."});
+    }
+}
+
+/**
+ * should call the service layer to retrieve all offers received by the user
+ * 
+ * @param {JSON} req object containing user info
+ * @param {JSON} res object to be manipulated and sent back to client
+ */
+async function getAllReceivedOffers(req, res) {
+    const userId = req.user.id;
+    try {
+        const offers = await offerService.getAllReceivedOffers(userId);
+        return res.status(200).json({ message: "All received offers retrieved", data: offers });
+    } catch (err) {
+        logger.error(`Error retrieving received offers for user ${userId}: ${err}`);
+        return res.status(500).json({ message: "Server error." });
     }
 }
 
@@ -117,7 +107,7 @@ const updateOfferStatus = async (req, res) => {
 module.exports = {
     createOffer,
     deleteOffer,
-    getOffersForEntity,
     getOffersSentByUser,
+    getAllReceivedOffers,
     updateOfferStatus
 };

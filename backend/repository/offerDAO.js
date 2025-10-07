@@ -3,7 +3,7 @@ const { DynamoDBClient } = require("@aws-sdk/client-dynamodb");
 const { DynamoDBDocumentClient, UpdateCommand, GetCommand, ScanCommand } = require("@aws-sdk/lib-dynamodb");
 const { logger } = require("../util/logger");
 
-const client = new DynamoDBClient({region: "us-east-1"});
+const client = new DynamoDBClient({ region: "us-east-1" });
 const documentClient = DynamoDBDocumentClient.from(client);
 const TableName = process.env.TableName || "pet_nest";
 
@@ -11,9 +11,9 @@ async function addOffer(PK, SK, offer) {
     try {
         const command = new UpdateCommand({
             TableName,
-            Key: {PK, SK},
+            Key: { PK, SK },
             UpdateExpression: "SET offers = list_append(if_not_exists(offers, :emptyList), :newOffer)",
-            ExpressionAttributeValues: {":newOffer": [offer], ":emptyList": []},
+            ExpressionAttributeValues: { ":newOffer": [offer], ":emptyList": [] },
             ReturnValues: "ALL_NEW"
         });
 
@@ -27,7 +27,7 @@ async function addOffer(PK, SK, offer) {
 
 async function removeOfferBySender(PK, SK, offerId, senderPK) {
     try {
-        const {Item} = await documentClient.send(new GetCommand({TableName, Key: {PK, SK}}));
+        const { Item } = await documentClient.send(new GetCommand({ TableName, Key: { PK, SK } }));
         if (!Item?.offers) return null;
 
         const exists = Item.offers.some(o => o.id === offerId && o.requesterPK === senderPK);
@@ -36,9 +36,9 @@ async function removeOfferBySender(PK, SK, offerId, senderPK) {
         const updatedOffers = Item.offers.filter(o => o.id !== offerId);
         const updateCmd = new UpdateCommand({
             TableName,
-            Key: {PK, SK},
+            Key: { PK, SK },
             UpdateExpression: "SET offers = :offers",
-            ExpressionAttributeValues: {":offers": updatedOffers},
+            ExpressionAttributeValues: { ":offers": updatedOffers },
             ReturnValues: "ALL_NEW"
         });
 
@@ -50,25 +50,15 @@ async function removeOfferBySender(PK, SK, offerId, senderPK) {
     }
 }
 
-async function getOffersByEntity(PK, SK) {
-    try {
-        const {Item} = await documentClient.send(new GetCommand({TableName, Key: {PK, SK}}));
-        return Item?.offers ?? [];
-    } catch (err) {
-        logger.error(`Error fetching offers for ${SK}: ${err}`);
-        return [];
-    }
-}
-
 async function getOffersSentByUser(userId) {
     try {
-        const {Items} = await documentClient.send(new ScanCommand({TableName}));
+        const { Items } = await documentClient.send(new ScanCommand({ TableName }));
         const offersSent = [];
 
         Items.forEach(item => {
             if (Array.isArray(item.offers)) {
                 item.offers.forEach(o => {
-                    if (o.requesterPK === userId) offersSent.push({...o, entityId: item.SK});
+                    if (o.requesterPK === userId) offersSent.push({ ...o, entityId: item.SK });
                 });
             }
         });
@@ -82,7 +72,7 @@ async function getOffersSentByUser(userId) {
 
 async function getEntity(PK, SK) {
     try {
-        const {Item} = await documentClient.send(new GetCommand({TableName, Key: {PK, SK}}));
+        const { Item } = await documentClient.send(new GetCommand({ TableName, Key: { PK, SK } }));
         return Item ?? null;
     } catch (err) {
         logger.error(`Error fetching entity ${SK}: ${err}`);
@@ -91,7 +81,9 @@ async function getEntity(PK, SK) {
 }
 
 async function getEntitiesByOwner(ownerId) {
-    const PK = `u#${ownerId}`;
+    const cleanOwnerId = ownerId.startsWith("u#") ? ownerId.slice(2) : ownerId;
+    const PK = `u#${cleanOwnerId}`;
+
     const command = new ScanCommand({
         TableName,
         FilterExpression: "PK = :pk AND (begins_with(SK, :petPrefix) OR begins_with(SK, :eventPrefix))",
@@ -115,9 +107,9 @@ async function updateEntityOffers(PK, SK, updatedOffers) {
     try {
         const command = new UpdateCommand({
             TableName,
-            Key: {PK, SK},
+            Key: { PK, SK },
             UpdateExpression: "SET offers = :offers",
-            ExpressionAttributeValues: {":offers": updatedOffers},
+            ExpressionAttributeValues: { ":offers": updatedOffers },
             ReturnValues: "ALL_NEW"
         });
 
@@ -132,9 +124,8 @@ async function updateEntityOffers(PK, SK, updatedOffers) {
 module.exports = {
     addOffer,
     removeOfferBySender,
-    getOffersByEntity,
     getOffersSentByUser,
-    getEntity,
+    updateEntityOffers,
     getEntitiesByOwner,
-    updateEntityOffers
+    getEntity
 };
