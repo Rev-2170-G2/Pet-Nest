@@ -1,7 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const { loggerMiddleware } = require('./util/logger');
-const { authenticateToken } = require('./util/jwt');
+const cors = require('cors')
 
 const userRoutes = require('./routes/api/userRoutes');
 const petRoutes = require('./routes/api/petRoutes');
@@ -10,6 +10,7 @@ const offerRoutes = require('./routes/api/offerRoutes');
 
 const app = express();
 
+app.use(cors())
 app.use(bodyParser.json());
 app.use(loggerMiddleware);
 
