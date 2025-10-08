@@ -25,36 +25,43 @@ describe('petService createPet', () => {
     });
 
     it('should create a pet successfully', async () => {
-        dummyPet = {
+    dummyPet = {
+        type: 'dog',
+        name: 'Rex',
+        services: [{ service: 'walking', price: 20 }],
+        description: 'friendly dog',
+        photos: ['img1.jpg'],
+        location: 'NYC'
+    };
+
+    dummyData = {
+        ...dummyPet,
+        id: 'p12345',
+        entity: 'PET',
+        photos: dummyPet.photos,
+        location: dummyPet.location
+    };
+
+    petDAO.createPet.mockResolvedValue(dummyData);
+
+    const result = await petService.createPet('u#abc123', dummyPet);
+
+    expect(nanoid).toHaveBeenCalledWith(5);
+    expect(petDAO.createPet).toHaveBeenCalledWith(
+        'u#abc123',
+        expect.objectContaining({
+            id: 'p12345',
             type: 'dog',
             name: 'Rex',
             services: [{ service: 'walking', price: 20 }],
             description: 'friendly dog',
-            images: ['img1.jpg'],
+            photos: ['img1.jpg'],
             location: 'NYC'
-        };
-
-        dummyData = {
-            ...dummyPet,
-            id: '12345',
-            entity: 'PET',
-            photos: dummyPet.images,
-            location: dummyPet.location
-        };
-
-        petDAO.createPet.mockResolvedValue(dummyData);
-
-        const result = await petService.createPet('u#abc123', dummyPet);
-
-        expect(nanoid).toHaveBeenCalledWith(5);
-        expect(petDAO.createPet).toHaveBeenCalledWith('u#abc123', expect.objectContaining({
-            id: '12345',
-            type: 'dog',
-            name: 'Rex'
-        }));
-        expect(logger.info).toHaveBeenCalled();
-        expect(result).toBe(dummyData);
-    });
+        })
+    );
+    expect(logger.info).toHaveBeenCalled();
+    expect(result).toBe(dummyData);
+});
 
     it('should return null if userId is missing', async () => {
         const result = await petService.createPet(null, dummyPet);
@@ -119,7 +126,7 @@ describe('petService deletePet', () => {
         expect(result).toBeNull();
     });
 
-describe('petService getAllPetServices', () => { 
+describe('petService getAllPetServices', () => {
     beforeEach(() => {
         jest.clearAllMocks();
     });
@@ -148,4 +155,34 @@ describe('petService getAllPetServices', () => {
         expect(result).toBeNull();
     });
 });
+
+describe('petService getPetById', () => {
+    beforeEach(() => {
+        jest.clearAllMocks();
+    });
+
+    it('should return pet data when valid petId and DAO returns data', async () => {
+        const dummyPet = { id: 'p123', name: 'Skip', type: 'DOG' };
+        const petId = 'p123';
+
+        petDAO.getPetById = jest.fn().mockResolvedValue(dummyPet);
+
+        const result = await petService.getPetById(petId);
+
+        expect(petDAO.getPetById).toHaveBeenCalledWith(petId);
+        expect(logger.info).toHaveBeenCalledWith(`Pet found | petService | getPetById | data: ${JSON.stringify(dummyPet)}`);
+        expect(result).toBe(dummyPet);
+    });
+
+    it('should return null and log when invalid petId is provided', async () => {
+        const invalidId = '1234';
+
+        const result = await petService.getPetById(invalidId);
+
+        expect(petDAO.getPetById).not.toHaveBeenCalled();
+        expect(logger.info).toHaveBeenCalledWith(`Invalid id provided | petService | getPetById | id: ${invalidId}`);
+        expect(result).toBeNull();
+    });
+});
+
 });

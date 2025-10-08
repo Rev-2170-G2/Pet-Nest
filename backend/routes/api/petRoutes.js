@@ -16,4 +16,7 @@ router.delete('/:petId', authenticateToken, petController.deletePet);
 // view all pet services
 router.get('/', petController.getAllPetServices);
 
+//view by id
+router.get('/:petId', petController.getPetById);
+
 module.exports = router;
