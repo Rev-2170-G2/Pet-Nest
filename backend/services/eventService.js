@@ -31,6 +31,7 @@ async function postEvent(event) {
             date: event.date,
             photos: photos,
             status: status,
+            offers: [],
             approved: approved
         });
         if (data) { 
