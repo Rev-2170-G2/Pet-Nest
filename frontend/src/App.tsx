@@ -2,16 +2,21 @@ import { useState } from 'react'
 import { Route, Routes } from 'react-router-dom'
 import Home from './components/Home/Home';
 import './App.css'
+import NavBar from './components/NavBar/NavBar';
 
 function App() {
   // const [count, setCount] = useState(0)
 
   return (
     <>
+      <NavBar />
 
-    <Routes>
-      <Route path='/' element={<Home/>}></Route>
-    </Routes>
+      <Routes>
+        <Route path='/' element={<Home />}></Route>
+        {/* <Route path='/' element={<Home />}></Route>
+        <Route path='/' element={<Home />}></Route>
+        <Route path='/' element={<Home />}></Route> */}
+      </Routes>
       {/* <div>
         <a href="https://vite.dev" target="_blank">
           <img src={viteLogo} className="logo" alt="Vite logo" />
