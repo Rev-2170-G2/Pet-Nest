@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Route, Routes } from 'react-router-dom'
 import Home from './components/Home/Home';
 import './App.css'
+import HeroSection from './components/HeroPage/HeroSection';
 
 function App() {
   // const [count, setCount] = useState(0)
@@ -10,7 +11,7 @@ function App() {
     <>
 
     <Routes>
-      <Route path='/' element={<Home/>}></Route>
+      <Route path='/' element={<HeroSection/>}></Route>
     </Routes>
       {/* <div>
         <a href="https://vite.dev" target="_blank">
