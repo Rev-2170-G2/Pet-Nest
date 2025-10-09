@@ -1,7 +1,7 @@
 import React, { useState, KeyboardEvent, ChangeEvent } from "react";
 import { Form, Button, Badge, InputGroup } from "react-bootstrap";
 
-interface MultiStringInputProps {
+type MultiStringInputProps = {
   label: string;
   onChange?: (values: {service: string; price: number}) => void;
 }
@@ -43,6 +43,7 @@ const MultiStringInput: React.FC<MultiStringInputProps> = ({ label, onChange }) 
   };
 
   return (
+    <>
     <Form.Group className="mb-3">
       <Form.Label>{label}</Form.Label>
       <InputGroup>
@@ -79,6 +80,7 @@ const MultiStringInput: React.FC<MultiStringInputProps> = ({ label, onChange }) 
         ))}
       </div>
     </Form.Group>
+    </>
   );
 };
 
