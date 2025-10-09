@@ -16,7 +16,7 @@ async function createPet(userId, pet){
                 price: s.price
             })),
             description: pet.description,
-            photos: pet.images ?? null,
+            photos: pet.photos ?? null,
             location: pet.location ?? null,
             offers: []
 
