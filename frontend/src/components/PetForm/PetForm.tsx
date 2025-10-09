@@ -7,7 +7,12 @@ type Props = {}
 
 export default function PetForm({}: Props) {
 
-    const [services, setServices] = useState<string[]>([]);
+    type service = {
+        service: string,
+        price: number
+    }
+    const [services, setServices] = useState<service[]>([]);
+;
 
     const [validated, setValidated] = useState<boolean>(false);
 
@@ -16,7 +21,7 @@ export default function PetForm({}: Props) {
         type: '',
         description: '',
         services: services,
-        photos: [],
+        photos: {},
         location: ''
     });
 
@@ -31,21 +36,22 @@ export default function PetForm({}: Props) {
     const handleSubmit = async (e: any) => {
         e.preventDefault();
         const form = e.currentTarget;
-        console.log(services);
         if (form.checkValidity() === false || services.length === 0) {
             e.stopPropagation();
+            console.log('PetForm validation failed');
+        } else if (form.checkValidity() === true && services.length > 0) {
+            setValidated(true);
+            console.log('PetForm validation passed');
+            console.log(pet);
+            // await axios
+            // .post(`${import.meta.env.VITE_BACKEND_URL}/pets/`, pet)
+            // .then((res) => {
+            //     console.log(res);
+            // })
+            // .catch((err) => {
+            //     console.error(err);
+            // })
         }
-        setValidated(true);
-        console.log('something going on here');
-        // await axios
-        // .post(`${import.meta.env.VITE_BACKEND_URL}/pets/`, pet)
-        // .then((res) => {
-        //     console.log(res);
-        // })
-        // .catch((err) => {
-        //     console.error(err);
-
-        // })
     }
 
   return (
@@ -67,16 +73,18 @@ export default function PetForm({}: Props) {
 
         <Form.Group className="mb-3" controlId="formBasicDesc">
             <Form.Label>Pet description</Form.Label>
-            <Form.Control type="text" placeholder="Enter a description of the pet" value={pet.description} onChange={onChange} name="description" required/>
+            <Form.Control as="textarea" placeholder="Enter a description of the pet" value={pet.description} onChange={onChange} name="description" required/>
             <Form.Control.Feedback>Loogs good!</Form.Control.Feedback>
             <Form.Control.Feedback type="invalid">Please provide a description</Form.Control.Feedback>
         </Form.Group>
 
+        <Form.Group controlId="formFile" className="mb-3">
+            <Form.Label>Default file input example</Form.Label>
+            <Form.Control type="file" />
+        </Form.Group>
+
         <MultiStringInput label="Services" onChange={setServices} />
 
-        {/* <Form.Group className="mb-3" controlId="formBasicCheckbox">
-            <Form.Check type="checkbox" label="Check me out" />
-        </Form.Group> */}
         <Button variant="primary" type="submit">
             Submit
         </Button>
