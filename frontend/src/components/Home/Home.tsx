@@ -1,11 +1,12 @@
-import React from 'react'
+import React from "react";
 
-type Props = {}
-
-export default function Home({}: Props) {
+function Home() {
   return (
-    <>
-        <div>Home</div>
-    </>
-  )
+    <div>
+      <h1>Welcome to PetNest</h1>
+      <p>This is the home page.</p>
+    </div>
+  );
 }
+
+export default Home
