@@ -7,7 +7,7 @@ const client = new DynamoDBClient({region: "us-east-1"});
 const documentClient = DynamoDBDocumentClient.from(client);
 
 const TableName = process.env.TableName || 'pet_nest';
-const IndexName = process.env.IndexName || 'pets-by-id-index';
+const PetIndexName = process.env.PetIndexName || 'pets-by-id-index';
 
 // link userId with new pet
 async function createPet(userId, pet){
@@ -118,7 +118,7 @@ async function getAllPetServices(){
 async function getPetById(petId) {
     const command = new QueryCommand({ 
         TableName,
-        IndexName,
+        PetIndexName,
         KeyConditionExpression: `id = :id`,
         ExpressionAttributeValues: {':id': petId},
     });
