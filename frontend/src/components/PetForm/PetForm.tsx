@@ -89,7 +89,7 @@ export default function PetForm({}: Props) {
 
             <MultiStringInput label="Services" onChange={setServices} />
             <Col>
-            <MapView></MapView>
+                <MapView></MapView>
             </Col>
             
             <Button variant="primary" type="submit">
