@@ -1,0 +1,7 @@
+.petcard-containter {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;  
+    padding: 100px;
+
+}
