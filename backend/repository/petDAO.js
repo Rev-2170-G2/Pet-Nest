@@ -114,7 +114,7 @@ async function getAllPetServices(){
     }
 }
 
-// get pet details by pet Id
+// get pet details by pet id
 async function getPetById(petId) {
     const command = new QueryCommand({ 
         TableName,
