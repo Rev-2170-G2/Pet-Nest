@@ -1,7 +1,7 @@
 import "./NavBar.css";
 import { Link } from "react-router-dom";
 import { useContext, useState } from "react";
-import { UserContext } from "../../AppContext";
+import { UserContext } from "../../context/AppContext";
 import Login from "../Login/Login";
 import Register from "../Register/Register";
 

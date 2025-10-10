@@ -7,8 +7,16 @@ const config: Config = {
     '!**/vendor/**'],
     coverageDirectory: 'coverage',
     testEnvironment: 'jsdom',
+    // transform: {
+    // ".(ts|tsx)": "ts-jest"
+    // },
     transform: {
-    ".(ts|tsx)": "ts-jest"
+    "^.+\\.(ts|tsx)$": "ts-jest",
+    },
+
+    // testing
+    moduleNameMapper: {
+    "\\.(css|less|scss|sass)$": "identity-obj-proxy",
     },
 
     coveragePathIgnorePatterns: [

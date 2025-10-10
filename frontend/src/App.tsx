@@ -2,7 +2,7 @@ import { Routes, Route } from "react-router-dom";
 import NavBar from "./components/NavBar/NavBar";
 import Home from "./components/Home/Home";
 import PetsEvents from "./components/PetsEvents/PetsEvents";
-import { AppProvider } from "./AppContext";
+import { AppProvider } from "./context/AppContext";
 
 function App() {
   return (
