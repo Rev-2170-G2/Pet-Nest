@@ -16,7 +16,10 @@ router.delete('/:petId', authenticateToken, petController.deletePet);
 // view all pet services
 router.get('/', petController.getAllPetServices);
 
-//view by id
+//view pet by pet id
 router.get('/:petId', petController.getPetById);
+
+//view all pets by user
+router.get('/user/:id', petController.getPetsByUser); 
 
 module.exports = router;
