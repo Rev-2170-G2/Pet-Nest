@@ -1,0 +1,16 @@
+.hero-button {
+  background-color: #E6F4FF; 
+  color: #3E442B;
+  font-family:Arial, Helvetica, sans-serif;
+  font-weight: bold;
+  border: none;
+  padding: 8px 15px;
+  border-radius: 21px;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+}
+
+#simple-button:hover {
+  background-color: #D6EEFF;
+  transform: scale(1.05);
+}
