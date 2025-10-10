@@ -3,6 +3,7 @@ import NavBar from "./components/NavBar/NavBar";
 import Home from "./components/Home/Home";
 import PetsEvents from "./components/PetsEvents/PetsEvents";
 import { AuthProvider } from "./context/AuthContext";
+import './App.css';
 
 function App() {
   return (

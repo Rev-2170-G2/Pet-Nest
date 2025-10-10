@@ -7,7 +7,7 @@ const client = new DynamoDBClient({region: 'us-east-1'});
 const documentClient = DynamoDBDocumentClient.from(client);
 
 const TableName = process.env.TableName || 'pet_nest';
-const IndexName = process.env.IndexName || 'events-by-id-status-index';
+const EventIndexName = process.env.EventIndexName || 'events-by-id-status-index';
 
 /**
  * should persist an event to the database
@@ -39,7 +39,7 @@ async function createEvent(event) {
 async function findAllEvents() {
     const command = new ScanCommand({
         TableName,
-        IndexName,
+        IndexName: EventIndexName,
         FilterExpression: "begins_with(#id, :id)",
         ExpressionAttributeNames: {"#id" : "id"},
         ExpressionAttributeValues: {":id": 'e'}
@@ -63,7 +63,7 @@ async function findAllEvents() {
 async function findEventById(id) {
     const command = new QueryCommand({ 
         TableName,
-        IndexName,
+        IndexName: EventIndexName,
         KeyConditionExpression: `id = :id`,
         ExpressionAttributeValues: {':id': id},
     });

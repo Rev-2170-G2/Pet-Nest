@@ -11,7 +11,7 @@ describe("NavBar Component", () => {
   test("should show Login and Register buttons when user is null", () => {
     render(
       <MemoryRouter>
-        <AuthContext.Provider value={{user: null, login: jest.fn(), logout: jest.fn(), setUser: jest.fn()}}>
+        <AuthContext.Provider value={{ user: null, login: jest.fn(), logout: jest.fn(), setUser: jest.fn() }}>
           <NavBar />
         </AuthContext.Provider>
       </MemoryRouter>
@@ -23,10 +23,10 @@ describe("NavBar Component", () => {
   });
 
   test("should show welcome message and logout button when user is logged in", () => {
-    const mockUser: User = {username: "testuser", token: "testtoken", isAdmin: false};
+    const mockUser: User = { username: "testuser", token: "testtoken", admin: false };
     render(
       <MemoryRouter>
-        <AuthContext.Provider value={{user: mockUser, login: jest.fn(), logout: jest.fn(), setUser: jest.fn()}}>
+        <AuthContext.Provider value={{ user: mockUser, login: jest.fn(), logout: jest.fn(), setUser: jest.fn() }}>
           <NavBar />
         </AuthContext.Provider>
       </MemoryRouter>
@@ -37,16 +37,16 @@ describe("NavBar Component", () => {
   });
 
   test("should call logout and clears localStorage on logout", () => {
-    const mockUser: User = {username: "testuser", token: "testtoken", isAdmin: true};
+    const mockUser: User = { username: "testuser", token: "testtoken", admin: true };
     const mockLogout = jest.fn();
 
     localStorage.setItem("token", mockUser.token);
     localStorage.setItem("username", mockUser.username);
-    localStorage.setItem("isAdmin", JSON.stringify(mockUser.isAdmin));
+    localStorage.setItem("admin", JSON.stringify(mockUser.admin));
 
     render(
       <MemoryRouter>
-        <AuthContext.Provider value={{user: mockUser, login: jest.fn(), logout: mockLogout, setUser: jest.fn()}}>
+        <AuthContext.Provider value={{ user: mockUser, login: jest.fn(), logout: mockLogout, setUser: jest.fn() }}>
           <NavBar />
         </AuthContext.Provider>
       </MemoryRouter>

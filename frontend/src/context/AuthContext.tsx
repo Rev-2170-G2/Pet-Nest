@@ -3,7 +3,7 @@ import { createContext, useState, useEffect, ReactNode } from "react";
 export interface User {
   username: string;
   token: string;
-  isAdmin: boolean;
+  admin: boolean;
 }
 
 interface AuthContextType {
@@ -15,25 +15,25 @@ interface AuthContextType {
 
 export const AuthContext = createContext<AuthContextType>({
   user: null,
-  login: () => {},
-  logout: () => {},
-  setUser: () => {},
+  login: () => { },
+  logout: () => { },
+  setUser: () => { },
 });
 
 interface AuthProviderProps {
   children: ReactNode;
 }
 
-export const AuthProvider = ({children}: AuthProviderProps) => {
+export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
     const username = localStorage.getItem("username");
-    const isAdmin = localStorage.getItem("isAdmin") === "true";
+    const admin = localStorage.getItem("admin") === "true";
 
     if (token && username) {
-      setUser({username, token, isAdmin});
+      setUser({ username, token, admin });
     }
   }, []);
 
@@ -41,11 +41,11 @@ export const AuthProvider = ({children}: AuthProviderProps) => {
     if (user) {
       localStorage.setItem("token", user.token);
       localStorage.setItem("username", user.username);
-      localStorage.setItem("isAdmin", String(user.isAdmin));
+      localStorage.setItem("admin", String(user.admin));
     } else {
       localStorage.removeItem("token");
       localStorage.removeItem("username");
-      localStorage.removeItem("isAdmin");
+      localStorage.removeItem("admin");
     }
   }, [user]);
 
@@ -58,7 +58,7 @@ export const AuthProvider = ({children}: AuthProviderProps) => {
   };
 
   return (
-    <AuthContext.Provider value={{user, login, logout, setUser}}>
+    <AuthContext.Provider value={{ user, login, logout, setUser }}>
       {children}
     </AuthContext.Provider>
   );

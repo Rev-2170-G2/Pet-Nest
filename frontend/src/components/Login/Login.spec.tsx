@@ -1,18 +1,15 @@
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import Login from "./Login";
-import { AuthContext, User } from "../../context/AuthContext";
+import { AuthContext } from "../../context/AuthContext";
+import axios from "axios";
 
-describe("Login Component", () => {
+jest.mock("axios");
+const mockedAxios = axios as jest.Mocked<typeof axios>;
+
+describe("Login Component (Axios)", () => {
   const mockOnClose = jest.fn();
   const mockSubmit = jest.fn();
   const mockLogin = jest.fn();
-
-  beforeEach(() => {
-    mockOnClose.mockClear();
-    mockSubmit.mockClear();
-    mockLogin.mockClear();
-    (global as any).fetch = jest.fn();
-  });
 
   const contextValue = {
     user: null,
@@ -20,6 +17,10 @@ describe("Login Component", () => {
     logout: jest.fn(),
     setUser: jest.fn(),
   };
+
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
 
   test("should render login form correctly", () => {
     render(
@@ -30,8 +31,7 @@ describe("Login Component", () => {
 
     expect(screen.getByLabelText(/Username/i)).toBeInTheDocument();
     expect(screen.getByLabelText(/Password/i)).toBeInTheDocument();
-    expect(screen.getByRole("button", {name: /Login/i})).toBeInTheDocument();
-    expect(screen.getByRole("button", {name: /X/i})).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /Login/i })).toBeInTheDocument();
   });
 
   test("should call onClose when close button is clicked", () => {
@@ -41,7 +41,7 @@ describe("Login Component", () => {
       </AuthContext.Provider>
     );
 
-    fireEvent.click(screen.getByRole("button", {name: /X/i}));
+    fireEvent.click(screen.getByRole("button", { name: /X/i }));
     expect(mockOnClose).toHaveBeenCalled();
   });
 
@@ -52,17 +52,17 @@ describe("Login Component", () => {
       </AuthContext.Provider>
     );
 
-    fireEvent.change(screen.getByLabelText(/Username/i), {target: {value: "testuser"}});
-    fireEvent.change(screen.getByLabelText(/Password/i), {target: {value: "testpass"}});
+    fireEvent.change(screen.getByLabelText(/Username/i), { target: { value: "testuser" } });
+    fireEvent.change(screen.getByLabelText(/Password/i), { target: { value: "testpass" } });
 
     expect(screen.getByLabelText(/Username/i)).toHaveValue("testuser");
     expect(screen.getByLabelText(/Password/i)).toHaveValue("testpass");
   });
 
-  test("should submit form, calls login, and onClose on successful fetch", async () => {
-    (global.fetch as jest.Mock).mockResolvedValueOnce({
-      ok: true,
-      json: async () => ({token: "testtoken", isAdmin: false}),
+  test("should submit form, calls login and onClose on success", async () => {
+    mockedAxios.post.mockResolvedValueOnce({
+      data: { token: "testtoken", admin: false },
+      status: 200,
     });
 
     render(
@@ -71,17 +71,17 @@ describe("Login Component", () => {
       </AuthContext.Provider>
     );
 
-    fireEvent.change(screen.getByLabelText(/Username/i), {target: {value: "testuser"}});
-    fireEvent.change(screen.getByLabelText(/Password/i), {target: {value: "testpass"}});
+    fireEvent.change(screen.getByLabelText(/Username/i), { target: { value: "testuser" } });
+    fireEvent.change(screen.getByLabelText(/Password/i), { target: { value: "testpass" } });
+    fireEvent.click(screen.getByRole("button", { name: /Login/i }));
 
-    fireEvent.click(screen.getByRole("button", {name: /Login/i}));
     expect(mockSubmit).toHaveBeenCalled();
 
     await waitFor(() => {
       expect(mockLogin).toHaveBeenCalledWith({
         username: "testuser",
         token: "testtoken",
-        isAdmin: false,
+        admin: false,
       });
       expect(mockOnClose).toHaveBeenCalled();
     });

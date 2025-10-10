@@ -1,11 +1,11 @@
-import React from "react";
+import React from 'react';
+import HeroSection from '../HeroComponent/HeroSection/HeroSection';
 
 function Home() {
   return (
-    <div>
-      <h1>Welcome to PetNest</h1>
-      <p>This is the home page.</p>
-    </div>
+    <>
+      <HeroSection />
+    </>
   );
 }
 

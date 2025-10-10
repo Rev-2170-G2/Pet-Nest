@@ -1,4 +1,5 @@
 import React, { useState, useContext } from "react";
+import axios from "axios";
 import "./Register.css";
 import { AuthContext, User } from "../../context/AuthContext";
 
@@ -7,43 +8,48 @@ interface RegisterProps {
   onSubmit?: () => void;
 }
 
-function Register({onClose, onSubmit}: RegisterProps) {
+function Register({ onClose, onSubmit }: RegisterProps) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
 
-  const {login} = useContext(AuthContext);
+  const { login } = useContext(AuthContext);
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
     onSubmit?.();
 
     try {
-      const response = await fetch("http://localhost:3000/api/users/register", {
-        method: "POST",
-        headers: {"Content-Type": "application/json"},
-        body: JSON.stringify({username, password, email}),
+      const response = await axios.post("http://localhost:3000/api/users/register", {
+        username,
+        password,
+        email,
       });
 
-      const data = await response.json();
+      const data = response.data;
 
-      if (response.ok) {
-        setMessage("Registration successful!");
-        
-        const user: User = {
-          username,
-          token: data.token,
-          isAdmin: data.isAdmin || false,
-        };
-        login(user);
-        onClose();
-        // setTimeout(() => onClose(), 1000);
+      setMessage("Registration successful!");
+
+      const user: User = {
+        username,
+        token: data.token,
+        admin: data.admin || false,
+      };
+
+      login(user);
+      onClose();
+    } catch (error: any) {
+      if (axios.isAxiosError(error)) {
+        const status = error.response?.status;
+        if (status === 409) {
+          setMessage("Username already exists");
+        } else {
+          setMessage(error.response?.data?.message || "Registration failed");
+        }
       } else {
-        setMessage(data.message || "Registration failed");
+        setMessage("Error connecting to server");
       }
-    } catch (err) {
-      setMessage("Error connecting to server");
     }
   };
 

@@ -6,7 +6,7 @@ import Login from "../Login/Login";
 import Register from "../Register/Register";
 
 function NavBar() {
-  const {user, logout} = useContext(AuthContext);
+  const { user, logout } = useContext(AuthContext);
   const [showLogin, setShowLogin] = useState(false);
   const [showRegister, setShowRegister] = useState(false);
 
@@ -28,7 +28,7 @@ function NavBar() {
           {user ? (
             <>
               <span className="welcome-text">
-                Hello, {user.username}{user.isAdmin ? " (Admin)" : ""}!
+                Hello, {user.username}{user.admin ? " (Admin)" : ""}!
               </span>
               <button id="logout-btn" onClick={handleLogout}>
                 Logout
