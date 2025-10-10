@@ -5,7 +5,6 @@ import axios from 'axios';
 
 interface Pet {
     entity: string,
-    type: string,
     photos: string,
     name: string,
     location: string,
@@ -41,7 +40,7 @@ function PetCard() {
                 <Card className="card-root">
                 <CardMedia className="card-media"
                     image={pet.photos}
-                    title={pet.entity + pet.type}
+                    title={pet.entity}
                 />
                 <CardContent>
                     <Typography gutterBottom variant="h5" component="div">
