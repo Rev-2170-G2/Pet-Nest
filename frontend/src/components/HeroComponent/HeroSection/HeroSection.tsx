@@ -4,10 +4,10 @@ import Button from '../Button/Button';
 import './styles.css';
 import CardDisplay from '../CardDisplay/CardDisplay';
 
-const buttonNames = ["Pets Please", "Event Hunting"];
+const buttonNames: string[] = ["Pets Please", "Event Hunting"];
 
 function HeroSection() {
-    const [selectedButton, setSelectedButton] = useState("Pets Please");
+    const [selectedButton, setSelectedButton] = useState<string>("Pets Please");
 
     function handleButtonClick(buttonText: string){
       setSelectedButton(buttonText);

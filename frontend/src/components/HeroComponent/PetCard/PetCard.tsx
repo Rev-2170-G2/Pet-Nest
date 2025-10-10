@@ -1,34 +1,34 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react';
 import { Card, CardActions, CardContent, CardMedia, Button, Typography } from '@mui/material';
-import './styles.css'
+import './styles.css';
 import axios from 'axios';
 
 interface Pet {
-    entity: string,
-    photos: string,
-    name: string,
-    location: string,
-    description: string
+    entity: string;
+    photos: string;
+    name: string;
+    location: string;
+    description: string;
 }
 
 function PetCard() {
-    const [pets, setPets] = useState<Pet[]>([])
-    const [loading, setLoading] = useState(true)
+    const [pets, setPets] = useState<Pet[]>([]);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const fetchPets = async () => {
             try {
-                const response = await axios.get("http://localhost:3000/api/pets")
-                console.log(response.data)
-                setPets(response.data.data.Items)
+                const response = await axios.get("http://localhost:3000/api/pets");
+                console.log(response.data);
+                setPets(response.data.data.Items);
             } catch (error) {
-                console.error("Error fetching pets: ", error)
+                console.error("Error fetching pets: ", error);
             } finally {
                 setLoading(false);
             }
         }
 
-        fetchPets()
+        fetchPets();
     }, [])
 
     if (loading) return <p>Loading...</p>
@@ -64,4 +64,4 @@ function PetCard() {
   );
 }
 
-export default PetCard
+export default PetCard;

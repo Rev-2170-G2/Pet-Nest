@@ -5,12 +5,12 @@ import './styles.css'
 import axios from 'axios';
 
 interface Events {
-    entity: string,
-    photos: string,
-    status: string,
-    name: string,
-    location: string,
-    description: string
+    entity: string;
+    photos: string;
+    status: string;
+    name: string;
+    location: string;
+    description: string;
 }
 
 function EventCard() {
@@ -20,16 +20,16 @@ function EventCard() {
     useEffect(() => {
         const fetchEvents = async () => {
             try {
-                const response = await axios.get("http://localhost:3000/api/events")
-                console.log(response.data)
-                setEvents(response.data.data)
+                const response = await axios.get("http://localhost:3000/api/events");
+                console.log(response.data);
+                setEvents(response.data.data);
             } catch (error) {
-                console.log('Error fetching events: ' + error)
+                console.log('Error fetching events: ' + error);
             } finally {
-                setLoading(false)
+                setLoading(false);
             }
         }
-        fetchEvents()    
+        fetchEvents();    
     }, [])
 
     if (loading) return <p>Loading...</p>
@@ -66,4 +66,4 @@ function EventCard() {
   )
 }
 
-export default EventCard
+export default EventCard;

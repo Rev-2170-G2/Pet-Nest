@@ -1,9 +1,9 @@
-import React from 'react'
-import './styles.css'
+import React from 'react';
+import './styles.css';
 
 interface ButtonProps {
-  text: string
-  onClick: (buttonText: string) => void
+  text: string;
+  onClick: (buttonText: string) => void;
 }
 
 function Button(props: ButtonProps) {
@@ -20,4 +20,4 @@ function Button(props: ButtonProps) {
   )
 }
 
-export default Button
+export default Button;

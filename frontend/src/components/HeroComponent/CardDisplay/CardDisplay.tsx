@@ -1,13 +1,13 @@
-import React, { useState } from 'react'
-import PetCard from '../PetCard/PetCard'
-import EventCard from '../EventCard/EventCard'
+import React, { useState } from 'react';
+import PetCard from '../PetCard/PetCard';
+import EventCard from '../EventCard/EventCard';
 
 interface CardDisplayProps {
-    display : string
+    display : string;
 }
 
 function CardDisplay(props: CardDisplayProps) {
-    console.log(props.display)
+    console.log(props.display);
 
   return (
     <>
@@ -18,4 +18,4 @@ function CardDisplay(props: CardDisplayProps) {
   )
 }
 
-export default CardDisplay
+export default CardDisplay;
