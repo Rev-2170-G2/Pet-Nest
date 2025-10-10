@@ -1,4 +1,4 @@
-import { Pet } from "./PetPage";
+import { Pet } from "../../types/Pet";
 import Rating from "@mui/material/Rating";
 import { useNavigate } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";

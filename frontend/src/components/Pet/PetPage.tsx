@@ -2,20 +2,9 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import PetDetails from "./PetDetails";
+import { Pet } from "../../types/Pet";
 
 const URL = "http://localhost:3000";
-
-export interface Pet {
-  id: string;
-  name: string;
-  type: string;
-  description: string;
-  services: { service: string; price: number; }[];
-  eventsCompleted: number;
-  review: number;
-  photos?: string[];
-  location?: string;
-}
 
 export default function PetPage() {
   const { id } = useParams();
