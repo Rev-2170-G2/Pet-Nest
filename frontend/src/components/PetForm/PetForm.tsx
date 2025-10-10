@@ -150,7 +150,16 @@ export default function PetForm({}: Props) {
           </Col>
 
           {/* MultiStringInput for Services */}
-          <MultiStringInput label="Services" onChange={setServices} />
+          <Form.Group as={Row} className="mb-3" controlId="formBasicServices">
+            <Form.Label column>Services</Form.Label>
+            <MultiStringInput label="Services" onChange={setServices} />
+            {validated && services.length === 0 && (
+                <div className="invalid-feedback d-block">Please add at least one service</div>
+            )}
+            {validated && services.length > 0 && (
+                <div className="valid-feedback d-block">Looks good!</div>
+            )}
+          </Form.Group>
         </Row>
 
         <Button variant="primary" type="submit">
