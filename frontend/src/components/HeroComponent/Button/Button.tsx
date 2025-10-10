@@ -10,7 +10,7 @@ function Button(props: ButtonProps) {
   return (
     <>
       <button 
-        id="simple-button"
+        className="hero-button"
         type="button" 
         onClick={() => props.onClick(props.text)}
       >
