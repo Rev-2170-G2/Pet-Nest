@@ -1,5 +1,5 @@
 import { render, screen, fireEvent } from "@testing-library/react";
-import { UserContext, User } from "../../context/AppContext";
+import { UserContext, User } from "../../context/AuthContext";
 import NavBar from "./NavBar";
 import { MemoryRouter } from "react-router-dom";
 

@@ -2,19 +2,18 @@ import { Routes, Route } from "react-router-dom";
 import NavBar from "./components/NavBar/NavBar";
 import Home from "./components/Home/Home";
 import PetsEvents from "./components/PetsEvents/PetsEvents";
-import { AppProvider } from "./context/AppContext";
+import { AuthProvider } from "./context/AuthContext";
 
 function App() {
   return (
-    <AppProvider>
+    <AuthProvider>
       <NavBar />
-
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/pets-events" element={<PetsEvents />} />
       </Routes>
-    </AppProvider>
+    </AuthProvider>
   );
 }
 
-export default App
+export default App;

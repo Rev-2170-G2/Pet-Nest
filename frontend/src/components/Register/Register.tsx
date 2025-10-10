@@ -41,6 +41,7 @@ function Register({onClose, onSubmit}: RegisterProps) {
       <div className="popup-box">
         <button className="close-btn" onClick={onClose}>X</button>
         <h2>Register</h2>
+
         <form onSubmit={handleRegister}>
           <label htmlFor="username" className="visually-hidden">Username</label>
           <input
@@ -74,6 +75,7 @@ function Register({onClose, onSubmit}: RegisterProps) {
 
           <button type="submit">Register</button>
         </form>
+
         {message && <p className="message">{message}</p>}
       </div>
     </div>

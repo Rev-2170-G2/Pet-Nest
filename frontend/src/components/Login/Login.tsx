@@ -1,6 +1,6 @@
 import React, { useState, useContext } from "react";
 import "./Login.css";
-import { UserContext } from "../../context/AppContext";
+import { AuthContext } from "../../context/AuthContext";
 
 interface LoginProps {
   onClose: () => void;
@@ -12,7 +12,7 @@ function Login({onClose, onSubmit}: LoginProps) {
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
 
-  const {setUser} = useContext(UserContext);
+  const {login} = useContext(AuthContext);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -29,7 +29,11 @@ function Login({onClose, onSubmit}: LoginProps) {
 
       if (response.ok) {
         setMessage("Login successful!");
-        setUser({username, token: data.token});
+        login({
+          username,
+          token: data.token,
+          isAdmin: data.isAdmin || false,
+        });
         onClose();
       } else {
         setMessage(data.message || "Login failed");
@@ -44,6 +48,7 @@ function Login({onClose, onSubmit}: LoginProps) {
       <div className="popup-box">
         <button className="close-btn" onClick={onClose}>X</button>
         <h2>Login</h2>
+
         <form onSubmit={handleLogin}>
           <label htmlFor="username" className="visually-hidden">Username</label>
           <input
@@ -67,6 +72,7 @@ function Login({onClose, onSubmit}: LoginProps) {
 
           <button type="submit">Login</button>
         </form>
+
         {message && <p className="message">{message}</p>}
       </div>
     </div>
