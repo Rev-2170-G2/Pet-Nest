@@ -1,22 +1,14 @@
 import { Button, Card, CardActions, CardContent, Typography } from '@mui/material'
 import CardMedia from '@mui/material/CardMedia'
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import './styles.css'
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { Event } from "../../../types/Event";
 
-interface Events {
-    id: string;
-    entity: string;
-    photos: string;
-    status: string;
-    name: string;
-    location: string;
-    description: string;
-}
 
 function EventCard() {
-    const [events, setEvents] = useState<Events[]>([])
+    const [events, setEvents] = useState<Event[]>([])
     const [loading, setLoading] = useState(true)
     const navigate = useNavigate();
 
