@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import "./Register.css";
+import { AuthContext, User } from "../../context/AuthContext";
 
 interface RegisterProps {
   onClose: () => void;
@@ -11,6 +12,8 @@ function Register({onClose, onSubmit}: RegisterProps) {
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
+
+  const {login} = useContext(AuthContext);
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -27,6 +30,14 @@ function Register({onClose, onSubmit}: RegisterProps) {
 
       if (response.ok) {
         setMessage("Registration successful!");
+        
+        const user: User = {
+          username,
+          token: data.token,
+          isAdmin: data.isAdmin || false,
+        };
+        login(user);
+
         setTimeout(() => onClose(), 1000);
       } else {
         setMessage(data.message || "Registration failed");

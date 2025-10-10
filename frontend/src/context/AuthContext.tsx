@@ -24,7 +24,7 @@ interface AuthProviderProps {
   children: ReactNode;
 }
 
-export const AuthProvider = ({ children }: AuthProviderProps) => {
+export const AuthProvider = ({children}: AuthProviderProps) => {
   const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
@@ -33,7 +33,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     const isAdmin = localStorage.getItem("isAdmin") === "true";
 
     if (token && username) {
-      setUser({ username, token, isAdmin });
+      setUser({username, token, isAdmin});
     }
   }, []);
 
@@ -58,7 +58,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, logout, setUser }}>
+    <AuthContext.Provider value={{user, login, logout, setUser}}>
       {children}
     </AuthContext.Provider>
   );

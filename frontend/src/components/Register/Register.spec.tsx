@@ -1,4 +1,3 @@
-import React from "react";
 import { render, screen, fireEvent } from "@testing-library/react";
 import Register from "./Register";
 
@@ -21,13 +20,13 @@ describe("Register Component", () => {
     expect(screen.getByRole("button", {name: /X/i})).toBeInTheDocument();
   });
 
-  test("calls onClose when close button is clicked", () => {
+  test("should call onClose when close button is clicked", () => {
     render(<Register onClose={mockOnClose} onSubmit={mockSubmit} />);
     fireEvent.click(screen.getByRole("button", {name: /X/i}));
     expect(mockOnClose).toHaveBeenCalled();
   });
 
-  test("updates input values when typing", () => {
+  test("should update input values when typing", () => {
     render(<Register onClose={mockOnClose} onSubmit={mockSubmit} />);
 
     const usernameInput = screen.getByLabelText(/Username/i);
@@ -43,7 +42,7 @@ describe("Register Component", () => {
     expect(passwordInput).toHaveValue("testpass");
   });
 
-  test("submits form correctly", () => {
+  test("should submit form correctly", () => {
     render(<Register onClose={mockOnClose} onSubmit={mockSubmit} />);
 
     fireEvent.change(screen.getByLabelText(/Username/i), {target: {value: "testuser"}});

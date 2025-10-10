@@ -1,4 +1,3 @@
-import React from "react";
 import { render, screen, fireEvent } from "@testing-library/react";
 import Login from "./Login";
 
@@ -11,7 +10,7 @@ describe("Login Component", () => {
     mockSubmit.mockClear();
   });
 
-  test("renders login form correctly", () => {
+  test("should render login form correctly", () => {
     render(<Login onClose={mockOnClose} onSubmit={mockSubmit} />);
 
     expect(screen.getByLabelText(/Username/i)).toBeInTheDocument();
@@ -20,13 +19,13 @@ describe("Login Component", () => {
     expect(screen.getByRole("button", {name: /X/i})).toBeInTheDocument();
   });
 
-  test("calls onClose when close button is clicked", () => {
+  test("should call onClose when close button is clicked", () => {
     render(<Login onClose={mockOnClose} onSubmit={mockSubmit} />);
     fireEvent.click(screen.getByRole("button", {name: /X/i}));
     expect(mockOnClose).toHaveBeenCalled();
   });
 
-  test("updates input values when typing", () => {
+  test("should update input values when typing", () => {
     render(<Login onClose={mockOnClose} onSubmit={mockSubmit} />);
 
     const usernameInput = screen.getByLabelText(/Username/i);
@@ -39,7 +38,7 @@ describe("Login Component", () => {
     expect(passwordInput).toHaveValue("testpass");
   });
 
-  test("submits form correctly", () => {
+  test("should submit form correctly", () => {
     render(<Login onClose={mockOnClose} onSubmit={mockSubmit} />);
 
     fireEvent.change(screen.getByLabelText(/Username/i), {target: {value: "testuser"}});

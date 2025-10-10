@@ -27,12 +27,9 @@ function NavBar() {
 
           {user ? (
             <>
-              <span className="welcome-text">Hello, {user.username}!</span>
-              {user.isAdmin && (
-                <Link to="/admin" className="nav-link admin-link">
-                  Admin Panel
-                </Link>
-              )}
+              <span className="welcome-text">
+                Hello, {user.username}{user.isAdmin ? " (Admin)" : ""}!
+              </span>
               <button id="logout-btn" onClick={handleLogout}>
                 Logout
               </button>

@@ -1,6 +1,6 @@
 import React, { useState, useContext } from "react";
 import "./Login.css";
-import { AuthContext } from "../../context/AuthContext";
+import { AuthContext, User } from "../../context/AuthContext";
 
 interface LoginProps {
   onClose: () => void;
@@ -28,12 +28,13 @@ function Login({onClose, onSubmit}: LoginProps) {
       const data = await response.json();
 
       if (response.ok) {
-        setMessage("Login successful!");
-        login({
+        const user: User = {
           username,
           token: data.token,
           isAdmin: data.isAdmin || false,
-        });
+        };
+        login(user);
+        setMessage("Login successful!");
         onClose();
       } else {
         setMessage(data.message || "Login failed");
