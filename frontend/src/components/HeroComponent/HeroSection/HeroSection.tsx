@@ -1,28 +1,30 @@
-import React, { useState } from 'react'
-import Video from '../Video/Video'
-import Button from '../Button/Button'
-import './styles.css'
-import CardDisplay from '../CardDisplay'
+import React, { useState } from 'react';
+import Video from '../Video/Video';
+import Button from '../Button/Button';
+import './styles.css';
+import CardDisplay from '../CardDisplay/CardDisplay';
+
+const buttonNames = ["Pets Please", "Event Hunting"];
 
 function HeroSection() {
-    const [selectedButton, setSelectedButton] = useState("Pets Please")
+    const [selectedButton, setSelectedButton] = useState("Pets Please");
 
     function handleButtonClick(buttonText: string){
-      setSelectedButton(buttonText)
+      setSelectedButton(buttonText);
     }
+
   return (
     <>
       <div className="hero-container">
         <Video />
         <div className="hero-buttons">
-          <Button 
-            text="Pets Please" 
-            onClick={handleButtonClick}
-          />
-          <Button 
-            text="Event Hunting" 
-            onClick={handleButtonClick}
-          />
+          {buttonNames.map((name, index) => (
+            <Button
+              key={index}
+              text={name}
+              onClick={handleButtonClick}
+            />
+          ))}
         </div>
       </div>
       <CardDisplay display={selectedButton} />
@@ -30,4 +32,4 @@ function HeroSection() {
   )
 }
 
-export default HeroSection
+export default HeroSection;
