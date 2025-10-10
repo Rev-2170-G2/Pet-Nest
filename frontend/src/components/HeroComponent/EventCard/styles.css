@@ -1,7 +1,30 @@
 .eventcard-container {
     display: flex;
+    flex-direction: 'column';
+    justify-content: 'flex-start';
     gap: 20px;
     flex-wrap: wrap;  
     padding: 100px;
+    /* justify-content: center; for centering the cards if needed*/ 
+}
 
+.event-card {
+  width: 250px;
+  height: 350px;
+  display: flex;
+}
+
+.card-root {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.card-media {
+  height: 150px;
+}
+
+.card-actions {
+  margin-top: auto;
+  align-self: flex-start;
 }
