@@ -3,23 +3,19 @@ import { AuthContext, User } from "../../context/AuthContext";
 import NavBar from "./NavBar";
 import { MemoryRouter } from "react-router-dom";
 
-const renderWithUser = (user: User | null, login = jest.fn(), logout = jest.fn(), setUser = jest.fn()) => {
-  return render(
-    <MemoryRouter>
-      <AuthContext.Provider value={{user, login, logout, setUser}}>
-        <NavBar />
-      </AuthContext.Provider>
-    </MemoryRouter>
-  );
-};
-
 describe("NavBar Component", () => {
   beforeEach(() => {
     localStorage.clear();
   });
 
   test("should show Login and Register buttons when user is null", () => {
-    renderWithUser(null);
+    render(
+      <MemoryRouter>
+        <AuthContext.Provider value={{user: null, login: jest.fn(), logout: jest.fn(), setUser: jest.fn()}}>
+          <NavBar />
+        </AuthContext.Provider>
+      </MemoryRouter>
+    );
 
     expect(screen.getByText(/Login/i)).toBeInTheDocument();
     expect(screen.getByText(/Register/i)).toBeInTheDocument();
@@ -28,7 +24,13 @@ describe("NavBar Component", () => {
 
   test("should show welcome message and logout button when user is logged in", () => {
     const mockUser: User = {username: "testuser", token: "testtoken", isAdmin: false};
-    renderWithUser(mockUser);
+    render(
+      <MemoryRouter>
+        <AuthContext.Provider value={{user: mockUser, login: jest.fn(), logout: jest.fn(), setUser: jest.fn()}}>
+          <NavBar />
+        </AuthContext.Provider>
+      </MemoryRouter>
+    );
 
     expect(screen.getByText(/Hello, testuser!/i)).toBeInTheDocument();
     expect(screen.getByText(/Logout/i)).toBeInTheDocument();
@@ -42,11 +44,15 @@ describe("NavBar Component", () => {
     localStorage.setItem("username", mockUser.username);
     localStorage.setItem("isAdmin", JSON.stringify(mockUser.isAdmin));
 
-    renderWithUser(mockUser, undefined, mockLogout);
+    render(
+      <MemoryRouter>
+        <AuthContext.Provider value={{user: mockUser, login: jest.fn(), logout: mockLogout, setUser: jest.fn()}}>
+          <NavBar />
+        </AuthContext.Provider>
+      </MemoryRouter>
+    );
 
-    const logoutButton = screen.getByText(/Logout/i);
-    fireEvent.click(logoutButton);
-
+    fireEvent.click(screen.getByText(/Logout/i));
     expect(mockLogout).toHaveBeenCalled();
   });
 });

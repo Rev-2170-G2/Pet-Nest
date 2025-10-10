@@ -1,17 +1,32 @@
-import { render, screen, fireEvent } from "@testing-library/react";
+import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import Register from "./Register";
+import { AuthContext, User } from "../../context/AuthContext";
 
 describe("Register Component", () => {
   const mockOnClose = jest.fn();
   const mockSubmit = jest.fn();
+  const mockLogin = jest.fn();
 
   beforeEach(() => {
     mockOnClose.mockClear();
     mockSubmit.mockClear();
+    mockLogin.mockClear();
+    (global as any).fetch = jest.fn();
   });
 
+  const contextValue = {
+    user: null,
+    login: mockLogin,
+    logout: jest.fn(),
+    setUser: jest.fn(),
+  };
+
   test("should render registration form correctly", () => {
-    render(<Register onClose={mockOnClose} onSubmit={mockSubmit} />);
+    render(
+      <AuthContext.Provider value={contextValue}>
+        <Register onClose={mockOnClose} onSubmit={mockSubmit} />
+      </AuthContext.Provider>
+    );
 
     expect(screen.getByLabelText(/Username/i)).toBeInTheDocument();
     expect(screen.getByLabelText(/Email/i)).toBeInTheDocument();
@@ -21,29 +36,43 @@ describe("Register Component", () => {
   });
 
   test("should call onClose when close button is clicked", () => {
-    render(<Register onClose={mockOnClose} onSubmit={mockSubmit} />);
+    render(
+      <AuthContext.Provider value={contextValue}>
+        <Register onClose={mockOnClose} onSubmit={mockSubmit} />
+      </AuthContext.Provider>
+    );
+
     fireEvent.click(screen.getByRole("button", {name: /X/i}));
     expect(mockOnClose).toHaveBeenCalled();
   });
 
   test("should update input values when typing", () => {
-    render(<Register onClose={mockOnClose} onSubmit={mockSubmit} />);
+    render(
+      <AuthContext.Provider value={contextValue}>
+        <Register onClose={mockOnClose} onSubmit={mockSubmit} />
+      </AuthContext.Provider>
+    );
 
-    const usernameInput = screen.getByLabelText(/Username/i);
-    const emailInput = screen.getByLabelText(/Email/i);
-    const passwordInput = screen.getByLabelText(/Password/i);
+    fireEvent.change(screen.getByLabelText(/Username/i), {target: {value: "testuser"}});
+    fireEvent.change(screen.getByLabelText(/Email/i), {target: {value: "test@email.com"}});
+    fireEvent.change(screen.getByLabelText(/Password/i), {target: {value: "testpass"}});
 
-    fireEvent.change(usernameInput, {target: {value: "testuser"}});
-    fireEvent.change(emailInput, {target: {value: "test@email.com"}});
-    fireEvent.change(passwordInput, {target: {value: "testpass"}});
-
-    expect(usernameInput).toHaveValue("testuser");
-    expect(emailInput).toHaveValue("test@email.com");
-    expect(passwordInput).toHaveValue("testpass");
+    expect(screen.getByLabelText(/Username/i)).toHaveValue("testuser");
+    expect(screen.getByLabelText(/Email/i)).toHaveValue("test@email.com");
+    expect(screen.getByLabelText(/Password/i)).toHaveValue("testpass");
   });
 
-  test("should submit form correctly", () => {
-    render(<Register onClose={mockOnClose} onSubmit={mockSubmit} />);
+  test("should submit form, calls login, and onClose on successful fetch", async () => {
+    (global.fetch as jest.Mock).mockResolvedValueOnce({
+      ok: true,
+      json: async () => ({token: "faketoken", isAdmin: false}),
+    });
+
+    render(
+      <AuthContext.Provider value={contextValue}>
+        <Register onClose={mockOnClose} onSubmit={mockSubmit} />
+      </AuthContext.Provider>
+    );
 
     fireEvent.change(screen.getByLabelText(/Username/i), {target: {value: "testuser"}});
     fireEvent.change(screen.getByLabelText(/Email/i), {target: {value: "test@email.com"}});
@@ -51,5 +80,14 @@ describe("Register Component", () => {
 
     fireEvent.click(screen.getByRole("button", {name: /Register/i}));
     expect(mockSubmit).toHaveBeenCalled();
+
+    await waitFor(() => {
+      expect(mockLogin).toHaveBeenCalledWith({
+        username: "testuser",
+        token: "faketoken",
+        isAdmin: false,
+      });
+      expect(mockOnClose).toHaveBeenCalled();
+    });
   });
 });

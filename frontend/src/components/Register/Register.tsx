@@ -37,8 +37,8 @@ function Register({onClose, onSubmit}: RegisterProps) {
           isAdmin: data.isAdmin || false,
         };
         login(user);
-
-        setTimeout(() => onClose(), 1000);
+        onClose();
+        // setTimeout(() => onClose(), 1000);
       } else {
         setMessage(data.message || "Registration failed");
       }
