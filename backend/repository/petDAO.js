@@ -114,11 +114,11 @@ async function getAllPetServices(){
     }
 }
 
-//
+// get pet details by pet Id
 async function getPetById(petId) {
     const command = new QueryCommand({ 
         TableName,
-        PetIndexName,
+        IndexName: PetIndexName,
         KeyConditionExpression: `id = :id`,
         ExpressionAttributeValues: {':id': petId},
     });
