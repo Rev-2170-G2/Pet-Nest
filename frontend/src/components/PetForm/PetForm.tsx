@@ -6,16 +6,14 @@ import axios from 'axios';
 import './PetForm.css';
 type Props = {}
 
+type Service = {
+    service: string,
+    price: number
+}
+
 export default function PetForm({}: Props) {
-
-    type service = {
-        service: string,
-        price: number
-    }
-    const [services, setServices] = useState<service[]>([]);
-
+    const [services, setServices] = useState<Service[]>([]);
     const [selectedPlace, setSelectedPlace] = useState<google.maps.places.Place | null>(null);
-
     const [validated, setValidated] = useState<boolean>(false);
     
     const [pet, setPet] = useState({
@@ -27,84 +25,138 @@ export default function PetForm({}: Props) {
         location: selectedPlace
     });
 
-    const onChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const onChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         setPet({ ...pet, [e.target.name]: e.target.value });
-    }
+    };
 
+    // sync services and location into pet object
     useEffect(() => {
         setPet({...pet, services: services});
-    },[services])
-
+    },[services]);
     useEffect(() => {
         if(selectedPlace && selectedPlace.location) {
             setPet({ ...pet, location: selectedPlace});
         }
-        console.log(pet);
-    }, [selectedPlace, setSelectedPlace])
+    }, [selectedPlace, setSelectedPlace]);
 
     const handleSubmit = async (e: any) => {
         e.preventDefault();
         const form = e.currentTarget;
+        setValidated(true); 
+
         if (form.checkValidity() === false || services.length === 0) {
             e.stopPropagation();
             console.log('PetForm validation failed');
+            return;
         } else if (form.checkValidity() === true && services.length > 0) {
             setValidated(true);
             console.log('PetForm validation passed');
             console.log(pet);
-            // await axios
-            // .post(`${import.meta.env.VITE_BACKEND_URL}/pets/`, pet)
-            // .then((res) => {
-            //     console.log(res);
-            // })
-            // .catch((err) => {
-            //     console.error(err);
-            // })
+        // try {
+        // const res = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/pets/`, pet);
+        // console.log(res);
+        // } catch (err) {
+        // console.error(err);
+        // }
         }
     }
 
   return (
     <>
-    <Container>
-        <Form noValidate validated={validated} onSubmit={handleSubmit} id='pet-form'>
-            <Row>
-            <Col>
-                <Form.Group className="mb-3" controlId="formBasicName">
-                    <Form.Label>Pet name</Form.Label>
-                    <Form.Control type="text" placeholder="Enter pet name" value={pet.name} onChange={onChange} name="name" required/>
-                    <Form.Control.Feedback>Loogs good!</Form.Control.Feedback>
-                    <Form.Control.Feedback type="invalid">Please provide a name</Form.Control.Feedback>
-                </Form.Group>
+   <Container>
+      <Form noValidate validated={validated} onSubmit={handleSubmit} id="pet-form">
+        <Row className="mb-3">
+          <Col>
+            {/* Pet Name */}
+            <Form.Group as={Row} className="mb-3" controlId="formBasicName">
+              <Form.Label column sm={2}>Name</Form.Label>
+              <Col>
+                <Form.Control
+                  type="text"
+                  placeholder="Enter pet name"
+                  value={pet.name}
+                  onChange={onChange}
+                  name="name"
+                  required
+                />
+                <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+                <Form.Control.Feedback type="invalid">
+                  Please provide a name.
+                </Form.Control.Feedback>
+              </Col>
+            </Form.Group>
 
-                <Form.Group className="mb-3" controlId="formBasicType">
-                    <Form.Label>Pet type</Form.Label>
-                    <Form.Control type="text" placeholder="Enter pet type" value={pet.type} onChange={onChange} name="type" required/>
-                    <Form.Control.Feedback>Loogs good!</Form.Control.Feedback>
-                    <Form.Control.Feedback type="invalid">Please provide a pet type</Form.Control.Feedback>
-                </Form.Group>
+            {/* Pet Type */}
+            <Form.Group as={Row} className="mb-3" controlId="formBasicType">
+              <Form.Label column sm={2}>Type</Form.Label>
+              <Col>
+                <Form.Control
+                  type="text"
+                  placeholder="Enter pet type"
+                  value={pet.type}
+                  onChange={onChange}
+                  name="type"
+                  required
+                />
+                <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+                <Form.Control.Feedback type="invalid">
+                  Please provide a pet type.
+                </Form.Control.Feedback>
+              </Col>
+            </Form.Group>
 
-                <Form.Group className="mb-3" controlId="formBasicDesc">
-                    <Form.Label>Pet description</Form.Label>
-                    <Form.Control as="textarea" placeholder="Enter a description of the pet" value={pet.description} onChange={onChange} name="description" required/>
-                    <Form.Control.Feedback>Loogs good!</Form.Control.Feedback>
-                    <Form.Control.Feedback type="invalid">Please provide a description</Form.Control.Feedback>
-                </Form.Group>
+            {/* Description */}
+            <Form.Group as={Row} className="mb-3" controlId="formBasicDesc">
+              <Form.Label column sm={2}>Description</Form.Label>
+              <Col>
+                <Form.Control
+                  as="textarea"
+                  placeholder="Enter a description of the pet"
+                  value={pet.description}
+                  onChange={onChange}
+                  name="description"
+                  required
+                />
+                <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+                <Form.Control.Feedback type="invalid">
+                  Please provide a description.
+                </Form.Control.Feedback>
+              </Col>
+            </Form.Group>
 
-                <Form.Group controlId="formFile" className="mb-3">
-                    <Form.Label>Default file input example</Form.Label>
-                    <Form.Control type="file" />
-                </Form.Group>
-            </Col>
-            
-            <MultiStringInput label="Services" onChange={setServices} />
-            <Col>
-                <MapView setSelectedPlace={setSelectedPlace} selectedPlace={selectedPlace}></MapView>
-            </Col>
-            </Row>
-            <Button variant="primary" type="submit">
-                Submit
-            </Button>
-        </Form>
+            {/* File Upload */}
+            <Form.Group as={Col} controlId="formFile" className="mb-3">
+              <Form.Label>Upload a photo</Form.Label>
+              <Form.Control type="file" required />
+              <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+              <Form.Control.Feedback type="invalid">
+                Please upload at least one photo.
+              </Form.Control.Feedback>
+            </Form.Group>
+
+            {/* Confirmation Checkbox */}
+            <Form.Group className="mb-3" controlId="formBasicCheckbox">
+              <Form.Check type="checkbox" label="Confirm settings" required />
+              <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+              <Form.Control.Feedback type="invalid">
+                Please confirm information is correct.
+              </Form.Control.Feedback>
+            </Form.Group>
+          </Col>
+
+          {/* Map Column */}
+          <Col>
+            <MapView setSelectedPlace={setSelectedPlace} selectedPlace={selectedPlace} />
+          </Col>
+
+          {/* MultiStringInput for Services */}
+          <MultiStringInput label="Services" onChange={setServices} />
+        </Row>
+
+        <Button variant="primary" type="submit">
+          Submit
+        </Button>
+      </Form>
     </Container>
     </>
   )

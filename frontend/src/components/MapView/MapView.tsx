@@ -8,13 +8,14 @@ import './AutoCompleteControl.css';
 type Props = {
   selectedPlace: google.maps.places.Place | null;
   setSelectedPlace: (  place: google.maps.places.Place | null) => void;
+  style?: ({width: number, height: number} | null);
 }
 
 export default function MapView({setSelectedPlace, selectedPlace}: Props) {
 
   return (
     <>
-    <Container>
+    <div id='map-container'>
       <Map
         mapId={'DEMO_MAP_ID'}
         style={{width: '50vw', height: '35vh'}}
@@ -31,7 +32,7 @@ export default function MapView({setSelectedPlace, selectedPlace}: Props) {
       <AutoCompleteResult place={selectedPlace} />
 
       </Map>
-    </Container>
+    </div>
     </>
   )
 }
