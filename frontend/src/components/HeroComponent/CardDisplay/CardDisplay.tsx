@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
-import PetCard from './PetCard/PetCard'
-import EventCard from './EventCard/EventCard'
+import PetCard from '../PetCard/PetCard'
+import EventCard from '../EventCard/EventCard'
 
 interface CardDisplayProps {
     display : string
