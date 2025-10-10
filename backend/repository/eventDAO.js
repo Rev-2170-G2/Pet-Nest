@@ -39,7 +39,7 @@ async function createEvent(event) {
 async function findAllEvents() {
     const command = new ScanCommand({
         TableName,
-        EventIndexName,
+        IndexName: EventIndexName,
         FilterExpression: "begins_with(#id, :id)",
         ExpressionAttributeNames: {"#id" : "id"},
         ExpressionAttributeValues: {":id": 'e'}
@@ -63,7 +63,7 @@ async function findAllEvents() {
 async function findEventById(id) {
     const command = new QueryCommand({ 
         TableName,
-        EventIndexName,
+        IndexName: EventIndexName,
         KeyConditionExpression: `id = :id`,
         ExpressionAttributeValues: {':id': id},
     });
