@@ -64,12 +64,12 @@ export default function PetForm({}: Props) {
   return (
     <>
    <Container>
-      <Form noValidate validated={validated} onSubmit={handleSubmit} id="pet-form">
+      <Form noValidate onSubmit={handleSubmit} id="pet-form">
         <Row className="mb-3">
           <Col>
             {/* Pet Name */}
             <Form.Group as={Row} className="mb-3" controlId="formBasicName">
-              <Form.Label column sm={2}>Name</Form.Label>
+              <Form.Label column sm={3}>Name</Form.Label>
               <Col>
                 <Form.Control
                   type="text"
@@ -77,6 +77,7 @@ export default function PetForm({}: Props) {
                   value={pet.name}
                   onChange={onChange}
                   name="name"
+                  isInvalid={validated}
                   required
                 />
                 <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
@@ -88,7 +89,7 @@ export default function PetForm({}: Props) {
 
             {/* Pet Type */}
             <Form.Group as={Row} className="mb-3" controlId="formBasicType">
-              <Form.Label column sm={2}>Type</Form.Label>
+              <Form.Label column sm={3}>Type</Form.Label>
               <Col>
                 <Form.Control
                   type="text"
@@ -96,6 +97,7 @@ export default function PetForm({}: Props) {
                   value={pet.type}
                   onChange={onChange}
                   name="type"
+                  isInvalid={validated}
                   required
                 />
                 <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
@@ -107,7 +109,7 @@ export default function PetForm({}: Props) {
 
             {/* Description */}
             <Form.Group as={Row} className="mb-3" controlId="formBasicDesc">
-              <Form.Label column sm={2}>Description</Form.Label>
+              <Form.Label column sm={3}>Description</Form.Label>
               <Col>
                 <Form.Control
                   as="textarea"
@@ -115,6 +117,7 @@ export default function PetForm({}: Props) {
                   value={pet.description}
                   onChange={onChange}
                   name="description"
+                  isInvalid={validated}
                   required
                 />
                 <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
@@ -127,7 +130,7 @@ export default function PetForm({}: Props) {
             {/* File Upload */}
             <Form.Group as={Col} controlId="formFile" className="mb-3">
               <Form.Label>Upload a photo</Form.Label>
-              <Form.Control type="file" required />
+              <Form.Control type="file" isInvalid={validated} required />
               <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
               <Form.Control.Feedback type="invalid">
                 Please upload at least one photo.
@@ -136,7 +139,7 @@ export default function PetForm({}: Props) {
 
             {/* Confirmation Checkbox */}
             <Form.Group className="mb-3" controlId="formBasicCheckbox">
-              <Form.Check type="checkbox" label="Confirm settings" required />
+              <Form.Check type="checkbox" label="Confirm settings" isInvalid={validated} required />
               <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
               <Form.Control.Feedback type="invalid">
                 Please confirm information is correct.
@@ -151,7 +154,6 @@ export default function PetForm({}: Props) {
 
           {/* MultiStringInput for Services */}
           <Form.Group as={Row} className="mb-3" controlId="formBasicServices">
-            <Form.Label column>Services</Form.Label>
             <MultiStringInput label="Services" onChange={setServices} />
             {validated && services.length === 0 && (
                 <div className="invalid-feedback d-block">Please add at least one service</div>

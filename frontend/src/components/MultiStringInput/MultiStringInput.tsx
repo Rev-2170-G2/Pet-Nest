@@ -6,12 +6,12 @@ type MultiStringInputProps = {
   onChange?: ( services: {service: string; price: number}[]) => void;
 }
 
+type service = {
+  service: string,
+  price: number
+}
 const MultiStringInput: React.FC<MultiStringInputProps> = ({ label, onChange }) => {
 
-  type service = {
-    service: string,
-    price: number
-  }
   const [values, setValues] = useState<service[]>([]);
   const [serviceValue, setServiceValue] = useState('');
   const [priceValue, setPriceValue] = useState('0');
