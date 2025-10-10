@@ -1,3 +1,4 @@
+// below code provided by https://github.com/visgl/react-google-maps.git
 import { FormEvent, useCallback, useState } from 'react';import { ControlPosition, MapControl, useMapsLibrary } from '@vis.gl/react-google-maps';
 import {useAutocompleteSuggestions} from '../../hooks/UseAutoCompleteSuggestions';
 
@@ -11,7 +12,7 @@ const AutoCompleteControl = ({
   onPlaceSelect
 }: CustomAutocompleteControlProps) => {
 
-     const places = useMapsLibrary('places');
+  const places = useMapsLibrary('places');
 
   const [inputValue, setInputValue] = useState<string>('');
   const {suggestions, resetSession} = useAutocompleteSuggestions(inputValue);

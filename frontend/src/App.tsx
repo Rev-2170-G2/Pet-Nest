@@ -1,6 +1,4 @@
-import { useState } from 'react'
-import { APIProvider, Map } from '@vis.gl/react-google-maps';
-
+import { APIProvider } from '@vis.gl/react-google-maps';
 import { Route, Routes } from 'react-router-dom'
 import Home from './pages/Home/Home';
 import './App.css'

@@ -3,7 +3,7 @@ import { Form, Button, Badge, InputGroup } from "react-bootstrap";
 
 type MultiStringInputProps = {
   label: string;
-  onChange?: (values: {service: string; price: number}) => void;
+  onChange?: ( services: {service: string; price: number}[]) => void;
 }
 
 const MultiStringInput: React.FC<MultiStringInputProps> = ({ label, onChange }) => {

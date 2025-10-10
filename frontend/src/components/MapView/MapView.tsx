@@ -4,32 +4,31 @@ import { useState, useEffect } from 'react';
 import AutoCompleteControl from './AutoCompleteControl';
 import AutoCompleteResult from './AutoCompleteResult';
 import './AutoCompleteControl.css';
-type Props = {}
 
-export type AutocompleteMode = {id: string; label: string};
+type Props = {
+  selectedPlace: google.maps.places.Place | null;
+  setSelectedPlace: (  place: google.maps.places.Place | null) => void;
+}
 
-export default function MapView({}: Props) {
-
-  const [selectedPlace, setSelectedPlace] =
-    useState<google.maps.places.Place | null>(null);
+export default function MapView({setSelectedPlace, selectedPlace}: Props) {
 
   return (
     <>
     <Container>
       <Map
-      mapId={'DEMO_MAP_ID'}
+        mapId={'DEMO_MAP_ID'}
         style={{width: '50vw', height: '35vh'}}
         defaultCenter={{lat: 37, lng: -80}}
         defaultZoom={4}
         gestureHandling='greedy'
         disableDefaultUI
-        >
-        <AutoCompleteControl
-          controlPosition={ControlPosition.TOP_LEFT}
-          onPlaceSelect={setSelectedPlace}
-        />
+      >
+      <AutoCompleteControl
+        controlPosition={ControlPosition.TOP_LEFT}
+        onPlaceSelect={setSelectedPlace}
+      />
 
-        <AutoCompleteResult place={selectedPlace} />
+      <AutoCompleteResult place={selectedPlace} />
 
       </Map>
     </Container>

@@ -13,7 +13,8 @@ export default function PetForm({}: Props) {
         price: number
     }
     const [services, setServices] = useState<service[]>([]);
-;
+
+    const [selectedPlace, setSelectedPlace] = useState<google.maps.places.Place | null>(null);
 
     const [validated, setValidated] = useState<boolean>(false);
     
@@ -23,7 +24,7 @@ export default function PetForm({}: Props) {
         description: '',
         services: services,
         photos: {},
-        location: ''
+        location: selectedPlace
     });
 
     const onChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -33,6 +34,13 @@ export default function PetForm({}: Props) {
     useEffect(() => {
         setPet({...pet, services: services});
     },[services])
+
+    useEffect(() => {
+        if(selectedPlace && selectedPlace.location) {
+            setPet({ ...pet, location: selectedPlace});
+        }
+        console.log(pet);
+    }, [selectedPlace, setSelectedPlace])
 
     const handleSubmit = async (e: any) => {
         e.preventDefault();
@@ -59,6 +67,7 @@ export default function PetForm({}: Props) {
     <>
     <Container>
         <Form noValidate validated={validated} onSubmit={handleSubmit} id='pet-form'>
+            <Row>
             <Col>
                 <Form.Group className="mb-3" controlId="formBasicName">
                     <Form.Label>Pet name</Form.Label>
@@ -86,12 +95,12 @@ export default function PetForm({}: Props) {
                     <Form.Control type="file" />
                 </Form.Group>
             </Col>
-
+            
             <MultiStringInput label="Services" onChange={setServices} />
             <Col>
-                <MapView></MapView>
+                <MapView setSelectedPlace={setSelectedPlace} selectedPlace={selectedPlace}></MapView>
             </Col>
-            
+            </Row>
             <Button variant="primary" type="submit">
                 Submit
             </Button>
