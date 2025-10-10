@@ -8,9 +8,9 @@ const createPet = async (req, res) => {
 
     const data = await petService.createPet(userId, pet);
     if(data){
-        return res.status(201).json({message: `Created pet: `, data: pet});
+        return res.status(201).json({message: `Created pet`, data: pet});
     }
-    return res.status(400).json({message: "Pet not created: ", data: pet});
+    return res.status(400).json({message: "Pet not created", data: pet});
 }
 
 const updatePet = async (req, res) => {
@@ -55,7 +55,18 @@ const getPetById = async (req, res) => {
     logger.info({message: `Incoming petController getPetById request: ${JSON.stringify(petId)}`});
     const data = await petService.getPetById(petId);
     if (data) {
-        res.status(200).json({message: 'Pet found ', data});
+        res.status(200).json({message: 'Pet found', data});
+    } else { 
+        res.status(400).json({message: 'No pet found'});
+    }
+}
+
+const getPetsByUser = async (req, res) => {
+    const id = req.params.id;
+    logger.info({message: `Incoming petController getPetByUser request: ${JSON.stringify(id)}`});
+    const data = await petService.getPetsByUser(id);
+    if (data) {
+        res.status(200).json({message: 'Pets found', data});
     } else { 
         res.status(400).json({message: 'No pet found'});
     }
@@ -66,5 +77,6 @@ module.exports = {
     updatePet,
     deletePet,
     getAllPetServices,
-    getPetById
+    getPetById,
+    getPetsByUser
 }

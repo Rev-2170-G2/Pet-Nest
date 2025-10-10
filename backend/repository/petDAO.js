@@ -132,10 +132,28 @@ async function getPetById(petId) {
     }
 }
 
+async function getPetsByUser(pk) {
+    const command = new QueryCommand({
+        TableName,
+        KeyConditionExpression: "PK = :pk AND begins_with(SK, :sk)",
+        ExpressionAttributeValues: { ":pk": pk, ":sk": "PET#" },
+    });
+
+    try {
+        const data = await documentClient.send(command);
+        logger.info(`QUERY command to database complete | petDAO | getPetsByUser | data: ${JSON.stringify(data.Items)}`);
+        return data.Items.length > 0 ? data.Items : null;
+    } catch (err) { 
+        logger.error(`Error in petDAO | getPetsByUser | error: ${err}`);
+        return null;
+    }
+}
+
 module.exports = {
     createPet,
     updatePet,
     deletePet,
     getAllPetServices,
-    getPetById
+    getPetById,
+    getPetsByUser
 }
