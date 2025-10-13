@@ -1,5 +1,4 @@
 export interface Pet {
-  PK: string
   entity: string;
   id: string;
   name: string;
