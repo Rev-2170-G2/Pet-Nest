@@ -1,5 +1,6 @@
 
 import type { Config } from 'jest';
+// import identityObjProxy from 'identity-obj-proxy';
 
 const config: Config = {
     collectCoverage: true,
@@ -8,7 +9,11 @@ const config: Config = {
     coverageDirectory: 'coverage',
     testEnvironment: 'jsdom',
     transform: {
-    ".(ts|tsx)": "ts-jest"
+    "^.+\\.(ts|tsx)$": "ts-jest",
+    },
+
+    moduleNameMapper: {
+    "\\.(css|less|scss|sass)$": "identity-obj-proxy",
     },
 
     coveragePathIgnorePatterns: [
