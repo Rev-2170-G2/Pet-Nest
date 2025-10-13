@@ -77,10 +77,23 @@ async function getPetById(petId) {
     }
 }
 
+async function getPetsByUser(id) {
+    const pk = 'u#' + id;
+    const data = await petDAO.getPetsByUser(pk);
+    if (data) {
+        logger.info(`Pets found | petService | getPetsByUser | data: ${JSON.stringify(data)}`);
+        return data;
+    } else { 
+        logger.info(`Failed to find any pet | petService | getPetsByUser`);
+        return null;
+    }
+}
+
 module.exports = {
     createPet,
     updatePet,
     deletePet,
     getAllPetServices,
-    getPetById
+    getPetById,
+    getPetsByUser
 }
