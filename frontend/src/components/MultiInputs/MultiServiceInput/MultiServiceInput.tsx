@@ -49,7 +49,7 @@ export default function MultiServiceInput({onChange, label}: Props) {
           value={serviceValue}
           onChange={(e: ChangeEvent<HTMLInputElement>) => setServiceValue(e.target.value)}
           onKeyDown={handleKeyDown}
-          placeholder="Type a value and hit Enter"
+          placeholder="Type a value and press Enter"
         />
         <InputGroup.Text id="inputGroupPrepend">$</InputGroup.Text>
         <Form.Control

@@ -18,7 +18,7 @@ export default function MapView({setSelectedPlace, selectedPlace}: Props) {
     <div id='map-container'>
       <Map
         mapId={'DEMO_MAP_ID'}
-        style={{width: '50vw', height: '35vh'}}
+        style={{width: '50vw', height: '45vh'}}
         defaultCenter={{lat: 37, lng: -80}}
         defaultZoom={4}
         gestureHandling='greedy'

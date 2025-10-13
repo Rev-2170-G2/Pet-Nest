@@ -1,11 +1,143 @@
-import React from 'react'
-import Form from 'react-bootstrap/Form'
-import FormLabel from 'react-bootstrap/FormLabel'
-import Button from 'react-bootstrap/Button';
+import { useState, useEffect, ChangeEvent } from 'react';
+import {  Form, Button, Container, Row, Col } from 'react-bootstrap';
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import MapView from '../MapView/MapView';
+import axios from 'axios';
+// import './eventForm.css';
 
-export default function EventForm() {
+
+export default function eventForm() {
+    const [selectedPlace, setSelectedPlace] = useState<google.maps.places.Place | null>(null);
+    const [validated, setValidated] = useState<boolean>(false);
+    const [date, setDate] = useState<Date | null>(new Date());
+
+    const [event, setevent] = useState({
+        name: '',
+        description: '',
+        date: date,
+        location: selectedPlace
+    });
+
+    const onChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        setevent({ ...event, [e.target.name]: e.target.value });
+    };
+
+    // sync date and location into event object
+    useEffect(() => {
+      if(selectedPlace && selectedPlace.location) {
+          setevent({ ...event, location: selectedPlace});
+      }
+    }, [selectedPlace, setSelectedPlace]);
+
+    const handleSubmit = async (e: any) => {
+        e.preventDefault();
+        const form = e.currentTarget;
+        // change validated attribute before checking validity to ensure react processes a change in the virtual DOM
+        setValidated(true); 
+
+        if (!form.checkValidity() || !event.date || !event.location) {
+            e.stopPropagation();
+            console.log('eventForm validation failed');
+            return;
+        } else if (form.checkValidity() && event.date && event.location) {
+          setValidated(true);
+          console.log('eventForm validation passed');
+          console.log(event);
+          //check if user is logged in
+          // try {
+          // const res = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/events/`, event);
+          // console.log(res);
+          // } catch (err) {
+          // console.error(err);
+          // }
+        }
+    }
+
   return (
     <>
+   <Container>
+      <Form noValidate onSubmit={handleSubmit} id='event-form'>
+        <Row className='mb-3'>
+          <Col>
+            {/* event Name */}
+            <Form.Group as={Row} className='mb-3' controlId='formBasicName'>
+              <Form.Label column sm={3}>Name</Form.Label>
+              <Col>
+                <Form.Control
+                  type='text'
+                  placeholder='Enter event name'
+                  value={event.name}
+                  onChange={onChange}
+                  name='name'
+                  isInvalid={validated && event.name.trim() === ''}
+                  isValid={validated && event.name.trim() !== ''}
+                  required
+                />
+                <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+                <Form.Control.Feedback type='invalid'>
+                  Please provide a name.
+                </Form.Control.Feedback>
+              </Col>
+            </Form.Group>
+
+            {/* Date */}
+            <Form.Group  as={Row} className='mb-3' controlId='formDate'>
+              <Form.Label column sm={3}>Date</Form.Label>
+              <Col>
+                <DatePicker selected={date} onChange={(date) => setDate(date)} />
+              </Col>
+            </Form.Group>
+
+            {/* Description */}
+            <Form.Group as={Row} className='mb-3' controlId='formBasicDesc'>
+              <Form.Label column sm={3}>Description</Form.Label>
+              <Col>
+                <Form.Control
+                  as='textarea'
+                  placeholder='Enter a description of the event'
+                  value={event.description}
+                  onChange={onChange}
+                  name='description'
+                  isInvalid={validated && event.description.trim() === ''}
+                  isValid={validated && event.description.trim() !== ''}
+                  required
+                />
+                <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+                <Form.Control.Feedback type='invalid'>
+                  Please provide a description.
+                </Form.Control.Feedback>
+              </Col>
+            </Form.Group>
+          </Col>
+
+          {/* Map Column */}
+          <Col>
+            <Form.Group className='mb-3' controlId='formMap'>
+              <MapView setSelectedPlace={setSelectedPlace} selectedPlace={selectedPlace} />
+              {validated && !selectedPlace && (
+                <div className='invalid-feedback d-block'>Please choose a location by searching</div>
+              )}
+              {validated && selectedPlace && (
+                <div className='valid-feedback d-block'>Looks good!</div>
+            )}
+            </Form.Group>
+          </Col>
+        </Row>
+        
+        {/* Confirmation Checkbox */}
+        <Form.Group className='mb-3' controlId='formBasicCheckbox'>
+          <Form.Check type='checkbox' label='Confirm settings' isValid={validated} isInvalid ={validated} required />
+          <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+          <Form.Control.Feedback type='invalid'>
+            Please confirm information is correct.
+          </Form.Control.Feedback>
+        </Form.Group>
+        <Button variant='primary' type='submit'>
+          Submit
+        </Button>
+      </Form>
+    </Container>
     </>
   )
 }

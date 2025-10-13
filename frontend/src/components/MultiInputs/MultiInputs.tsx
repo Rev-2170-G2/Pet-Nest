@@ -1,13 +1,13 @@
-import React, { useState, KeyboardEvent, ChangeEvent } from "react";
+import React from "react";
 import type { Service } from '../PetForm/PetForm';
 import MultiPhotoInput from './MultiPhotoInput/MultiPhotoInput';
 import MultiServiceInput from './MultiServiceInput/MultiServiceInput';
 
-type MultiStringInputProps = {
+type MultiInputProps = {
   label: string;
   onChange?: ( values: Service[] | string[]) => void;
 }
-const MultiStringInput: React.FC<MultiStringInputProps> = ({ label, onChange }) => {
+const MultiInput: React.FC<MultiInputProps> = ({ label, onChange }) => {
 
   return (
     <>
@@ -16,4 +16,4 @@ const MultiStringInput: React.FC<MultiStringInputProps> = ({ label, onChange }) 
   );
 };
 
-export default MultiStringInput;
+export default MultiInput;

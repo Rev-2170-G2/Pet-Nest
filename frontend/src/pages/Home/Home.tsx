@@ -10,8 +10,8 @@ export default function Home({}: Props) {
   return (
     <>
       <HeroSection />
-      {/* <EventForm></EventForm> */}
-      <div id='form-container'><PetForm></PetForm></div>
+      {/* <PetForm />
+      <EventForm /> */}
     </>
   )
 }
