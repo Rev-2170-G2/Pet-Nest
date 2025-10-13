@@ -12,7 +12,7 @@ export default function PetDetails({ pet }: { pet: Pet }) {
   const navigate = useNavigate();
 
   return (
-    <div className="container py-5 min-vh-100 d-flex flex-column justify-content-center">
+    <div className="container py-5 d-flex flex-column justify-content-center">
       <div className="row g-4 align-items-start">
         <div className="col-12 col-md-5 d-flex justify-content-center align-items-start">
           <div className="w-100" style={{ maxWidth: "400px", height: "400px" }}>
