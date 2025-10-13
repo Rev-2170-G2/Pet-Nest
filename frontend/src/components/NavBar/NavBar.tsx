@@ -28,7 +28,7 @@ function NavBar() {
           {user ? (
             <>
               <span className="welcome-text">
-                Hello, Admin {user.username}{user.admin ? " (Admin)" : ""}! 
+                Hello, {user.username}{user.admin ? " (Admin)" : ""}! 
               </span>
               <button id="logout-btn" onClick={handleLogout}>
                 Logout

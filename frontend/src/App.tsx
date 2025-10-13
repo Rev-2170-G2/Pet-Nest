@@ -4,7 +4,6 @@ import Home from './components/Home/Home';
 import PetPage from './components/Pet/PetPage';
 import EventPage from './components/Event/EventPage';
 import { AuthProvider } from "./context/AuthContext";
-import './App.css';
 import PetsEvents from './components/PetsEvents/PetsEvents';
 
 function App() {
