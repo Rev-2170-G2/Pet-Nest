@@ -1,8 +1,9 @@
-import { useState, useEffect, ChangeEvent } from 'react';
+import { useState, useEffect, ChangeEvent, useContext } from 'react';
 import {  Form, Button, Container, Row, Col } from 'react-bootstrap';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import MapView from '../MapView/MapView';
+import { AuthContext } from '../../context/AuthContext';
 import axios from 'axios';
 // import './eventForm.css';
 
@@ -18,6 +19,8 @@ export default function eventForm() {
         date: date,
         location: selectedPlace
     });
+    const { user } = useContext(AuthContext);
+
 
     const onChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         setevent({ ...event, [e.target.name]: e.target.value });
@@ -43,14 +46,13 @@ export default function eventForm() {
         } else if (form.checkValidity() && event.date && event.location) {
           setValidated(true);
           console.log('eventForm validation passed');
-          console.log(event);
-          //check if user is logged in
-          // try {
-          // const res = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/events/`, event);
-          // console.log(res);
-          // } catch (err) {
-          // console.error(err);
-          // }
+          if (user) { 
+            await axios.post(`${import.meta.env.VITE_BACKEND_URL}/pets/`, event, {
+              headers: {
+                'Authorization': `Bearer ${user.token}`
+              }
+            });
+          }
         }
     }
 

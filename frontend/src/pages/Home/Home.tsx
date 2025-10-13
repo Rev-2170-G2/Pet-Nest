@@ -10,8 +10,8 @@ export default function Home({}: Props) {
   return (
     <>
       <HeroSection />
-      {/* <PetForm />
-      <EventForm /> */}
+      <PetForm />
+      {/* <EventForm /> */}
     </>
   )
 }

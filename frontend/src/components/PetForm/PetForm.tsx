@@ -1,7 +1,8 @@
-import { useState, useEffect, ChangeEvent } from 'react';
+import { useState, useEffect, ChangeEvent, useContext } from 'react';
 import {  Form, Button, Container, Row, Col } from 'react-bootstrap';
 import MultiInput from '../MultiInputs/MultiInputs';
 import MapView from '../../components/MapView/MapView';
+import { AuthContext } from '../../context/AuthContext';
 import axios from 'axios';
 // import './PetForm.css';
 
@@ -24,6 +25,8 @@ export default function PetForm() {
         photos: photos,
         location: selectedPlace
     });
+    const { user } = useContext(AuthContext);
+    
 
     const onChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         setPet({ ...pet, [e.target.name]: e.target.value });
@@ -35,7 +38,7 @@ export default function PetForm() {
     },[services]);
     useEffect(() => {
       if(selectedPlace && selectedPlace.location) {
-          setPet({ ...pet, location: selectedPlace});
+          setPet({ ...pet, location: selectedPlace.location});
       }
     }, [selectedPlace, setSelectedPlace]);
     useEffect(() => {
@@ -57,14 +60,14 @@ export default function PetForm() {
         } else if (form.checkValidity() && services.length > 0 && pet.location){
           setValidated(true);
           console.log('PetForm validation passed');
-          console.log(pet);
           //check if user is logged in
-          // try {
-          // const res = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/pets/`, pet);
-          // console.log(res);
-          // } catch (err) {
-          // console.error(err);
-          // }
+          if (user) { 
+            await axios.post(`${import.meta.env.VITE_BACKEND_URL}/pets/`, pet, {
+              headers: {
+                'Authorization': `Bearer ${user.token}`
+              }
+            });
+          }
         }
     }
 
