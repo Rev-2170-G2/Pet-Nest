@@ -42,6 +42,7 @@ export default function PetForm({}: Props) {
     const handleSubmit = async (e: any) => {
         e.preventDefault();
         const form = e.currentTarget;
+        // change validated attribute before checking validity to ensure react processes a change in the virtual DOM
         setValidated(true); 
 
         if (form.checkValidity() === false || services.length === 0) {
