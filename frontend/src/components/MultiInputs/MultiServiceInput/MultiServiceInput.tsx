@@ -14,7 +14,7 @@ export default function MultiServiceInput({onChange, label}: Props) {
     const [priceValue, setPriceValue] = useState('0');
 
     const handleAdd = () => {
-        const trimmedSV = serviceValue.trim();
+        const trimmedSV = serviceValue.trim().toLowerCase();
         const convertedPV = parseFloat(priceValue);
         if (trimmedSV && convertedPV !== 0 && !values.includes({service: trimmedSV, price: convertedPV})) {
         const updated = [...values, {service: trimmedSV, price: convertedPV}];

@@ -84,7 +84,8 @@ export default function PetForm({}: Props) {
                   value={pet.name}
                   onChange={onChange}
                   name="name"
-                  isInvalid={validated}
+                  isInvalid={validated && pet.name.trim() === ''}
+                  isValid={validated && pet.name.trim() !== ''}
                   required
                 />
                 <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
@@ -104,7 +105,8 @@ export default function PetForm({}: Props) {
                   value={pet.type}
                   onChange={onChange}
                   name="type"
-                  isInvalid={validated}
+                  isInvalid={validated && pet.type.trim() === ''}
+                  isValid={validated && pet.type.trim() !== ''}
                   required
                 />
                 <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
@@ -124,7 +126,8 @@ export default function PetForm({}: Props) {
                   value={pet.description}
                   onChange={onChange}
                   name="description"
-                  isInvalid={validated}
+                  isInvalid={validated && pet.description.trim() === ''}
+                  isValid={validated && pet.description.trim() !== ''}
                   required
                 />
                 <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
@@ -137,27 +140,26 @@ export default function PetForm({}: Props) {
           {/* MultiStringInput for Photo URLs */}
           <Form.Group as={Row} className="mb-3" controlId="formBasicPhotoLinks">
             <MultiStringInput label="Photos" onChange={setPhotos} />
-            {validated && services.length === 0 && (
+            {validated && photos.length === 0 && (
                 <div className="invalid-feedback d-block">Please add at least one photo link</div>
             )}
-            {validated && services.length > 0 && (
+            {validated && photos.length > 0 && (
                 <div className="valid-feedback d-block">Looks good!</div>
             )}
           </Form.Group>
-
-            {/* Confirmation Checkbox */}
-            <Form.Group className="mb-3" controlId="formBasicCheckbox">
-              <Form.Check type="checkbox" label="Confirm settings" isInvalid={validated} required />
-              <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
-              <Form.Control.Feedback type="invalid">
-                Please confirm information is correct.
-              </Form.Control.Feedback>
-            </Form.Group>
           </Col>
 
           {/* Map Column */}
           <Col>
-            <MapView setSelectedPlace={setSelectedPlace} selectedPlace={selectedPlace} />
+            <Form.Group className="mb-3" controlId="formMap">
+              <MapView setSelectedPlace={setSelectedPlace} selectedPlace={selectedPlace} />
+              {validated && !selectedPlace && (
+                <div className="invalid-feedback d-block">Please choose a location by searching</div>
+              )}
+              {validated && selectedPlace && (
+                <div className="valid-feedback d-block">Looks good!</div>
+            )}
+            </Form.Group>
           </Col>
 
           {/* MultiStringInput for Services */}
@@ -171,7 +173,15 @@ export default function PetForm({}: Props) {
             )}
           </Form.Group>
         </Row>
-
+        
+        {/* Confirmation Checkbox */}
+        <Form.Group className="mb-3" controlId="formBasicCheckbox">
+          <Form.Check type="checkbox" label="Confirm settings" isValid={validated} isInvalid ={validated} required />
+          <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+          <Form.Control.Feedback type="invalid">
+            Please confirm information is correct.
+          </Form.Control.Feedback>
+        </Form.Group>
         <Button variant="primary" type="submit">
           Submit
         </Button>
