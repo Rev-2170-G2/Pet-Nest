@@ -3,6 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import PetDetails from "./PetDetails";
 import { Pet } from "../../types/Pet";
+import UserPets from "./UserPets";
 
 const URL = "http://localhost:3000";
 
@@ -36,7 +37,10 @@ return (
         </button>
       </div>
     ) : (
-      <PetDetails pet={pet} />
+      <div className="d-flex flex-column">
+        <PetDetails pet={pet} />
+        {pet?.PK && <UserPets userId={pet.PK.slice(2)} />}
+      </div>
     )}
   </div>
 );
