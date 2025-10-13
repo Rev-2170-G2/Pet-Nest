@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import axios from "axios";
 import "./Register.css";
 import { AuthContext, User } from "../../../context/AuthContext";
@@ -16,6 +16,17 @@ function Register({ onClose, onSubmit }: RegisterProps) {
 
   const { login } = useContext(AuthContext);
 
+  useEffect(() => {
+    document.body.style.overflow = "hidden";
+    const root = document.getElementById("root");
+    if (root) root.style.pointerEvents = "none";
+
+    return () => {
+      document.body.style.overflow = "auto";
+      if (root) root.style.pointerEvents = "auto";
+    };
+  }, []);
+
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
     onSubmit?.();
@@ -28,7 +39,6 @@ function Register({ onClose, onSubmit }: RegisterProps) {
       });
 
       const data = response.data;
-
       setMessage("Registration successful!");
 
       const user: User = {
@@ -55,7 +65,7 @@ function Register({ onClose, onSubmit }: RegisterProps) {
 
   return (
     <div className="popup-overlay">
-      <div className="popup-box">
+      <div className="popup-box" style={{ pointerEvents: "auto" }}>
         <button className="close-btn" onClick={onClose}>X</button>
         <h2>Register</h2>
 

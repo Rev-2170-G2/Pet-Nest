@@ -1,17 +1,35 @@
 import "./NavBar.css";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useContext, useState } from "react";
 import { AuthContext } from "../../context/AuthContext";
 import Login from "../Auth/Login/Login";
 import Register from "../Auth/Register/Register";
 
-function NavBar() {
+interface NavBarProps {
+  onJoinClick?: () => void;
+}
+
+function NavBar({ onJoinClick }: NavBarProps) {
   const { user, logout } = useContext(AuthContext);
   const [showLogin, setShowLogin] = useState(false);
   const [showRegister, setShowRegister] = useState(false);
+  const location = useLocation();
+  const navigate = useNavigate();
 
-  const handleLogout = () => {
-    logout();
+  const handleLogout = () => logout();
+
+  const handleJoinClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+
+    if (location.pathname === "/") {
+      onJoinClick?.();
+    } else {
+      navigate("/");
+
+      setTimeout(() => {
+        onJoinClick?.();
+      }, 400);
+    }
   };
 
   return (
@@ -23,12 +41,15 @@ function NavBar() {
 
         <div className="navbar-right">
           <Link to="/" className="nav-link">Home</Link>
-          <Link to="/pets-events" className="nav-link">Pets & Events</Link> {/* Separate to Pets/Events page. just filler right now. */}
+          <Link to="/pets-events" className="nav-link">Pets & Events</Link>
+          <a href="#join" className="nav-link" onClick={handleJoinClick}>
+            Join
+          </a>
 
           {user ? (
             <>
               <span className="welcome-text">
-                Hello, {user.username}{user.admin ? " (Admin)" : ""}! 
+                Hello, {user.username}{user.admin ? " (Admin)" : ""}!
               </span>
               <button id="logout-btn" onClick={handleLogout}>
                 Logout

@@ -1,12 +1,19 @@
-import React from 'react';
-import HeroSection from '../HeroComponent/HeroSection/HeroSection';
+import HeroSection from "../HeroComponent/HeroSection/HeroSection";
+import JoinSection from "../JoinSection/JoinSection";
 
-function Home() {
+interface HomeProps {
+  joinRef: React.RefObject<HTMLDivElement | null>;
+}
+
+function Home({ joinRef }: HomeProps) {
   return (
     <>
       <HeroSection />
+      <div ref={joinRef} id="join">
+        <JoinSection />
+      </div>
     </>
   );
 }
 
-export default Home
+export default Home;
