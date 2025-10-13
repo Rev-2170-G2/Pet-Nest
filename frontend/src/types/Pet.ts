@@ -9,4 +9,5 @@ export interface Pet {
   review: number;
   photos?: string[];
   location?: string;
+  PK: string;
 }
