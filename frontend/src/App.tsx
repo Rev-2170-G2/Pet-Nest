@@ -1,20 +1,23 @@
 import { Route, Routes } from 'react-router-dom';
+import NavBar from "./components/NavBar/NavBar";
 import Home from './components/Home/Home';
 import PetPage from './components/Pet/PetPage';
 import EventPage from './components/Event/EventPage';
-import './App.css';
+import { AuthProvider } from "./context/AuthContext";
+import PetsEvents from './components/PetsEvents/PetsEvents';
 
 function App() {
-
   return (
-    <>
-    <Routes>
-      <Route path='/' element={<Home/>}></Route>
-      <Route path="/pets/:id" element={<PetPage />} />
-      <Route path="/events/:id" element={<EventPage />} />
-    </Routes>
-    </>
-  )
+    <AuthProvider>
+      <NavBar />
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/pets-events" element={<PetsEvents />} />
+        <Route path="/pets/:id" element={<PetPage />} />
+        <Route path="/events/:id" element={<EventPage />} />
+      </Routes>
+    </AuthProvider>
+  );
 }
 
 export default App;

@@ -1,12 +1,12 @@
 import React from 'react';
 import HeroSection from '../HeroComponent/HeroSection/HeroSection';
 
-type Props = {}
-
-export default function Home({}: Props) {
+function Home() {
   return (
     <>
-        <HeroSection />
+      <HeroSection />
     </>
-  )
+  );
 }
+
+export default Home
