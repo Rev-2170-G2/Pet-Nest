@@ -2,8 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { Card, CardActions, CardContent, CardMedia, Button, Typography } from '@mui/material';
 import './styles.css';
 import axios from 'axios';
+import { useNavigate } from "react-router-dom";
 
 interface Pet {
+    id: string;
     entity: string;
     photos: string;
     name: string;
@@ -14,6 +16,7 @@ interface Pet {
 function PetCard() {
     const [pets, setPets] = useState<Pet[]>([]);
     const [loading, setLoading] = useState(true);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchPets = async () => {
@@ -54,7 +57,7 @@ function PetCard() {
                     </Typography>
                 </CardContent>
                 <CardActions className="card-actions">
-                    <Button size="small">Pick Me</Button>
+                    <Button size="small" onClick={() => navigate(`/pets/${pet.id}`)}>Pick Me</Button>
                 </CardActions>
                 </Card>
             </div>

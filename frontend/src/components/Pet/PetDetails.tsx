@@ -1,0 +1,78 @@
+import { Pet } from "../../types/Pet";
+import Rating from "@mui/material/Rating";
+import { useNavigate } from "react-router-dom";
+import "bootstrap/dist/css/bootstrap.min.css";
+import LocationPinIcon from '@mui/icons-material/LocationPin';
+import PetsIcon from '@mui/icons-material/Pets';
+import EventAvailableIcon from '@mui/icons-material/EventAvailable';
+
+const DEFAULT_IMAGE = "https://jooinn.com/images/pet-70.jpg";
+
+export default function PetDetails({ pet }: { pet: Pet }) {
+  const navigate = useNavigate();
+
+  return (
+    <div className="container py-5 min-vh-100 d-flex flex-column justify-content-center">
+      <div className="row g-4 align-items-start">
+        <div className="col-12 col-md-5 d-flex justify-content-center align-items-start">
+          <div className="w-100" style={{ maxWidth: "400px", height: "400px" }}>
+            <img
+              src={pet.photos?.[0] || DEFAULT_IMAGE}
+              alt={pet.name}
+              className="img-fluid rounded"
+              style={{ width: "100%", height: "100%", objectFit: "cover" }}
+            />
+          </div>
+        </div>
+
+        <div className="col-12 col-md-7 d-flex flex-column">
+          <div className="mb-3">
+            <button className="btn btn-secondary" onClick={() => navigate(-1)}>
+              ← Back
+            </button>
+          </div>
+
+          <h1 className="mb-2">{pet.name}</h1>
+
+          <div className="d-flex flex-wrap mb-3 gap-3 align-items-center">
+            <span className="d-flex align-items-center gap-1">
+              <PetsIcon fontSize="small" />
+              {pet.type}
+            </span>
+            <span className="d-flex align-items-center gap-1">
+              <LocationPinIcon fontSize="small" />
+              {pet.location || "Unknown"}
+            </span>
+            <span className="d-flex align-items-center gap-1">
+              <EventAvailableIcon fontSize="small" />
+              {pet.eventsCompleted || 0} events completed
+            </span>
+          </div>
+
+          <div className="d-flex align-items-center mb-3">
+            <Rating name="pet-rating" value={pet.review || 0} readOnly />
+            <span className="ms-2 text-muted">({pet.review || 0})</span>
+          </div>
+
+          <p className="mb-4">{pet.description}</p>
+
+          <h4 className="mb-3">Services Offered</h4>
+          <ul className="list-group mb-4">
+            {pet.services?.map((service, index) => (
+              <li key={index} className="list-group-item d-flex justify-content-between align-items-center">
+                {service.service}
+                <span className="badge bg-primary rounded-pill">${service.price}</span>
+              </li>
+            ))}
+          </ul>
+
+          <div className="d-flex justify-content-start">
+            <button className="btn btn-success btn-lg px-4">
+              Request Service
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}

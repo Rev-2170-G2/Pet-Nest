@@ -1,9 +1,11 @@
-import { Routes, Route } from "react-router-dom";
+import { Route, Routes } from 'react-router-dom';
 import NavBar from "./components/NavBar/NavBar";
-import Home from "./components/Home/Home";
-import PetsEvents from "./components/PetsEvents/PetsEvents";
+import Home from './components/Home/Home';
+import PetPage from './components/Pet/PetPage';
+import EventPage from './components/Event/EventPage';
 import { AuthProvider } from "./context/AuthContext";
 import './App.css';
+import PetsEvents from './components/PetsEvents/PetsEvents';
 
 function App() {
   return (
@@ -12,6 +14,8 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/pets-events" element={<PetsEvents />} />
+        <Route path="/pets/:id" element={<PetPage />} />
+        <Route path="/events/:id" element={<EventPage />} />
       </Routes>
     </AuthProvider>
   );

@@ -185,4 +185,33 @@ describe('petService getPetById', () => {
     });
 });
 
+describe('petService getPetsByUser', () => {
+    beforeEach(() => {
+        jest.clearAllMocks();
+    });
+
+    it('should return pets when DAO returns data', async () => {
+        const dummyPets = [{ id: 'p111', name: 'Chase', type: 'DOG' }, { id: 'p222', name: 'Fufu', type: 'CAT' },];
+        const userId = '001';
+
+        petDAO.getPetsByUser = jest.fn().mockResolvedValue(dummyPets);
+
+        const result = await petService.getPetsByUser(userId);
+
+        expect(petDAO.getPetsByUser).toHaveBeenCalledWith('u#' + userId);
+        expect(result).toBe(dummyPets);
+    });
+
+    it('should return null when DAO returns no data', async () => {
+        const userId = '001';
+
+        petDAO.getPetsByUser = jest.fn().mockResolvedValue(null);
+
+        const result = await petService.getPetsByUser(userId);
+
+        expect(petDAO.getPetsByUser).toHaveBeenCalledWith('u#' + userId);
+        expect(result).toBeNull();
+    });
+});
+
 });

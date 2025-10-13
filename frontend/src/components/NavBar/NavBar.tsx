@@ -23,12 +23,12 @@ function NavBar() {
 
         <div className="navbar-right">
           <Link to="/" className="nav-link">Home</Link>
-          <Link to="/pets-events" className="nav-link">Pets & Events</Link>
+          <Link to="/pets-events" className="nav-link">Pets & Events</Link> {/* Separate to Pets/Events page. just filler right now. */}
 
           {user ? (
             <>
               <span className="welcome-text">
-                Hello, {user.username}{user.admin ? " (Admin)" : ""}!
+                Hello, Admin {user.username}{user.admin ? " (Admin)" : ""}! 
               </span>
               <button id="logout-btn" onClick={handleLogout}>
                 Logout

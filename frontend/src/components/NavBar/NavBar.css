@@ -7,6 +7,17 @@
   padding: 15px 15px;
 }
 
+.navbar-left,
+.navbar-right {
+  display: flex;
+  align-items: center;
+}
+
+/* .navbar-right .nav-link,
+.navbar-right .nav-btn {
+  margin-left: 15px;
+} */
+
 .navbar div.navbar-logo {
   color: #C0CEE2;
   margin-right: 15px;
