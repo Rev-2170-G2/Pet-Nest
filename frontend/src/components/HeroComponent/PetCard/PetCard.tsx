@@ -1,17 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Card, CardActions, CardContent, CardMedia, Button, Typography } from '@mui/material';
 import './styles.css';
 import axios from 'axios';
 import { useNavigate } from "react-router-dom";
-
-interface Pet {
-    id: string;
-    entity: string;
-    photos: string;
-    name: string;
-    location: string;
-    description: string;
-}
+import { Pet } from "../../../types/Pet";
 
 function PetCard() {
     const [pets, setPets] = useState<Pet[]>([]);
@@ -42,7 +34,7 @@ function PetCard() {
             <div key={index} className="pet-card">
                 <Card className="card-root">
                 <CardMedia className="card-media"
-                    image={pet.photos}
+                    image={pet.photos?.[0]}
                     title={pet.entity}
                 />
                 <CardContent>
