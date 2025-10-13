@@ -11,6 +11,7 @@ export interface Pet {
   // photos?: string[];
   photos: string;
   location?: string;
+  PK: string;
 }
 
 export interface PetOfferFormProps {
