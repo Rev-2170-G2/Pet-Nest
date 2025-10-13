@@ -1,12 +1,12 @@
 import { useState, useEffect, ChangeEvent } from 'react';
 import {  Form, Button, Container, Row, Col } from 'react-bootstrap';
-import MultiStringInput from '../MultiStringInput/MultiStringInput';
+import MultiStringInput from '../MultiInputs/MultiInputs';
 import MapView from '../../components/MapView/MapView';
 import axios from 'axios';
 import './PetForm.css';
 type Props = {}
 
-type Service = {
+export type Service = {
     service: string,
     price: number
 }
@@ -15,13 +15,14 @@ export default function PetForm({}: Props) {
     const [services, setServices] = useState<Service[]>([]);
     const [selectedPlace, setSelectedPlace] = useState<google.maps.places.Place | null>(null);
     const [validated, setValidated] = useState<boolean>(false);
+    const [photos, setPhotos] = useState<string[]>([]);
     
     const [pet, setPet] = useState({
         name: '',
         type: '',
         description: '',
         services: services,
-        photos: {},
+        photos: photos,
         location: selectedPlace
     });
 
@@ -29,15 +30,20 @@ export default function PetForm({}: Props) {
         setPet({ ...pet, [e.target.name]: e.target.value });
     };
 
-    // sync services and location into pet object
+    // sync services and location and photos into pet object
     useEffect(() => {
         setPet({...pet, services: services});
     },[services]);
     useEffect(() => {
-        if(selectedPlace && selectedPlace.location) {
-            setPet({ ...pet, location: selectedPlace});
-        }
+      if(selectedPlace && selectedPlace.location) {
+          setPet({ ...pet, location: selectedPlace});
+      }
     }, [selectedPlace, setSelectedPlace]);
+    useEffect(() => {
+      if(photos && photos.length > 0) {
+        setPet({...pet, photos: photos});
+      }
+    }, [photos]);
 
     const handleSubmit = async (e: any) => {
         e.preventDefault();
@@ -128,15 +134,16 @@ export default function PetForm({}: Props) {
               </Col>
             </Form.Group>
 
-            {/* File Upload */}
-            <Form.Group as={Col} controlId="formFile" className="mb-3">
-              <Form.Label>Upload a photo</Form.Label>
-              <Form.Control type="file" isInvalid={validated} required />
-              <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
-              <Form.Control.Feedback type="invalid">
-                Please upload at least one photo.
-              </Form.Control.Feedback>
-            </Form.Group>
+          {/* MultiStringInput for Photo URLs */}
+          <Form.Group as={Row} className="mb-3" controlId="formBasicPhotoLinks">
+            <MultiStringInput label="Photos" onChange={setPhotos} />
+            {validated && services.length === 0 && (
+                <div className="invalid-feedback d-block">Please add at least one photo link</div>
+            )}
+            {validated && services.length > 0 && (
+                <div className="valid-feedback d-block">Looks good!</div>
+            )}
+          </Form.Group>
 
             {/* Confirmation Checkbox */}
             <Form.Group className="mb-3" controlId="formBasicCheckbox">
