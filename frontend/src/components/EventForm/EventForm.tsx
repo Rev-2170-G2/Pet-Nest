@@ -52,20 +52,12 @@ export default function eventForm() {
 
     const handleSubmit = async (e: any) => {
         e.preventDefault();
-        const formattedEvent = {
-          ...event, 
-          date: formatDate(event.date),
-          location: selectedPlace?.formattedAddress
-        };
-
-        console.log(formattedEvent);
-
         const isFormValid = 
-          formattedEvent.name.trim() !== '' &&
-          formattedEvent.description.trim() !== '' &&
-          formattedEvent.location && 
-          formattedEvent.date && 
-          formattedEvent.photos;
+          event.name.trim() !== '' &&
+          event.description.trim() !== '' &&
+          event.location && 
+          event.date && 
+          event.photos;
 
         // change validated attribute before checking validity to ensure react processes a change in the virtual DOM
         setValidated(true); 
@@ -80,6 +72,12 @@ export default function eventForm() {
           console.log('eventForm validation passed');
 
           if (user) { 
+            const formattedEvent = {
+              ...event, 
+              date: formatDate(event.date),
+              location: selectedPlace?.formattedAddress
+            };
+
             await axios
             .post(`${import.meta.env.VITE_BACKEND_URL}/events/`, formattedEvent, {
               headers: {

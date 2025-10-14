@@ -14,6 +14,7 @@ export type Service = {
 
 export default function PetForm() {
     const navigate = useNavigate();
+    const validTypes: string[] = ['cat', 'dog', 'bird', 'other'];
 
     const [services, setServices] = useState<Service[]>([]);
     const [selectedPlace, setSelectedPlace] = useState<google.maps.places.Place | null>(null);
@@ -31,7 +32,7 @@ export default function PetForm() {
     const { user } = useContext(AuthContext);
     
 
-    const onChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const onChange = (e: ChangeEvent<HTMLInputElement>) => {
         setPet({ ...pet, [e.target.name]: e.target.value });
     };
 
@@ -56,14 +57,15 @@ export default function PetForm() {
         e.preventDefault();
         const isFormValid = 
           pet.name.trim() !== '' &&
-          pet.type.trim() !== '' &&
+          validTypes.includes(pet.type) &&
           pet.description.trim() !== '' &&
           services.length > 0 &&
           photos.length > 0 &&
           pet.location;
-          
+        console.log(pet);
         // change validated attribute before checking validity to ensure react processes a change in the virtual DOM
         setValidated(true); 
+
         if (!isFormValid) {
             e.stopPropagation();
             console.log('PetForm validation failed');
@@ -74,8 +76,11 @@ export default function PetForm() {
           console.log('PetForm validation passed');
 
           if (user) { 
+            const formattedPet = {
+              ...pet, location: selectedPlace?.formattedAddress
+            };
             await axios
-            .post(`${import.meta.env.VITE_BACKEND_URL}/pets/`, pet, {
+            .post(`${import.meta.env.VITE_BACKEND_URL}/pets/`, formattedPet, {
               headers: {
                 'Authorization': `Bearer ${user.token}`
               }
@@ -118,16 +123,20 @@ export default function PetForm() {
             <Form.Group as={Row} className='mb-3' controlId='formBasicType'>
               <Form.Label column sm={3}>Type</Form.Label>
               <Col>
-                <Form.Control
-                  type='text'
-                  placeholder='Enter pet type'
-                  value={pet.type}
+                <Form.Select
+                  aria-label='pet type selector'
                   onChange={onChange}
                   name='type'
-                  isInvalid={validated && pet.type.trim() === ''}
-                  isValid={validated && pet.type.trim() !== ''}
+                  isInvalid={validated && !validTypes.includes(pet.type)}
+                  isValid={validated && validTypes.includes(pet.type)}
                   required
-                />
+                >
+                  <option>Please select a type</option>
+                  <option value='cat'>Cat</option>
+                  <option value='dog'>Dog</option>
+                  <option value='bird'>Bird</option>
+                  <option value='other'>Other</option>
+                </Form.Select>
                 <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
                 <Form.Control.Feedback type='invalid'>
                   Please provide a pet type.
