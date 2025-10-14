@@ -4,6 +4,7 @@ import './styles.css';
 import axios from 'axios';
 import { useNavigate } from "react-router-dom";
 import { Pet } from "../../../types/Pet";
+import PetFilter from "../PetFilter/PetFilter";
 
 function PetCard() {
     const [pets, setPets] = useState<Pet[]>([]);
@@ -26,11 +27,28 @@ function PetCard() {
         fetchPets();
     }, [])
 
+    const getPetsByType = async (type: string) => {
+        setLoading(true);
+        try {
+            const response = await axios.get(`http://localhost:3000/api/pets/type/${type}`);
+            setPets(response.data.data || []);
+        } catch (error) {
+            console.error(error);
+        } finally {
+            setLoading(false);
+        }
+    }
+
     if (loading) return <p>Loading...</p>
 
   return (
-    <div className="petcard-container">
-        {pets.map((pet, index) => (
+    <div className="d-flex flex-column">
+        <div className="mb-2 mx-3">
+            <PetFilter onSelectType={(type: string) => getPetsByType(type)} />
+        </div>
+
+        <div className="petcard-container">
+            {pets.map((pet, index) => (
             <div key={index} className="pet-card">
                 <Card className="card-root">
                 <CardMedia className="card-media"
@@ -53,8 +71,8 @@ function PetCard() {
                 </CardActions>
                 </Card>
             </div>
-            )
-        )}
+            ))}
+        </div>
     </div>
   );
 }

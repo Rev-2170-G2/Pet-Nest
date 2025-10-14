@@ -89,11 +89,28 @@ async function getPetsByUser(id) {
     }
 }
 
+async function getPetsByType(petType) {
+    if (petType) {
+        const data = await petDAO.getPetsByType(petType);
+        if (data) {
+            logger.info(`Pet found | petService | getPetsByType | data: ${JSON.stringify(data)}`);
+            return data;
+        } else { 
+            logger.info(`Failed to find any pet | petService | getPetsByType`);
+            return null;
+        }
+    } else { 
+        logger.info(`Invalid id provided | petService | getPetsByType | id: ${petType}`);
+        return null;
+    }
+}
+
 module.exports = {
     createPet,
     updatePet,
     deletePet,
     getAllPetServices,
     getPetById,
-    getPetsByUser
+    getPetsByUser,
+    getPetsByType
 }

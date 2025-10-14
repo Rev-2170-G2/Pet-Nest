@@ -13,13 +13,16 @@ router.patch('/:petId', authenticateToken, validatePetUpdates, petController.upd
 //delete
 router.delete('/:petId', authenticateToken, petController.deletePet);
 
-// view all pet services
+//view all pet services
 router.get('/', petController.getAllPetServices);
 
 //view pet by pet id
 router.get('/:petId', petController.getPetById);
 
 //view all pets by user
-router.get('/user/:id', petController.getPetsByUser); 
+router.get('/user/:id', petController.getPetsByUser);
+
+//view all pets by type
+router.get('/type/:type', petController.getPetsByType);
 
 module.exports = router;
