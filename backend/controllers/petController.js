@@ -72,11 +72,23 @@ const getPetsByUser = async (req, res) => {
     }
 }
 
+const getPetsByType = async (req, res) => {
+    const type = req.params.type;
+    logger.info({message: `Incoming petController getPetsByType request: ${JSON.stringify(type)}`});
+    const data = await petService.getPetsByType(type);
+    if (data) {
+        return res.status(200).json({message: 'Pets found', data});
+    } else {
+        return res.status(404).json({message: `No pets found for type ${type}`});
+    }
+}
+
 module.exports = {
     createPet,
     updatePet,
     deletePet,
     getAllPetServices,
     getPetById,
-    getPetsByUser
+    getPetsByUser,
+    getPetsByType
 }
