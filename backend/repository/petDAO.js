@@ -8,6 +8,7 @@ const documentClient = DynamoDBDocumentClient.from(client);
 
 const TableName = process.env.TableName || 'pet_nest';
 const PetIndexName = process.env.PetIndexName || 'pets-by-id-index';
+const PetTypeIndexName = process.env.PetTypeIndexName || 'pets-by-type-index';
 
 // link userId with new pet
 async function createPet(userId, pet){
@@ -33,7 +34,7 @@ async function createPet(userId, pet){
     }
 }
 
-//update pet location/photos/services by petId
+// update pet location/photos/services by petId
 async function updatePet(userId, petId, updates) {
     const command = new UpdateCommand({
         TableName,
@@ -132,6 +133,7 @@ async function getPetById(petId) {
     }
 }
 
+// get pets by user id
 async function getPetsByUser(pk) {
     const command = new QueryCommand({
         TableName,
@@ -149,11 +151,32 @@ async function getPetsByUser(pk) {
     }
 }
 
+// get pets by type (ex .DOG, CAT, BIRD)
+async function getPetsByType(petType) {
+    const command = new QueryCommand({
+    TableName,
+    IndexName: PetTypeIndexName,
+    KeyConditionExpression: '#type = :type',
+        ExpressionAttributeNames: { '#type': 'type', },
+    ExpressionAttributeValues: { ':type': petType },
+    });
+
+    try {
+        const data = await documentClient.send(command);
+        logger.info(`QUERY command to database complete | petDAO | getPetsByType | data: ${JSON.stringify(data.Items)}`);
+        return data.Items;
+    } catch (err) {
+        logger.error(`Error in petDAO | getPetsByType | error: ${err}`);
+        return null;
+    }
+}
+
 module.exports = {
     createPet,
     updatePet,
     deletePet,
     getAllPetServices,
     getPetById,
-    getPetsByUser
+    getPetsByUser,
+    getPetsByType
 }
