@@ -42,7 +42,7 @@ export default function PetForm() {
 
     useEffect(() => {
     if(selectedPlace && selectedPlace.location) {
-        setPet({ ...pet, location: selectedPlace.location});
+        setPet({ ...pet, location: selectedPlace});
       }
     }, [selectedPlace]);
 
@@ -61,14 +61,15 @@ export default function PetForm() {
           services.length > 0 &&
           photos.length > 0 &&
           pet.location;
+          
         // change validated attribute before checking validity to ensure react processes a change in the virtual DOM
         setValidated(true); 
-        if (!isFormValid || services.length === 0 || !pet.location) {
+        if (!isFormValid) {
             e.stopPropagation();
             console.log('PetForm validation failed');
             return;
 
-        } else if (isFormValid && services.length > 0 && pet.location){
+        } else if (isFormValid){
           setValidated(true);
           console.log('PetForm validation passed');
 

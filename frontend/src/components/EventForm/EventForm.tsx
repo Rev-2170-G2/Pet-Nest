@@ -13,7 +13,7 @@ import MultiInput from '../MultiInputs/MultiInputs';
 export default function eventForm() {
     const [selectedPlace, setSelectedPlace] = useState<google.maps.places.Place | null>(null);
     const [validated, setValidated] = useState<boolean>(false);
-    const [date, setDate] = useState<Date | null>(new Date());
+    const [date, setDate] = useState<Date>(new Date());
     const [photos, setPhotos] = useState<string[]>([]);
 
     const navigate = useNavigate();
@@ -39,11 +39,10 @@ export default function eventForm() {
       }
     }, [selectedPlace, setSelectedPlace]);
 
-    useEffect(() => {
-      if (event.date) {
-        setevent({ ...event, date });
-      }
-    }, [date])
+    // useEffect(() => {
+    //   const formattedDate = formatDate(date);
+    //   setevent({ ...event, date: formattedDate });
+    // }, [date])
 
     useEffect(() => {
       if (photos) {
@@ -53,26 +52,36 @@ export default function eventForm() {
 
     const handleSubmit = async (e: any) => {
         e.preventDefault();
+        const formattedEvent = {
+          ...event, 
+          date: formatDate(event.date),
+          location: selectedPlace?.formattedAddress
+        };
+
+        console.log(formattedEvent);
+
         const isFormValid = 
-          event.name.trim() !== '' &&
-          event.description.trim() !== '' &&
-          event.location && 
-          event.date;
+          formattedEvent.name.trim() !== '' &&
+          formattedEvent.description.trim() !== '' &&
+          formattedEvent.location && 
+          formattedEvent.date && 
+          formattedEvent.photos;
+
         // change validated attribute before checking validity to ensure react processes a change in the virtual DOM
         setValidated(true); 
 
-        if (!isFormValid || !event.date || !event.location) {
+        if (!isFormValid) {
             e.stopPropagation();
             console.log('eventForm validation failed');
             return;
 
-        } else if (isFormValid && event.date && event.location) {
+        } else if (isFormValid) {
           setValidated(true);
           console.log('eventForm validation passed');
-          
+
           if (user) { 
             await axios
-            .post(`${import.meta.env.VITE_BACKEND_URL}/events/`, event, {
+            .post(`${import.meta.env.VITE_BACKEND_URL}/events/`, formattedEvent, {
               headers: {
                 'Authorization': `Bearer ${user.token}`
               }
@@ -115,7 +124,7 @@ export default function eventForm() {
             <Form.Group  as={Row} className='mb-3' controlId='formDate'>
               <Form.Label column sm={3}>Date</Form.Label>
               <Col>
-                <DatePicker selected={date} onChange={(date) => setDate(date)} />
+                <DatePicker selected={date} onChange={(date: Date | null) => setDate(date)} />
               </Col>
             </Form.Group>
 
@@ -181,3 +190,11 @@ export default function eventForm() {
     </>
   )
 }
+
+const formatDate = (date: Date) => {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-indexed
+  const day = String(date.getDate()).padStart(2, '0');
+
+  return `${year}-${month}-${day}`;
+};
