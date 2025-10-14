@@ -25,10 +25,19 @@ function NavBar({ onJoinClick }: NavBarProps) {
       onJoinClick?.();
     } else {
       navigate("/");
-
       setTimeout(() => {
         onJoinClick?.();
       }, 400);
+    }
+  };
+
+  const handleGoHome = (e: React.MouseEvent) => {
+    e.preventDefault();
+    if (location.pathname === "/") {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    } else {
+      navigate("/");
+      setTimeout(() => window.scrollTo({ top: 0, behavior: "smooth" }), 300);
     }
   };
 
@@ -36,12 +45,22 @@ function NavBar({ onJoinClick }: NavBarProps) {
     <>
       <nav className="navbar">
         <div className="navbar-left">
-          <div className="navbar-logo">PetNest</div>
+          <div
+            className="navbar-logo"
+            onClick={handleGoHome}
+            style={{ cursor: "pointer" }}
+          >
+            PetNest
+          </div>
         </div>
 
         <div className="navbar-right">
-          <Link to="/" className="nav-link">Home</Link>
-          <Link to="/pets-events" className="nav-link">Pets & Events</Link>
+          <Link to="/" className="nav-link" onClick={handleGoHome}>
+            Home
+          </Link>
+          <Link to="/pets-events" className="nav-link">
+            Pets & Events
+          </Link>
           <a href="#join" className="nav-link" onClick={handleJoinClick}>
             Join
           </a>
@@ -49,7 +68,8 @@ function NavBar({ onJoinClick }: NavBarProps) {
           {user ? (
             <>
               <span className="welcome-text">
-                Hello, {user.username}{user.admin ? " (Admin)" : ""}!
+                Hello, {user.username}
+                {user.admin ? " (Admin)" : ""}!
               </span>
               <button id="logout-btn" onClick={handleLogout}>
                 Logout
@@ -57,10 +77,16 @@ function NavBar({ onJoinClick }: NavBarProps) {
             </>
           ) : (
             <>
-              <button className="nav-btn login-btn" onClick={() => setShowLogin(true)}>
+              <button
+                className="nav-btn login-btn"
+                onClick={() => setShowLogin(true)}
+              >
                 Login
               </button>
-              <button className="nav-btn register-btn" onClick={() => setShowRegister(true)}>
+              <button
+                className="nav-btn register-btn"
+                onClick={() => setShowRegister(true)}
+              >
                 Register
               </button>
             </>

@@ -1,32 +1,25 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
+import "./JoinSection.css";
 
-export default function JoinSection() {
+function JoinSection() {
     const navigate = useNavigate();
 
     return (
-        <div className="container py-5 min-vh-100">
-            <h1 className="mb-4 text-center">Got an event or a talented pet?</h1>
+        <div className="join-section">
+            <h1 className="text-center mb-4">Got a talented pet or an event?</h1>
             <p className="text-center mb-5">
-                Pick a section to join and explore exciting options.
+                Simple to join!
             </p>
 
-            <div className="d-flex justify-content-center gap-4 flex-wrap">
-                <div
-                    className="card text-center p-4"
-                    style={{ width: "250px", cursor: "pointer" }}
-                    onClick={() => navigate("/pets")}
-                >
+            <div className="join-cards-wrapper">
+                <div className="join-card text-center" onClick={() => navigate("/pets")}>
                     <h5>Post A Pet</h5>
                     <p>Is your pet talented? Join now!</p>
                 </div>
 
-                <div
-                    className="card text-center p-4"
-                    style={{ width: "250px", cursor: "pointer" }}
-                    onClick={() => navigate("/events")}
-                >
+                <div className="join-card text-center" onClick={() => navigate("/events")}>
                     <h5>Create An Event</h5>
                     <p>Need pets for your event? We got you!</p>
                 </div>
@@ -34,3 +27,5 @@ export default function JoinSection() {
         </div>
     );
 }
+
+export default JoinSection;
