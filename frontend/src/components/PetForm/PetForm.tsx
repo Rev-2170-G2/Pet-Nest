@@ -12,6 +12,15 @@ export type Service = {
     price: number
 }
 
+type Pet = {
+  name: string;
+  type: string;
+  description: string;
+  services: Service[];
+  photos: string[];
+  location: google.maps.places.Place | null;
+}
+
 export default function PetForm() {
     const navigate = useNavigate();
     const validTypes: string[] = ['cat', 'dog', 'bird', 'other'];
@@ -21,7 +30,7 @@ export default function PetForm() {
     const [validated, setValidated] = useState<boolean>(false);
     const [photos, setPhotos] = useState<string[]>([]);
     
-    const [pet, setPet] = useState({
+    const [pet, setPet] = useState<Pet>({
         name: '',
         type: '',
         description: '',
@@ -32,8 +41,8 @@ export default function PetForm() {
     const { user } = useContext(AuthContext);
     
 
-    const onChange = (e: ChangeEvent<HTMLInputElement>) => {
-        setPet({ ...pet, [e.target.name]: e.target.value });
+    const onChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+        setPet({ ...pet, [e.target.name as keyof Pet]: e.target.value });
     };
 
     // sync services and location and photos into pet object
@@ -53,7 +62,7 @@ export default function PetForm() {
       }
     }, [photos]);
 
-    const handleSubmit = async (e: any) => {
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement | HTMLSelectElement | HTMLTextAreaElement>) => {
         e.preventDefault();
         const isFormValid = 
           pet.name.trim() !== '' &&

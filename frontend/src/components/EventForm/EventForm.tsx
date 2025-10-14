@@ -28,7 +28,7 @@ export default function eventForm() {
     const { user } = useContext(AuthContext);
 
 
-    const onChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const onChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
         setevent({ ...event, [e.target.name]: e.target.value });
     };
 
@@ -39,18 +39,13 @@ export default function eventForm() {
       }
     }, [selectedPlace, setSelectedPlace]);
 
-    // useEffect(() => {
-    //   const formattedDate = formatDate(date);
-    //   setevent({ ...event, date: formattedDate });
-    // }, [date])
-
     useEffect(() => {
       if (photos) {
         setevent({ ...event, photos});
       }
     }, [photos])
 
-    const handleSubmit = async (e: any) => {
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         const isFormValid = 
           event.name.trim() !== '' &&
@@ -122,7 +117,11 @@ export default function eventForm() {
             <Form.Group  as={Row} className='mb-3' controlId='formDate'>
               <Form.Label column sm={3}>Date</Form.Label>
               <Col>
-                <DatePicker selected={date} onChange={(date: Date | null) => setDate(date)} />
+                <DatePicker selected={date} onChange={(date: Date | null | [Date | null, Date | null]) => {
+                  if (date && !Array.isArray(date)) {
+                    setDate(date);
+                  }
+                }} />
               </Col>
             </Form.Group>
 

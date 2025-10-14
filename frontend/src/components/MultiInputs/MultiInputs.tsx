@@ -3,10 +3,11 @@ import type { Service } from '../PetForm/PetForm';
 import MultiPhotoInput from './MultiPhotoInput/MultiPhotoInput';
 import MultiServiceInput from './MultiServiceInput/MultiServiceInput';
 
-type MultiInputProps = {
-  label: string;
-  onChange?: ( values: Service[] | string[]) => void;
-}
+// runtime discriminator for switching data types based on input
+type MultiInputProps = 
+  | { label: 'Photos'; onChange?: (values: string[]) => void}
+  | { label: 'Services'; onChange?: (values: Service[]) => void};
+
 const MultiInput: React.FC<MultiInputProps> = ({ label, onChange }) => {
 
   return (
