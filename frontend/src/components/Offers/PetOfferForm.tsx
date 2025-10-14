@@ -1,26 +1,23 @@
-import {
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
-  FormLabel,
-  FormControlLabel,
-  Checkbox,
-  Typography,
-  Box,
-  TextField,
-  Button,
-} from "@mui/material";
+// Hooks, Context, and Utils
+import { useEffect, useState } from "react";
+import { useAuth } from "../../context/AuthContext";
+import axios from "axios";
+
+// Types
 import { PetOfferFormProps } from "../../types/Pet";
 import { Event } from "../../types/Event";
 import { Offer } from "../../types/Offer";
-import axios from "axios";
-import { useEffect, useState } from "react";
 
-// TODO: replace with actual id using authContextProvider
-const id = "7kq0K";
+// Modal & MUI Components
+import ModalButton from "./ModalButton";
+import ModalTextField from "./ModalTextField";
+import ModalCheckBox from "./ModalCheckBox";
+import ModalSelect from "./ModalSelect";
+import { FormControl, FormLabel, Typography, Box } from "@mui/material";
 
 function PetOfferForm({ pet }: PetOfferFormProps) {
+  const { user } = useAuth();
+  const userId = user?.id.split("#")[1];
   const [userEvents, setUserEvents] = useState<Event[]>([]);
   const [requesterSK, setRequesterSK] = useState("");
   const [serviceSelection, setServiceSelection] = useState<string[]>([]);
@@ -29,10 +26,17 @@ function PetOfferForm({ pet }: PetOfferFormProps) {
   useEffect(() => {
     const fetchEventsByUser = async () => {
       try {
-        const response = await axios.get(`http://localhost:3000/api/events/user/${id}`);
-        console.log(`From fetchEventsByUser: ${JSON.stringify(response.data.data)}`);
+        const response = await axios.get(
+          `http://localhost:3000/api/events/user/${userId}`
+        );
+        console.log(
+          `From fetchEventsByUser: ${JSON.stringify(response.data.data)}`
+        );
 
-        response.data.data.unshift({ name: "request as a individual", id: id });
+        response.data.data.unshift({
+          name: "request as a individual",
+          id: userId,
+        });
         setUserEvents(response.data.data);
       } catch (error) {
         console.log(`Error fetching events: ${error}`);
@@ -41,9 +45,7 @@ function PetOfferForm({ pet }: PetOfferFormProps) {
       }
     };
     fetchEventsByUser();
-  }, []);
-
-  if (loading) return <p>Loading...</p>;
+  }, [userId]);
 
   function handleRequesterChange(event: string) {
     setRequesterSK(event);
@@ -59,8 +61,8 @@ function PetOfferForm({ pet }: PetOfferFormProps) {
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault(); // prevent page reload
-    const formData = new FormData(event.currentTarget); 
-    const typetag = formData.get("requesterSK") !== id ? "EVENT#" : "USER#";
+    const formData = new FormData(event.currentTarget);
+    const typetag = formData.get("requesterSK") !== userId ? "EVENT#" : "USER#";
     const formattedRequesterSK = typetag + formData.get("requesterSK");
 
     const offer: Offer = {
@@ -69,32 +71,43 @@ function PetOfferForm({ pet }: PetOfferFormProps) {
       requestedOwnerId: pet["PK"],
       services: serviceSelection,
       description: formData.get("description") as string,
-      };
+    };
 
     console.log("Form submitted. The new Offer is:", offer);
 
     try {
-        setLoading(true);
-        const response = await axios.post(
-          'http://localhost:3000/api/offers', 
-          offer,
-          { headers: { 'Content-Type': 'application/json' } }
-        );
-        return response;
+      setLoading(true);
+      const response = await axios.post(
+        "http://localhost:3000/api/offers",
+        offer,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${user?.token}`,
+          },
+        }
+      );
+      return response;
     } catch (error) {
-        console.log(`Error creating offer: ${error}`);
+      console.log(`Error creating offer: ${error}`);
     } finally {
-        setLoading(false);
+      setLoading(false);
     }
   }
 
-  if (loading) return <p>Submitting...</p>
+  if (loading) return <p>Loading..</p>;
 
   return (
     <Box
       component="form"
       onSubmit={handleSubmit}
-      sx={{ fontFamily: "Roboto", ml: 3 }}
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "space-between",
+        height: "100%",
+        overflow: "hidden auto",
+      }}
     >
       <FormControl component="fieldset">
         <FormLabel
@@ -115,96 +128,24 @@ function PetOfferForm({ pet }: PetOfferFormProps) {
         </Typography>
 
         {/* requesterSK information */}
-        <InputLabel
-          shrink
-          id="requesterSK"
-          htmlFor="requesterSK"
-          sx={{ mt: 15, fontSize: 17, color: "black" }}
-        >
-          Requester
-        </InputLabel>
-        <Select
-          labelId="requesterSK"
-          name="requesterSK"
-          label="RequesterSK"
-          displayEmpty
-          sx={{ height: 56, minWidth: 250, mt: 5, color: "black" }}
-          renderValue={(requesterSK: string) => {
-            if (!requesterSK) return "Please select an option";
-            const selectedEvent = userEvents.find(
-              (event) => event.id === requesterSK
-            );
-            return selectedEvent ? selectedEvent.name : "";
-          }}
-          value={requesterSK}
-          onChange={(event) => handleRequesterChange(event.target.value)}
-        >
-          {userEvents.map((event) => (
-            <MenuItem selected key={event.id} value={event.id}>
-              {event.name}
-            </MenuItem>
-          ))}
-        </Select>
+        <ModalSelect
+          requesterSK={requesterSK}
+          userEvents={userEvents}
+          handleRequesterChange={handleRequesterChange}
+        />
 
         {/* services information */}
-        <FormLabel
-          component="legend"
-          sx={{ mt: 2, ml: 1, fontSize: 14, color: "black" }}
-        >
-          Services
-        </FormLabel>
-        {pet.services.map(
-          (serviceObj: { service: string; price: number }, index: number) => {
-            return (
-              <>
-                <FormControlLabel
-                  key={index}
-                  sx={{ ml: 2, mt: -1 }}
-                  label={`${serviceObj.service} ➜ $${serviceObj.price}`}
-                  control={
-                    <Checkbox
-                      name="services"
-                      value={serviceObj.service}
-                      checked={serviceSelection.includes(serviceObj.service)}
-                      onChange={() =>
-                        handleServiceSelectionChange(serviceObj.service)
-                      }
-                    />
-                  }
-                ></FormControlLabel>
-              </>
-            );
-          }
-        )}
+        <ModalCheckBox
+          pet={pet}
+          serviceSelection={serviceSelection}
+          handleServiceSelectionChange={handleServiceSelectionChange}
+        />
 
         {/* description information */}
-        <InputLabel shrink id="description" htmlFor="description"></InputLabel>
-        <TextField
-          id="outlined-basic"
-          name="description"
-          label="Description of Request"
-          variant="outlined"
-          multiline
-          required
-          sx={{ mt: 3, fontSize: 18, color: "black" }}
-        ></TextField>
-      </FormControl>
+        <ModalTextField />
 
-      <Button
-        type="submit"
-        variant="contained"
-        color="success"
-        size="large"
-        sx={{
-          mt: 2,
-          px: 4,
-          fontSize: 20,
-          textTransform: "none",
-          borderRadius: 2,
-        }}
-      >
-        Request Service
-      </Button>
+      </FormControl>
+      <ModalButton />
     </Box>
   );
 }
