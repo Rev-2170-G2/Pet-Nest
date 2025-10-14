@@ -1,7 +1,8 @@
-import { createContext, useState, useEffect, ReactNode } from "react";
+import { createContext, useState, useEffect, ReactNode, useContext } from "react";
 
 export interface User {
   username: string;
+  id: string;
   token: string;
   admin: boolean;
 }
@@ -29,21 +30,24 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
   useEffect(() => {
     const token = localStorage.getItem("token");
+    const id = localStorage.getItem("id")
     const username = localStorage.getItem("username");
     const admin = localStorage.getItem("admin") === "true";
 
-    if (token && username) {
-      setUser({ username, token, admin });
+    if (token && username && id) {
+      setUser({ username, token, admin, id });
     }
   }, []);
 
   useEffect(() => {
     if (user) {
       localStorage.setItem("token", user.token);
+      localStorage.setItem("id", user.id);
       localStorage.setItem("username", user.username);
       localStorage.setItem("admin", String(user.admin));
     } else {
       localStorage.removeItem("token");
+      localStorage.removeItem("id");
       localStorage.removeItem("username");
       localStorage.removeItem("admin");
     }
@@ -63,3 +67,5 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     </AuthContext.Provider>
   );
 };
+
+export const useAuth = () => useContext(AuthContext);
