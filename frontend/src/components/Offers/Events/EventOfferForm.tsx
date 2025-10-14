@@ -1,54 +1,50 @@
 // Hooks, Context, and Utils
 import { useEffect, useState } from "react";
-import { useAuth } from "../../context/AuthContext";
+import { useAuth } from "../../../context/AuthContext";
 import axios from "axios";
 
 // Types
-import { PetOfferFormProps } from "../../types/Pet";
-import { Event } from "../../types/Event";
-import { Offer } from "../../types/Offer";
+import { EventOfferFormProps } from "../../../types/Event";
+import { Pet } from "../../../types/Pet";
+import { Offer } from "../../../types/Offer";
 
 // Modal & MUI Components
-import ModalButton from "./ModalButton";
-import ModalTextField from "./ModalTextField";
-import ModalCheckBox from "./ModalCheckBox";
-import ModalSelect from "./ModalSelect";
+import ModalButton from "../ModalButton";
+import ModalTextField from "../ModalTextField";
+import ModalCheckBox from "../ModalCheckBox";
+import ModalSelect from "../ModalSelect";
 import { FormControl, FormLabel, Typography, Box } from "@mui/material";
 
-function PetOfferForm({ pet }: PetOfferFormProps) {
+function EventOfferForm({ event, handleClose }: EventOfferFormProps) {
   const { user } = useAuth();
   const userId = user?.id.split("#")[1];
-  const [userEvents, setUserEvents] = useState<Event[]>([]);
-  const [requesterSK, setRequesterSK] = useState("");
+  const [userPets, setUserPets] = useState<Pet[]>([]);
+  const [requesterSK, setRequesterSK] = useState<string>("");
   const [serviceSelection, setServiceSelection] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchEventsByUser = async () => {
+    const fetchPetsByUser = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:3000/api/events/user/${userId}`
+          `http://localhost:3000/api/pets/user/${userId}`
         );
         console.log(
-          `From fetchEventsByUser: ${JSON.stringify(response.data.data)}`
+          `From fetchPetsByUser: ${JSON.stringify(response.data.data)}`
         );
 
-        response.data.data.unshift({
-          name: "request as a individual",
-          id: userId,
-        });
-        setUserEvents(response.data.data);
+        setUserPets(response.data.data);
       } catch (error) {
-        console.log(`Error fetching events: ${error}`);
+        console.log(`Error fetching pets: ${error}`);
       } finally {
         setLoading(false);
       }
     };
-    fetchEventsByUser();
+    fetchPetsByUser();
   }, [userId]);
 
-  function handleRequesterChange(event: string) {
-    setRequesterSK(event);
+  function handleRequesterChange(pet: string) {
+    setRequesterSK(pet);
   }
 
   function handleServiceSelectionChange(service: string) {
@@ -59,20 +55,23 @@ function PetOfferForm({ pet }: PetOfferFormProps) {
     );
   }
 
-  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault(); // prevent page reload
-    const formData = new FormData(event.currentTarget);
-    const typetag = formData.get("requesterSK") !== userId ? "EVENT#" : "USER#";
-    const formattedRequesterSK = typetag + formData.get("requesterSK");
+  function findPetByPetId(requesterSK: string): Pet {
+    const currentPet = userPets.find((pet) => pet.id === requesterSK) as Pet;
+    return currentPet;
+  }
 
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault(); // prevent page reload
+    const formData = new FormData(e.currentTarget);
+    const typetag = formData.get("requesterSK") !== userId ? "PET#" : "USER#";
+    const formattedRequesterSK = typetag + formData.get("requesterSK");
     const offer: Offer = {
       requesterSK: formattedRequesterSK,
-      requestedSK: "PET#" + pet.id,
-      requestedOwnerId: pet["PK"],
+      requestedSK: "EVENT#" + event.id,
+      requestedOwnerId: event["PK"],
       services: serviceSelection,
       description: formData.get("description") as string,
     };
-
     console.log("Form submitted. The new Offer is:", offer);
 
     try {
@@ -87,7 +86,8 @@ function PetOfferForm({ pet }: PetOfferFormProps) {
           },
         }
       );
-      return response;
+      console.log("Offer submitted:", response.data);
+      handleClose();
     } catch (error) {
       console.log(`Error creating offer: ${error}`);
     } finally {
@@ -119,27 +119,29 @@ function PetOfferForm({ pet }: PetOfferFormProps) {
             color: "primary.main",
           }}
         >
-          Pet Service Request Form
+          Event Service Request Form
         </FormLabel>
 
         {/* requested pet information */}
         <Typography variant="h5" sx={{ mt: 1, fontSize: 16, color: "black" }}>
-          Pet requested: {pet.name}
+          Event requested: {event.name}
         </Typography>
 
         {/* requesterSK information */}
         <ModalSelect
           requesterSK={requesterSK}
-          userEvents={userEvents}
+          userPetsOrEvents={userPets}
           handleRequesterChange={handleRequesterChange}
         />
 
         {/* services information */}
+        {requesterSK && findPetByPetId(requesterSK) && (
         <ModalCheckBox
-          pet={pet}
+          pet={findPetByPetId(requesterSK)}
           serviceSelection={serviceSelection}
           handleServiceSelectionChange={handleServiceSelectionChange}
         />
+        )}
 
         {/* description information */}
         <ModalTextField />
@@ -150,4 +152,4 @@ function PetOfferForm({ pet }: PetOfferFormProps) {
   );
 }
 
-export default PetOfferForm;
+export default EventOfferForm;

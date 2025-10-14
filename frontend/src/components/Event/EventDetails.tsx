@@ -3,10 +3,15 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { Event } from "../../types/Event";
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import LocationPinIcon from '@mui/icons-material/LocationPin';
+import EventOfferModal from "../Offers/Events/EventOfferModal";
+import { useState } from "react";
 
 const DEFAULT_IMAGE = "https://th.bing.com/th/id/OIP.5t0ye0TwtLcy8ihTtU-0fQHaDs?w=341&h=174&c=7&r=0&o=7&cb=12&pid=1.7&rm=3";
 
 export default function EventDetails({ event }: { event: Event }) {
+  const [open, setOpen] = useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
   const navigate = useNavigate();
 
   return (
@@ -44,9 +49,10 @@ export default function EventDetails({ event }: { event: Event }) {
         <p className="mb-4">{event.description}</p>
 
         <div className="d-flex justify-content-center justify-content-md-start">
-          <button className="btn btn-success btn-lg px-4">
+          <button className="btn btn-success btn-lg px-4" onClick={handleOpen}>
             Join Event
           </button>
+          <EventOfferModal event={event} open={open} handleClose={handleClose}/>
         </div>
       </div>
     </div>

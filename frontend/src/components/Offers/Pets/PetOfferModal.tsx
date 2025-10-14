@@ -1,6 +1,6 @@
 import { Box,  Modal } from '@mui/material';
 import PetOfferForm from './PetOfferForm';
-import { Pet } from "../../types/Pet";
+import { Pet } from "../../../types/Pet";
 
 interface PetOfferModalProps {
   pet: Pet;
@@ -27,12 +27,12 @@ function PetOfferModal({pet, open, handleClose}: PetOfferModalProps) { // props 
   <div>
       <Modal
         open={open}
-        onClose={handleClose} 
+        onClose={handleClose}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
         <Box sx={style}>
-          <PetOfferForm pet={pet}/>
+          <PetOfferForm pet={pet} handleClose={handleClose} />
         </Box>
       </Modal>
     </div>

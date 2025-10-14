@@ -6,7 +6,7 @@ import LocationPinIcon from '@mui/icons-material/LocationPin';
 import PetsIcon from '@mui/icons-material/Pets';
 import EventAvailableIcon from '@mui/icons-material/EventAvailable';
 import { useState } from "react";
-import PetOfferModal from "../Offers/PetOfferModal";
+import PetOfferModal from "../Offers/Pets/PetOfferModal";
 
 const DEFAULT_IMAGE = "https://jooinn.com/images/pet-70.jpg";
 
@@ -22,8 +22,7 @@ export default function PetDetails({ pet }: { pet: Pet }) {
         <div className="col-12 col-md-5 d-flex justify-content-center align-items-start">
           <div className="w-100" style={{ maxWidth: "400px", height: "400px" }}>
             <img
-              // src={pet.photos?.[0] || DEFAULT_IMAGE}
-              src={pet.photos || DEFAULT_IMAGE}
+              src={Array.isArray(pet.photos) ? pet.photos?.[0] || DEFAULT_IMAGE : pet.photos}
               alt={pet.name}
               className="img-fluid rounded"
               style={{ width: "100%", height: "100%", objectFit: "cover" }}

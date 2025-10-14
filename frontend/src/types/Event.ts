@@ -1,3 +1,5 @@
+import { Pet } from './Pet'
+
 export interface Event {
   entity: string;
   id: string;
@@ -8,4 +10,9 @@ export interface Event {
   status?: string;
   photos?: string;
   PK: string;
+}
+
+export interface EventOfferFormProps {
+  event: Event;
+  handleClose: () => void;
 }
