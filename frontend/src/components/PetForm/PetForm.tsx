@@ -73,11 +73,15 @@ export default function PetForm() {
           console.log('PetForm validation passed');
 
           if (user) { 
-            await axios.post(`${import.meta.env.VITE_BACKEND_URL}/pets/`, pet, {
+            await axios
+            .post(`${import.meta.env.VITE_BACKEND_URL}/pets/`, pet, {
               headers: {
                 'Authorization': `Bearer ${user.token}`
               }
-            });
+            })
+            .then((res) => console.log(res))
+            .catch((err) => console.error(JSON.stringify(err)))
+            .finally(() => navigate('/'));
           }
         }
     }

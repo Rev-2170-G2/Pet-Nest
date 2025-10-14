@@ -1,4 +1,4 @@
-import React, { useState, KeyboardEvent, ChangeEvent } from 'react';
+import { useState, KeyboardEvent, ChangeEvent } from 'react';
 import { Form, Button, Badge, InputGroup } from "react-bootstrap";
 import type { Service } from '../../PetForm/PetForm';
 

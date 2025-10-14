@@ -1,10 +1,12 @@
 import { useState, useEffect, ChangeEvent, useContext } from 'react';
 import {  Form, Button, Container, Row, Col } from 'react-bootstrap';
+import { useNavigate } from "react-router-dom";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import MapView from '../MapView/MapView';
 import { AuthContext } from '../../context/AuthContext';
 import axios from 'axios';
+import MultiInput from '../MultiInputs/MultiInputs';
 // import './eventForm.css';
 
 
@@ -12,11 +14,15 @@ export default function eventForm() {
     const [selectedPlace, setSelectedPlace] = useState<google.maps.places.Place | null>(null);
     const [validated, setValidated] = useState<boolean>(false);
     const [date, setDate] = useState<Date | null>(new Date());
+    const [photos, setPhotos] = useState<string[]>([]);
+
+    const navigate = useNavigate();
 
     const [event, setevent] = useState({
         name: '',
         description: '',
         date: date,
+        photos: photos,
         location: selectedPlace
     });
     const { user } = useContext(AuthContext);
@@ -26,12 +32,24 @@ export default function eventForm() {
         setevent({ ...event, [e.target.name]: e.target.value });
     };
 
-    // sync date and location into event object
+    // sync date and location and photos into event object
     useEffect(() => {
-      if(selectedPlace && selectedPlace.location) {
+      if (selectedPlace && selectedPlace.location) {
           setevent({ ...event, location: selectedPlace});
       }
     }, [selectedPlace, setSelectedPlace]);
+
+    useEffect(() => {
+      if (event.date) {
+        setevent({ ...event, date });
+      }
+    }, [date])
+
+    useEffect(() => {
+      if (photos) {
+        setevent({ ...event, photos});
+      }
+    }, [photos])
 
     const handleSubmit = async (e: any) => {
         e.preventDefault();
@@ -47,15 +65,21 @@ export default function eventForm() {
             e.stopPropagation();
             console.log('eventForm validation failed');
             return;
+
         } else if (isFormValid && event.date && event.location) {
           setValidated(true);
           console.log('eventForm validation passed');
+          
           if (user) { 
-            await axios.post(`${import.meta.env.VITE_BACKEND_URL}/pets/`, event, {
+            await axios
+            .post(`${import.meta.env.VITE_BACKEND_URL}/events/`, event, {
               headers: {
                 'Authorization': `Bearer ${user.token}`
               }
-            });
+            })
+            .then((res) => console.log(res))
+            .catch((err) => console.error(JSON.stringify(err)))
+            .finally(() => navigate('/'));
           }
         }
     }
@@ -114,6 +138,16 @@ export default function eventForm() {
                   Please provide a description.
                 </Form.Control.Feedback>
               </Col>
+            </Form.Group>
+            {/* MultiStringInput for Photo URLs */}
+            <Form.Group className='mb-3' controlId='formBasicPhotoLinks'>
+              <MultiInput label='Photos' onChange={setPhotos} />
+              {validated && photos.length === 0 && (
+                  <div className='invalid-feedback d-block'>Please add at least one photo link</div>
+              )}
+              {validated && photos.length > 0 && (
+                  <div className='valid-feedback d-block'>Looks good!</div>
+              )}
             </Form.Group>
           </Col>
 
