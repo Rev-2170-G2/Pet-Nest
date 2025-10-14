@@ -35,15 +35,19 @@ export default function eventForm() {
 
     const handleSubmit = async (e: any) => {
         e.preventDefault();
-        const form = e.currentTarget;
+        const isFormValid = 
+          event.name.trim() !== '' &&
+          event.description.trim() !== '' &&
+          event.location && 
+          event.date;
         // change validated attribute before checking validity to ensure react processes a change in the virtual DOM
         setValidated(true); 
 
-        if (!form.checkValidity() || !event.date || !event.location) {
+        if (!isFormValid || !event.date || !event.location) {
             e.stopPropagation();
             console.log('eventForm validation failed');
             return;
-        } else if (form.checkValidity() && event.date && event.location) {
+        } else if (isFormValid && event.date && event.location) {
           setValidated(true);
           console.log('eventForm validation passed');
           if (user) { 
@@ -128,13 +132,13 @@ export default function eventForm() {
         </Row>
         
         {/* Confirmation Checkbox */}
-        <Form.Group className='mb-3' controlId='formBasicCheckbox'>
+        {/* <Form.Group className='mb-3' controlId='formBasicCheckbox'>
           <Form.Check type='checkbox' label='Confirm settings' isValid={validated} isInvalid ={validated} required />
           <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
           <Form.Control.Feedback type='invalid'>
             Please confirm information is correct.
           </Form.Control.Feedback>
-        </Form.Group>
+        </Form.Group> */}
         <Button variant='primary' type='submit'>
           Submit
         </Button>

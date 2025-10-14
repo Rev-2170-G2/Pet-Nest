@@ -11,7 +11,7 @@ export default function MultiServiceInput({onChange, label}: Props) {
 
     const [values, setValues] = useState<Service[]>([]);
     const [serviceValue, setServiceValue] = useState('');
-    const [priceValue, setPriceValue] = useState('0');
+    const [priceValue, setPriceValue] = useState('1');
 
     const handleAdd = () => {
         const trimmedSV = serviceValue.trim().toLowerCase();
@@ -54,6 +54,7 @@ export default function MultiServiceInput({onChange, label}: Props) {
         <InputGroup.Text id="inputGroupPrepend">$</InputGroup.Text>
         <Form.Control
           type="number"
+          min="1"
           value={priceValue}
           onChange={(e: ChangeEvent<HTMLInputElement>) => setPriceValue(e.target.value)}
           onKeyDown={handleKeyDown}

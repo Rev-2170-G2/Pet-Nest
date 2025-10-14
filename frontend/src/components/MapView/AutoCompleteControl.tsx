@@ -33,7 +33,9 @@ const AutoCompleteControl = ({
           'viewport',
           'location',
           'svgIconMaskURI',
-          'iconBackgroundColor'
+          'iconBackgroundColor',
+          'location',
+          'formattedAddress'
         ]
       });
 

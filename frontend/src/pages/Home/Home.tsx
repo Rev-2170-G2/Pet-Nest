@@ -11,7 +11,7 @@ export default function Home({}: Props) {
     <>
       <HeroSection />
       <PetForm />
-      {/* <EventForm /> */}
+      <EventForm />
     </>
   )
 }

@@ -1,5 +1,6 @@
 import { useState, useEffect, ChangeEvent, useContext } from 'react';
 import {  Form, Button, Container, Row, Col } from 'react-bootstrap';
+import { useNavigate } from "react-router-dom";
 import MultiInput from '../MultiInputs/MultiInputs';
 import MapView from '../../components/MapView/MapView';
 import { AuthContext } from '../../context/AuthContext';
@@ -12,6 +13,8 @@ export type Service = {
 }
 
 export default function PetForm() {
+    const navigate = useNavigate();
+
     const [services, setServices] = useState<Service[]>([]);
     const [selectedPlace, setSelectedPlace] = useState<google.maps.places.Place | null>(null);
     const [validated, setValidated] = useState<boolean>(false);
@@ -34,33 +37,41 @@ export default function PetForm() {
 
     // sync services and location and photos into pet object
     useEffect(() => {
-        setPet({...pet, services: services});
+        setPet({...pet, services});
     },[services]);
+
     useEffect(() => {
-      if(selectedPlace && selectedPlace.location) {
-          setPet({ ...pet, location: selectedPlace.location});
+    if(selectedPlace && selectedPlace.location) {
+        setPet({ ...pet, location: selectedPlace.location});
       }
-    }, [selectedPlace, setSelectedPlace]);
+    }, [selectedPlace]);
+
     useEffect(() => {
-      if(photos && photos.length > 0) {
-        setPet({...pet, photos: photos});
+      if(photos.length > 0) {
+        setPet({...pet, photos});
       }
     }, [photos]);
 
     const handleSubmit = async (e: any) => {
         e.preventDefault();
-        const form = e.currentTarget;
+        const isFormValid = 
+          pet.name.trim() !== '' &&
+          pet.type.trim() !== '' &&
+          pet.description.trim() !== '' &&
+          services.length > 0 &&
+          photos.length > 0 &&
+          pet.location;
         // change validated attribute before checking validity to ensure react processes a change in the virtual DOM
         setValidated(true); 
-
-        if (!form.checkValidity() || services.length === 0 || !pet.location) {
+        if (!isFormValid || services.length === 0 || !pet.location) {
             e.stopPropagation();
             console.log('PetForm validation failed');
             return;
-        } else if (form.checkValidity() && services.length > 0 && pet.location){
+
+        } else if (isFormValid && services.length > 0 && pet.location){
           setValidated(true);
           console.log('PetForm validation passed');
-          //check if user is logged in
+
           if (user) { 
             await axios.post(`${import.meta.env.VITE_BACKEND_URL}/pets/`, pet, {
               headers: {
@@ -178,13 +189,13 @@ export default function PetForm() {
         </Row>
         
         {/* Confirmation Checkbox */}
-        <Form.Group className='mb-3' controlId='formBasicCheckbox'>
+        {/* <Form.Group className='mb-3' controlId='formBasicCheckbox'>
           <Form.Check type='checkbox' label='Confirm settings' isValid={validated} isInvalid ={validated} required />
           <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
           <Form.Control.Feedback type='invalid'>
             Please confirm information is correct.
           </Form.Control.Feedback>
-        </Form.Group>
+        </Form.Group> */}
         <Button variant='primary' type='submit'>
           Submit
         </Button>

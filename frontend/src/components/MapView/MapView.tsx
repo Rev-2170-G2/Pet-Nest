@@ -15,7 +15,7 @@ export default function MapView({setSelectedPlace, selectedPlace}: Props) {
 
   return (
     <>
-    <div id='map-container'>
+    <Container>
       <Map
         mapId={'DEMO_MAP_ID'}
         style={{width: '50vw', height: '45vh'}}
@@ -32,7 +32,7 @@ export default function MapView({setSelectedPlace, selectedPlace}: Props) {
       <AutoCompleteResult place={selectedPlace} />
 
       </Map>
-    </div>
+    </Container>
     </>
   )
 }
