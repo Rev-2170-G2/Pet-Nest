@@ -1,15 +1,20 @@
 import { Pet } from "../../types/Pet";
-import Rating from "@mui/material/Rating";
+import { Rating, Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import LocationPinIcon from '@mui/icons-material/LocationPin';
 import PetsIcon from '@mui/icons-material/Pets';
 import EventAvailableIcon from '@mui/icons-material/EventAvailable';
+import { useState } from "react";
+import PetOfferModal from "../Offers/Pets/PetOfferModal";
 
 const DEFAULT_IMAGE = "https://jooinn.com/images/pet-70.jpg";
 
 export default function PetDetails({ pet }: { pet: Pet }) {
-  const navigate = useNavigate();
+    const [open, setOpen] = useState(false);
+    const handleOpen = () => setOpen(true);
+    const handleClose = () => setOpen(false);
+    const navigate = useNavigate();
 
   return (
     <div className="container py-5 d-flex flex-column justify-content-center">
@@ -17,7 +22,7 @@ export default function PetDetails({ pet }: { pet: Pet }) {
         <div className="col-12 col-md-5 d-flex justify-content-center align-items-start">
           <div className="w-100" style={{ maxWidth: "400px", height: "400px" }}>
             <img
-              src={pet.photos?.[0] || DEFAULT_IMAGE}
+              src={Array.isArray(pet.photos) ? pet.photos?.[0] || DEFAULT_IMAGE : pet.photos}
               alt={pet.name}
               className="img-fluid rounded"
               style={{ width: "100%", height: "100%", objectFit: "cover" }}
@@ -67,9 +72,10 @@ export default function PetDetails({ pet }: { pet: Pet }) {
           </ul>
 
           <div className="d-flex justify-content-start">
-            <button className="btn btn-success btn-lg px-4">
+            <button className="btn btn-success btn-lg px-4" onClick={handleOpen}>
               Request Service
             </button>
+            <PetOfferModal pet={pet} open={open} handleClose={handleClose}/>
           </div>
         </div>
       </div>
