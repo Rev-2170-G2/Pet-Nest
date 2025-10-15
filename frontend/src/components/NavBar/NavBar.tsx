@@ -24,6 +24,7 @@ function NavBar() {
         <div className="navbar-right">
           <Link to="/" className="nav-link">Home</Link>
           <Link to="/pets-events" className="nav-link">Pets & Events</Link> {/* Separate to Pets/Events page. just filler right now. */}
+          {user && <Link to="/offers" className="nav-link">Offers</Link>}
 
           {user ? (
             <>
