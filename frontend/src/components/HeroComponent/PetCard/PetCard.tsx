@@ -60,7 +60,7 @@ function PetCard() {
             <PetFilter onSelectType={(type: string) => getPetsByType(type)} />
              <MapView
                 showAutoComplete={false}
-                positions={petLocations} 
+                positions={petLocations}
                 markerType={'pets'}
                 height={'20vh'}
                 width={'45vw'}

@@ -3,7 +3,7 @@ import { Container } from 'react-bootstrap';
 import { useState, useEffect, CSSProperties } from 'react';
 import AutoCompleteControl from './AutoComplete/AutoCompleteControl';
 import AutoCompleteResult from './AutoComplete/AutoCompleteResult';
-import PetMarker from './PetMarkers/PetMarkers';
+import CustomMarker from './CustomMarkers/CustomMarkers';
 import './AutoComplete/AutoCompleteControl.css';
 
 type Props = {
@@ -41,10 +41,8 @@ export default function MapView({showAutoComplete, setSelectedPlace, selectedPla
         <AutoCompleteResult place={selectedPlace} />
       )}
 
-      {positions && markerType === 'pets' ? (
-        <PetMarker markerSpots={positions}></PetMarker>
-      ) : (
-        <></>
+      {positions && markerType && (
+        <CustomMarker markerSpots={positions} markerType={markerType} />
       )}
       </Map>
     </Container>
