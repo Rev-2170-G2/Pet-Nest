@@ -9,6 +9,8 @@ import { AuthProvider } from "./context/AuthContext";
 import PetsEvents from './components/PetsEvents/PetsEvents';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Offers from './components/Offers/Offers';
+import PetForm from "./components/PetForm/PetForm";
+import EventForm from "./components/EventForm/EventForm";
 
 function App() {
   const joinRef = useRef<HTMLDivElement | null>(null);
@@ -25,14 +27,16 @@ function App() {
   return (
     <AuthProvider>
       <NavBar onJoinClick={scrollToJoin} />
-      <APIProvider apiKey={import.meta.env.VITE_MAPS_API_KEY}> 
-      <Routes>
-        <Route path="/" element={<Home joinRef={joinRef} />} />
-        <Route path="/pets-events" element={<PetsEvents />} />
-        <Route path="/pets/:id" element={<PetPage />} />
-        <Route path="/events/:id" element={<EventPage />} />
-        <Route path="/offers" element={<Offers />} />
-      </Routes>
+      <APIProvider apiKey={import.meta.env.VITE_MAPS_API_KEY}>
+        <Routes>
+          <Route path="/" element={<Home joinRef={joinRef} />} />
+          <Route path="/pets-events" element={<PetsEvents />} />
+          <Route path="/pets/:id" element={<PetPage />} />
+          <Route path="/events/:id" element={<EventPage />} />
+          <Route path="/offers" element={<Offers />} />
+          <Route path="/pet-form" element={<PetForm />} />
+          <Route path="/event-form" element={<EventForm />} />
+        </Routes>
       </APIProvider>
     </AuthProvider>
   );
