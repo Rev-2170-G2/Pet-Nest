@@ -1,6 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import "bootstrap/dist/css/bootstrap.min.css";
+import JoinCard from "./JoinCard";
 import "./JoinSection.css";
 
 function JoinSection() {
@@ -9,20 +9,21 @@ function JoinSection() {
     return (
         <div className="join-section">
             <h1 className="text-center mb-4">Got a talented pet or an event?</h1>
-            <p className="text-center mb-5">
-                Simple to join!
-            </p>
+            <p className="text-center mb-5">Simple To Join, Choose One!</p>
 
             <div className="join-cards-wrapper">
-                <div className="join-card text-center" onClick={() => navigate("/pets")}>
-                    <h5>Post A Pet</h5>
-                    <p>Is your pet talented? Join now!</p>
-                </div>
-
-                <div className="join-card text-center" onClick={() => navigate("/events")}>
-                    <h5>Create An Event</h5>
-                    <p>Need pets for your event? We got you!</p>
-                </div>
+                <JoinCard
+                    title="Post A Pet"
+                    subtitle="Is your pet talented? Join now!"
+                    imageUrl="https://images.unsplash.com/photo-1581753418434-51c11169a3c1"
+                    onClick={() => navigate("/pet-form")}
+                />
+                <JoinCard
+                    title="Create An Event"
+                    subtitle="Need pets for your event? We got you!"
+                    imageUrl="https://images.unsplash.com/photo-1631857455684-a54a2f03665f"
+                    onClick={() => navigate("/event-form")}
+                />
             </div>
         </div>
     );

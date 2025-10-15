@@ -21,7 +21,7 @@
     align-items: center;
     gap: 5rem;
     flex-wrap: wrap;
-    margin-top: 75px;
+    margin-top: 30;
 }
 
 .join-card {
@@ -30,7 +30,6 @@
     border-radius: 20px;
     transition: all 0.3s ease;
     width: 250px;
-    padding: 25px;
     cursor: pointer;
 }
 
