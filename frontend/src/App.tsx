@@ -5,6 +5,7 @@ import PetPage from './components/Pet/PetPage';
 import EventPage from './components/Event/EventPage';
 import { AuthProvider } from "./context/AuthContext";
 import PetsEvents from './components/PetsEvents/PetsEvents';
+import Offers from './components/Offers/Offers';
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/pets-events" element={<PetsEvents />} />
+        <Route path="/offers" element={<Offers />} />
         <Route path="/pets/:id" element={<PetPage />} />
         <Route path="/events/:id" element={<EventPage />} />
       </Routes>
