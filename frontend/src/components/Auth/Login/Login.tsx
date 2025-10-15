@@ -28,9 +28,10 @@ function Login({ onClose, onSubmit }: LoginProps) {
       const data = response.data;
 
       const user: User = {
-        username,
+        id: data.id,
+        username: data.username,
         token: data.token,
-        admin: data.admin || false,
+        admin: data.admin,
       };
 
       login(user);

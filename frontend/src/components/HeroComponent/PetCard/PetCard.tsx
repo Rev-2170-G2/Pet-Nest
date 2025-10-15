@@ -52,7 +52,7 @@ function PetCard() {
             <div key={index} className="pet-card">
                 <Card className="card-root">
                 <CardMedia className="card-media"
-                    image={pet.photos?.[0]}
+                    image={Array.isArray(pet.photos) ? pet.photos?.[0] : pet.photos}
                     title={pet.entity}
                 />
                 <CardContent>

@@ -16,6 +16,9 @@ const logger = createLogger({
 
 function loggerMiddleware(req, res, next) {
     logger.info(`Incoming ${req.method} : ${req.url}`);
+    if (req.method === "POST" || req.method === "PUT") {
+        logger.info(`Body: ${JSON.stringify(req.body)}`);
+    }
     next();
 }
 

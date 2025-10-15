@@ -48,7 +48,7 @@ async function login (req, res) {
         if (user){
             const payload = { id: user.PK, username: username, admin: user.admin };
             const token = generateToken(payload);
-            return res.status(200).json({message: "Successful login", token});
+            return res.status(200).json({message: "Successful login", token, id: user.PK, username: username, admin: user.admin});
         } else {
             return res.status(401).json({message: `Invalid username and/or password`});  
         }
