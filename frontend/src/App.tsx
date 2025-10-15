@@ -8,6 +8,7 @@ import { AuthProvider } from "./context/AuthContext";
 import PetsEvents from './components/PetsEvents/PetsEvents';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Offers from './components/Offers/Offers';
+import Admin from './components/Admin/Admin';
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
         <Route path="/pets/:id" element={<PetPage />} />
         <Route path="/events/:id" element={<EventPage />} />
         <Route path="/offers" element={<Offers />} />
+        <Route path="/admin" element={<Admin />} />
       </Routes>
       </APIProvider>
     </AuthProvider>
