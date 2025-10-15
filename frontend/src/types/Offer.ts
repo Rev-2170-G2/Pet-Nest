@@ -9,3 +9,8 @@ export interface Offer {
   status: "pending" | "approved" | "denied";
   createdAt: string;
 }
+
+export interface IndividualUser{
+  name: string | undefined;
+  id: string;
+}

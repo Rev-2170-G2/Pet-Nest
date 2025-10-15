@@ -7,7 +7,12 @@ export interface Pet {
   services: { service: string; price: number; }[];
   eventsCompleted: number;
   review: number;
-  photos?: string[];
+  photos: string[] | string;
   location?: string;
   PK: string;
+}
+
+export interface PetOfferFormProps {
+  pet: Pet;
+  handleClose: () => void;
 }

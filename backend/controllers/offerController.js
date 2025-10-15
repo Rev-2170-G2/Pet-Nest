@@ -9,10 +9,11 @@ const { logger } = require("../util/logger");
  */
 async function createOffer(req, res) {
     const userId = req.user.id;
+
     try {
         const offer = await offerService.createOffer(req.body, userId);
         if (!offer) {
-            logger.info(`${userId} attempted to create an invalid offer: ${JSON.stringify(req.body)}`);
+            logger.info(`${userId} attempted to create an invalid offer in createOffer from offerController: ${JSON.stringify(req.body)}`);
             return res.status(400).json({message: "Invalid offer or permission denied."});
         }
         logger.info(`${userId} created new offer: ${JSON.stringify(offer)}`);
