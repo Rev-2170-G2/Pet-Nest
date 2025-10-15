@@ -15,9 +15,12 @@
     "@emotion/styled": "^11.14.1",
     "@mui/icons-material": "^7.3.4",
     "@mui/material": "^7.3.4",
+    "@vis.gl/react-google-maps": "^1.5.5",
     "axios": "^1.12.2",
     "bootstrap": "^5.3.8",
     "react": "^19.1.1",
+    "react-bootstrap": "^2.10.10",
+    "react-datepicker": "^8.7.0",
     "react-dom": "^19.1.1",
     "react-router-dom": "^7.9.3"
   },

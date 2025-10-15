@@ -32,7 +32,7 @@ function EventCard() {
   return (
     <div className="eventcard-container">
         {events
-            .filter(event => event.status === "open")
+            .filter(event => event.status === "pending")
             .map((event, index) => (
               <div key={index} className="event-card">
                 <Card className="card-root">
