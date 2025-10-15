@@ -35,9 +35,7 @@ function Register({ onClose, onSwitchToLogin, onSubmit }: RegisterProps) {
     } catch (error: any) {
       if (axios.isAxiosError(error)) {
         const status = error.response?.status;
-        if (status === 409) {
-          setMessage("Username already exists");
-        } else if (status === 400) {
+        if (status === 400) {
           setMessage("Invalid registration data");
         } else {
           setMessage(error.response?.data?.message || "Registration failed");
