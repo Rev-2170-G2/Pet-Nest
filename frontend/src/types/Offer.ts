@@ -1,11 +1,13 @@
-import { Pet } from "./Pet";
-
 export interface Offer {
-  requesterSK: string | Pet | Event;
+  id: string;
+  requesterPK: string;
+  requesterSK: string;
+  requestedPK: string;
   requestedSK: string;
-  requestedOwnerId: string;
-  services: string[];
-  description: string;
+  services: { service: string; price: number }[];
+  description?: string;
+  status: "pending" | "approved" | "denied";
+  createdAt: string;
 }
 
 export interface IndividualUser{
