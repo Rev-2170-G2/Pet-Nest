@@ -1,3 +1,4 @@
+import { useRef } from "react";
 import { APIProvider } from '@vis.gl/react-google-maps';
 import { Route, Routes } from 'react-router-dom'
 import Home from './pages/Home/Home';
@@ -8,21 +9,34 @@ import { AuthProvider } from "./context/AuthContext";
 import PetsEvents from './components/PetsEvents/PetsEvents';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Offers from './components/Offers/Offers';
-import Admin from './components/Admin/Admin';
+import PetForm from "./components/PetForm/PetForm";
+import EventForm from "./components/EventForm/EventForm";
 
 function App() {
+  const joinRef = useRef<HTMLDivElement | null>(null);
+
+  const scrollToJoin = () => {
+    if (joinRef.current) {
+      const navbarHeight = 70;
+      const elementY =
+        joinRef.current.getBoundingClientRect().top + window.scrollY - navbarHeight;
+      window.scrollTo({ top: elementY, behavior: "smooth" });
+    }
+  };
+
   return (
     <AuthProvider>
-      <NavBar />
-      <APIProvider apiKey={import.meta.env.VITE_MAPS_API_KEY}> 
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/pets-events" element={<PetsEvents />} />
-        <Route path="/pets/:id" element={<PetPage />} />
-        <Route path="/events/:id" element={<EventPage />} />
-        <Route path="/offers" element={<Offers />} />
-        <Route path="/admin" element={<Admin />} />
-      </Routes>
+      <NavBar onJoinClick={scrollToJoin} />
+      <APIProvider apiKey={import.meta.env.VITE_MAPS_API_KEY}>
+        <Routes>
+          <Route path="/" element={<Home joinRef={joinRef} />} />
+          <Route path="/pets-events" element={<PetsEvents />} />
+          <Route path="/pets/:id" element={<PetPage />} />
+          <Route path="/events/:id" element={<EventPage />} />
+          <Route path="/offers" element={<Offers />} />
+          <Route path="/pet-form" element={<PetForm />} />
+          <Route path="/event-form" element={<EventForm />} />
+        </Routes>
       </APIProvider>
     </AuthProvider>
   );

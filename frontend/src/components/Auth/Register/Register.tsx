@@ -1,49 +1,42 @@
-import React, { useState, useContext } from "react";
+import React, { useState } from "react";
 import axios from "axios";
 import "./Register.css";
-import { AuthContext, User } from "../../../context/AuthContext";
 
 interface RegisterProps {
   onClose: () => void;
+  onSwitchToLogin?: () => void;
   onSubmit?: () => void;
 }
 
-function Register({ onClose, onSubmit }: RegisterProps) {
+function Register({ onClose, onSwitchToLogin, onSubmit }: RegisterProps) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
-
-  const { login } = useContext(AuthContext);
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
     onSubmit?.();
 
     try {
-      const response = await axios.post("http://localhost:3000/api/users/register", {
+      await axios.post("http://localhost:3000/api/users/register", {
         username,
         password,
         email,
       });
 
-      const data = response.data;
+      setMessage("Registration successful! Redirecting to login...");
 
-      setMessage("Registration successful!");
+      setTimeout(() => {
+        onClose();
+        onSwitchToLogin?.();
+      }, 2000);
 
-      const user: User = {
-        username,
-        token: data.token,
-        admin: data.admin || false,
-      };
-
-      login(user);
-      onClose();
     } catch (error: any) {
       if (axios.isAxiosError(error)) {
         const status = error.response?.status;
-        if (status === 409) {
-          setMessage("Username already exists");
+        if (status === 400) {
+          setMessage("Invalid registration data");
         } else {
           setMessage(error.response?.data?.message || "Registration failed");
         }
@@ -56,7 +49,14 @@ function Register({ onClose, onSubmit }: RegisterProps) {
   return (
     <div className="popup-overlay">
       <div className="popup-box">
-        <button className="close-btn" onClick={onClose}>X</button>
+        <button
+          className="close-btn"
+          onClick={() => {
+            onClose();
+          }}
+        >
+          X
+        </button>
         <h2>Register</h2>
 
         <form onSubmit={handleRegister}>
