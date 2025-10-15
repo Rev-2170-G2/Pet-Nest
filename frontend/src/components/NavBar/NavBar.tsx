@@ -16,7 +16,11 @@ function NavBar({ onJoinClick }: NavBarProps) {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const handleLogout = () => logout();
+  const handleLogout = () => {
+    logout();
+    navigate("/");
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
 
   const handleJoinClick = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -95,7 +99,15 @@ function NavBar({ onJoinClick }: NavBarProps) {
       </nav>
 
       {showLogin && <Login onClose={() => setShowLogin(false)} />}
-      {showRegister && <Register onClose={() => setShowRegister(false)} />}
+      {showRegister && (
+        <Register
+          onClose={() => setShowRegister(false)}
+          onSwitchToLogin={() => {
+            setShowRegister(false);
+            setShowLogin(true);
+          }}
+        />
+      )}
     </>
   );
 }
