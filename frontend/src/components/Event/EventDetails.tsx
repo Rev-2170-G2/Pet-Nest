@@ -4,15 +4,45 @@ import { Event } from "../../types/Event";
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import LocationPinIcon from '@mui/icons-material/LocationPin';
 import EventOfferModal from "../Offers/Events/EventOfferModal";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import { Pet } from "../../types/Pet";
+import { useAuth } from "../../context/AuthContext";import { Alert } from "@mui/material";
+;
 
 const DEFAULT_IMAGE = "https://th.bing.com/th/id/OIP.5t0ye0TwtLcy8ihTtU-0fQHaDs?w=341&h=174&c=7&r=0&o=7&cb=12&pid=1.7&rm=3";
 
 export default function EventDetails({ event }: { event: Event }) {
+  const { user } = useAuth();
+  const userId = user?.id.split("#")[1];
   const [open, setOpen] = useState(false);
+  const [showWarning, setShowWarning] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+  const [userPets, setUserPets] = useState<Pet[]>([]);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchPetsByUser = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:3000/api/pets/user/${userId}`
+        );
+        console.log(
+          `From fetchPetsByUser: ${JSON.stringify(response.data.data)}`
+        );
+        
+        if (!response.data.data){
+          return null;
+        } else {
+          setUserPets(response.data.data);
+        }
+      } catch (error) {
+        console.log(`Error fetching pets: ${error}`);
+      } 
+    };
+    fetchPetsByUser();
+  }, [userId]);
 
   return (
     <div className="container py-5 min-vh-100">
@@ -49,12 +79,20 @@ export default function EventDetails({ event }: { event: Event }) {
         <p className="mb-4">{event.description}</p>
 
         <div className="d-flex justify-content-center justify-content-md-start">
-          <button className="btn btn-success btn-lg px-4" onClick={handleOpen}>
+          <button className="btn btn-success btn-lg px-4"  onClick={() => {
+            if (userPets.length > 0) {
+              handleOpen()
+            } else {
+              setShowWarning(true)       
+            }}}>
             Join Event
           </button>
-          <EventOfferModal event={event} open={open} handleClose={handleClose}/>
+          {userPets.length > 0 && 
+            (<EventOfferModal event={event} userPets={userPets} open={open} handleClose={handleClose}/>)}
+          
+          {showWarning && 
+            (<Alert severity="warning" sx={{ ml: 2, width: 300, borderRadius: 4 }}>Create a pet first to join an event.</Alert>)}
         </div>
       </div>
     </div>
-  );
-}
+  )};

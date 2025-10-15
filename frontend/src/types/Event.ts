@@ -14,5 +14,6 @@ export interface Event {
 
 export interface EventOfferFormProps {
   event: Event;
+  userPets: Pet[]
   handleClose: () => void;
 }

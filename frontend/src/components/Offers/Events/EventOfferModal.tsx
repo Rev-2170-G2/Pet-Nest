@@ -1,10 +1,12 @@
 import { Box,  Modal } from '@mui/material';
 import { Event } from "../../../types/Event";
 import EventOfferForm from './EventOfferForm';
+import { Pet } from '../../../types/Pet';
 
 interface EventOfferModalProps {
   event: Event;
   open: boolean;
+  userPets: Pet[];
   handleClose: () => void;
 }
 
@@ -22,7 +24,7 @@ const style = {
   p: 4,
 };
 
-function EventOfferModal({event, open, handleClose}: EventOfferModalProps) { // props passed from EventDetails
+function EventOfferModal({event, userPets, open, handleClose}: EventOfferModalProps) { // props passed from EventDetails
   return (
   <div>
       <Modal
@@ -32,7 +34,7 @@ function EventOfferModal({event, open, handleClose}: EventOfferModalProps) { // 
         aria-describedby="modal-modal-description"
       >
         <Box sx={style}>
-          <EventOfferForm event={event} handleClose={handleClose}/>
+          <EventOfferForm event={event} userPets={userPets} handleClose={handleClose}/>
         </Box>
       </Modal>
     </div>

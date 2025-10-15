@@ -1,5 +1,5 @@
 // Hooks, Context, and Utils
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useAuth } from "../../../context/AuthContext";
 import axios from "axios";
 
@@ -15,33 +15,12 @@ import ModalCheckBox from "../ModalCheckBox";
 import ModalSelect from "../ModalSelect";
 import { FormControl, FormLabel, Typography, Box } from "@mui/material";
 
-function EventOfferForm({ event, handleClose }: EventOfferFormProps) {
+function EventOfferForm({ event, userPets, handleClose }: EventOfferFormProps) {
   const { user } = useAuth();
   const userId = user?.id.split("#")[1];
-  const [userPets, setUserPets] = useState<Pet[]>([]);
   const [requesterSK, setRequesterSK] = useState<string>("");
   const [serviceSelection, setServiceSelection] = useState<string[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchPetsByUser = async () => {
-      try {
-        const response = await axios.get(
-          `http://localhost:3000/api/pets/user/${userId}`
-        );
-        console.log(
-          `From fetchPetsByUser: ${JSON.stringify(response.data.data)}`
-        );
-
-        setUserPets(response.data.data);
-      } catch (error) {
-        console.log(`Error fetching pets: ${error}`);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchPetsByUser();
-  }, [userId]);
+  const [loading, setLoading] = useState(false);
 
   function handleRequesterChange(pet: string) {
     setRequesterSK(pet);
@@ -61,7 +40,7 @@ function EventOfferForm({ event, handleClose }: EventOfferFormProps) {
   }
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault(); // prevent page reload
+    e.preventDefault(); 
     const formData = new FormData(e.currentTarget);
     const typetag = formData.get("requesterSK") !== userId ? "PET#" : "USER#";
     const formattedRequesterSK = typetag + formData.get("requesterSK");
