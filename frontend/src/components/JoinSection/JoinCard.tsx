@@ -1,4 +1,3 @@
-// src/components/JoinSection/JoinCard.tsx
 import React from "react";
 import "./JoinCard.css";
 

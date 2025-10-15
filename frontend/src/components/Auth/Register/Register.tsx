@@ -53,7 +53,6 @@ function Register({ onClose, onSwitchToLogin, onSubmit }: RegisterProps) {
           className="close-btn"
           onClick={() => {
             onClose();
-            onSwitchToLogin?.();
           }}
         >
           X

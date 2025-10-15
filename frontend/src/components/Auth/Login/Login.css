@@ -44,7 +44,7 @@
 }
 
 .popup-box input {
-  width: 90%;
+  width: 100%;
   padding: .6rem .5rem;
   margin-bottom: 1rem;
   border: 1px solid #333823;
@@ -59,7 +59,7 @@
 
 .popup-box button[type="submit"] {
   position: relative;
-  left: 90px;
+  left: 70px;
   width: 50%;
   background-color: #6a7062;
   color: #D6EEFF;
