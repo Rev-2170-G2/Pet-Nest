@@ -1,4 +1,4 @@
-import { useState, useEffect, ChangeEvent, useContext } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import {  Form, Button, Container, Row, Col } from 'react-bootstrap';
 import { useNavigate } from "react-router-dom";
 import MultiInput from '../MultiInputs/MultiInputs';
@@ -104,6 +104,7 @@ export default function PetForm() {
   return (
     <>
    <Container>
+    <h1>Create Pet</h1>
       <Form noValidate onSubmit={handleSubmit} id='pet-form'>
         <Row className='mb-3'>
           <Col>
@@ -200,7 +201,7 @@ export default function PetForm() {
           {/* Map Column */}
           <Col>
             <Form.Group className='mb-3' controlId='formMap'>
-              <MapView setSelectedPlace={setSelectedPlace} selectedPlace={selectedPlace} />
+              <MapView setSelectedPlace={setSelectedPlace} selectedPlace={selectedPlace} width={'50vw'} height={'45vh'}/>
               {validated && !selectedPlace && (
                 <div className='invalid-feedback d-block'>Please choose a location by searching</div>
               )}
