@@ -11,6 +11,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import Offers from './components/Offers/Offers';
 import PetForm from "./components/PetForm/PetForm";
 import EventForm from "./components/EventForm/EventForm";
+import Admin from "./components/Admin/Admin";
 
 function App() {
   const joinRef = useRef<HTMLDivElement | null>(null);
@@ -36,6 +37,7 @@ function App() {
           <Route path="/offers" element={<Offers />} />
           <Route path="/pet-form" element={<PetForm />} />
           <Route path="/event-form" element={<EventForm />} />
+          <Route path="/admin" element={<Admin />} />
         </Routes>
       </APIProvider>
     </AuthProvider>
