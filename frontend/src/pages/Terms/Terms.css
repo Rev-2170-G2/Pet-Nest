@@ -1,0 +1,34 @@
+.terms-container {
+  max-width: 900px;
+  margin: 4rem auto;
+  padding: 2rem;
+  font-family: 'Poppins', sans-serif;
+  color: #333823;
+  line-height: 1.6;
+}
+
+.terms-container h1 {
+  text-align: center;
+  font-size: 2.2rem;
+  color: #333823;
+  margin-bottom: 1.5rem;
+}
+
+.terms-container h2 {
+  margin-top: 2rem;
+  font-size: 1.3rem;
+  color: #444;
+}
+
+.terms-container p {
+  font-size: 1rem;
+  color: #4A4A4A;
+  margin-top: 0.8rem;
+}
+
+.terms-end {
+  text-align: center;
+  margin-top: 2rem;
+  font-weight: 500;
+  color: #6a7062;
+}

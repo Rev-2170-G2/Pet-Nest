@@ -1,5 +1,5 @@
 import { Pet } from "../../types/Pet";
-import { Rating, Button } from "@mui/material";
+import { Rating, Alert } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import LocationPinIcon from '@mui/icons-material/LocationPin';
@@ -7,20 +7,24 @@ import PetsIcon from '@mui/icons-material/Pets';
 import EventAvailableIcon from '@mui/icons-material/EventAvailable';
 import { useState } from "react";
 import PetOfferModal from "../Offers/Pets/PetOfferModal";
+import { useAuth } from "../../context/AuthContext";
 
 const DEFAULT_IMAGE = "https://jooinn.com/images/pet-70.jpg";
 
 export default function PetDetails({ pet }: { pet: Pet }) {
+    const { user } = useAuth();
     const [open, setOpen] = useState(false);
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
     const navigate = useNavigate();
+    const [showWarning, setShowWarning] = useState(false);
+    const [warningMessage, setWarningMessage] = useState("");
 
   return (
     <div className="container py-5 d-flex flex-column justify-content-center">
       <div className="row g-4 align-items-start">
         <div className="col-12 col-md-5 d-flex justify-content-center align-items-start">
-          <div className="w-100" style={{ maxWidth: "400px", height: "400px" }}>
+          <div className="w-100" style={{ maxWidth: "700px", height: "400px" }}>
             <img
               src={Array.isArray(pet.photos) ? pet.photos?.[0] || DEFAULT_IMAGE : pet.photos}
               alt={pet.name}
@@ -71,11 +75,35 @@ export default function PetDetails({ pet }: { pet: Pet }) {
             ))}
           </ul>
 
-          <div className="d-flex justify-content-start">
-            <button className="btn btn-success btn-lg px-4" onClick={handleOpen}>
+          <div className="d-flex flex-row align-items-start" style={{gap: '8px', position: 'relative'}}>
+            <button className="btn btn-success btn-lg px-4"
+              onClick={() => {
+                if(!user) {
+                  setWarningMessage("You must be logged in to request a service");
+                  setShowWarning(true);
+                  return;
+                }
+                else if(user?.id === pet.PK) {
+                  setWarningMessage("You cannot request your own service");
+                  setShowWarning(true);
+                  return;
+                }
+                else{
+                  handleOpen();
+                }
+              }}
+            >
               Request Service
             </button>
             <PetOfferModal pet={pet} open={open} handleClose={handleClose}/>
+
+            {showWarning && 
+              <div style={{position: 'absolute', top: '100%', left: 0, marginTop: '4px'}}>
+                <Alert severity="warning" sx={{width: 300, borderRadius: 4}} onClose={() => setShowWarning(false)}>
+                  {warningMessage}
+                </Alert>
+              </div>
+            }
           </div>
         </div>
       </div>

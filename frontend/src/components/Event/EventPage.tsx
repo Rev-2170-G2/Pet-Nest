@@ -39,7 +39,7 @@ export default function EventPage() {
     ) : (
       <div className="w-100">
         <EventDetails event={event} />
-        {event?.PK && <UserEvents userId={event.PK.slice(2)} />}
+        {event?.PK && <UserEvents userId={event.PK.slice(2)} excludeEventId={event.id} />}
       </div>
     )}
   </div>

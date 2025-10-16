@@ -1,0 +1,50 @@
+.join-section {
+    background-color: #C0CEE2;
+    min-height: 100vh;
+    padding-top: 80px;
+    padding-bottom: 80px;
+}
+
+.join-section h1 {
+    color: #333823;
+    font-weight: 700;
+}
+
+.join-section p {
+    color: #4a4a4a;
+    font-size: 1.1rem;
+}
+
+.join-cards-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 5rem;
+    flex-wrap: wrap;
+    margin-top: 30;
+}
+
+.join-card {
+    background-color: #ffffff;
+    border: 2px solid #333823;
+    border-radius: 20px;
+    transition: all 0.3s ease;
+    width: 250px;
+    cursor: pointer;
+}
+
+.join-card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+.join-card h5 {
+    font-weight: 600;
+    color: #333823;
+    margin-bottom: 10px;
+}
+
+.join-card p {
+    color: #5a5a5a;
+    font-size: 0.95rem;
+}
