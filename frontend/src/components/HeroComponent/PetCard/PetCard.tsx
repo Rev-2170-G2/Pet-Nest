@@ -6,11 +6,12 @@ import { useNavigate } from "react-router-dom";
 import { Pet } from "../../../types/Pet";
 import PetFilter from "../PetFilter/PetFilter";
 import MapView from '../../MapView/MapView';
+import MapPopup from '../../MapView/MapPopup/MapPopup';
 
 function PetCard() {
     const [pets, setPets] = useState<Pet[]>([]);
     const [loading, setLoading] = useState(true);
-    // const [petLocations, setPetLocations] = useState<string[]>([]);
+    const [showMap, setShowMap] = useState<boolean>(false);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -29,16 +30,6 @@ function PetCard() {
         fetchPets();
     }, [])
 
-    // useEffect(() => {
-    //     if (pets) {
-    //         var update: string[] = [];
-    //         for (const pet of pets) { 
-    //             update.push(pet.location || '');
-    //         }
-    //         setPetLocations(update);
-    //     }
-    // }, [pets])
-
     const getPetsByType = async (type: string) => {
         setLoading(true);
         try {
@@ -55,18 +46,14 @@ function PetCard() {
 
   return (
     <div className="d-flex flex-column">
-        <div className="mb-2 mx-3">
+        <div className="mb-2 mx-3 d-flex flex-row">
+            <button onClick={() => setShowMap(true)}>Show Map</button>
             <PetFilter onSelectType={(type: string) => getPetsByType(type)} />
-             <div>
-                <MapView
-                    showAutoComplete={false}
-                    // positions={petLocations}
-                    positions={pets}
-                    markerType={'pets'}
-                    height={'20vh'}
-                    width={'45vw'}
-                />
-             </div>
+                <MapPopup
+                isOpen={showMap}
+                onClose={() => setShowMap(false)}
+                positions={pets}
+                markerType='pets' />
         </div>
 
         <div className="petcard-container">

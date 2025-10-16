@@ -1,4 +1,4 @@
-import {useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {AdvancedMarker} from '@vis.gl/react-google-maps';
 import classNames from 'classnames';
 import geocoder from '../../../util/geocoder';
@@ -6,14 +6,15 @@ import { Pet } from '../../../types/Pet';
 import { Event } from '../../../types/Event';
 import PetDetails from '../../Pet/PetDetails';
 import EventDetails from '../../Event/EventDetails';
-import PetListingDetails from '../ListingDetails/ListingDetails';
+import PetListingDetails from '../ListingDetails/PetListingDetails';
+import EventListingDetails from '../ListingDetails/EventListingDetails';
 
 type Props = { 
     markerSpots: Pet[] | Event[];
     markerType: string;
 }
 
-export default function CustomMarker({markerSpots, markerType}: Props) {
+function CustomMarker({markerSpots, markerType}: Props) {
     const [positions, setPositions] = useState<
     { item: Pet | Event; location: google.maps.LatLng }[]
     >([]);
@@ -27,7 +28,6 @@ export default function CustomMarker({markerSpots, markerType}: Props) {
           .filter(i => i.location && i.location.trim().length > 0);
 
             const locations = await geocoder(validSpots.map(i => i.location!));
-            console.log(locations);
             setPositions(markerSpots.map((item, i) => ({
                 item,
                 location: locations[i],
@@ -41,13 +41,13 @@ export default function CustomMarker({markerSpots, markerType}: Props) {
         return (
         <>
             <div className="custom-pin">
-            <button className="close-button">
+            {/* <button className="close-button">
                 <span className="material-symbols-outlined"> close </span>
-            </button>
+            </button> */}
             {markerType === 'pets' ? (
                 <PetListingDetails details={item as Pet}/>
             ) : (
-                <EventDetails event={item as Event}/>
+                <EventListingDetails details={item as Event}/>
             )}
             </div>
 
@@ -74,9 +74,10 @@ export default function CustomMarker({markerSpots, markerType}: Props) {
           {activeMarker === item.id
           ? renderCustomPin(item)
           : <div className='custom-pin'><div className='icon'>📍</div></div>}
-          {/* <div>something is gonna go here</div> */}
         </AdvancedMarker>
       ))}
     </>
   );
 }
+
+export default React.memo(CustomMarker);

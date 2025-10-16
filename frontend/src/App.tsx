@@ -13,6 +13,8 @@ import PetForm from "./components/PetForm/PetForm";
 import EventForm from "./components/EventForm/EventForm";
 import Admin from "./components/Admin/Admin";
 
+import './style.css';
+
 function App() {
   const joinRef = useRef<HTMLDivElement | null>(null);
 

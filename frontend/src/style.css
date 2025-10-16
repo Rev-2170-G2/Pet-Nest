@@ -1,0 +1,17 @@
+/* ---- fonts ---- */
+@import url('https://fonts.googleapis.com/css?family=Rufina:wght@400;700|Raleway:wght@0,100,700|Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0');
+
+:root {
+  /* real estate */
+  --estate-yellow: #b88b2e;
+  --estate-yellow-light: #ffe29c;
+  --estate-green-dark: #12271e;
+  --estate-green-light: #18342a;
+  --estate-01-grey-mid: #f4f4f4;
+  --estate-grey-main: #404040;
+  /* basic colors */
+  --background-color-primary: #fff;
+  /* fonts */
+  --font-family-rufina: 'Rufina', serif;
+  --font-family-raleway: 'Raleway', sans-serif;
+}

@@ -42,18 +42,23 @@ function EventCard() {
     if (loading) return <p>Loading...</p>
 
   return (
-    <div className="eventcard-container">
+    <>
+        <div className="d-flex flex-column">
+            <div className="mb-2 mx-3">
+                <MapView
+                    showAutoComplete={false}
+                    positions={events}
+                    markerType={'events'}
+                    height={'50vh'}
+                    width={'60vw'}
+                />
+            </div>
+        </div>
+        <div className="eventcard-container">
         {events
-            .filter(event => event.approved === true) //(PREVIOUS: .filter(event => event.status === "pending"))
+            .filter(event => event.status === "pending") //(NEW: .filter(event => event.status === "pending"))
             .map((event, index) => (
               <div key={index} className="event-card">
-                 <MapView
-                    showAutoComplete={false}
-                    positions={petLocations}
-                    markerType={'events'}
-                    height={'20vh'}
-                    width={'45vw'}
-                />
                 <Card className="card-root">
                     <CardMedia className="card-media"
                         image={event.photos}
@@ -76,7 +81,8 @@ function EventCard() {
                 </Card>
             </div>
         ))}
-    </div>
+    </div>    
+    </>
   )
 }
 

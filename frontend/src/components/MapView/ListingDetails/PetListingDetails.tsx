@@ -26,24 +26,23 @@ const PetListingDetails: FunctionComponent<Props> = ({ details }) => {
     } = details;
 
     return (
-        <div className="details-container">
+        <div className="details-container container py-5 d-flex flex-column justify-content-center">
             <div className="listing-content">
                 <h2>{name}</h2>
                 <p>{location}</p>
                 <div className="details">
                     <div className="detail_item">
-                        {/* <FloorplanIcon /> {property_square_feet.replace('sq ft', 'ft²')} */}
                         <PetsIcon fontSize="small" />
-                    {type}
+                        {type}
                     </div>
                     <div className="detail_item">
                         <LocationPinIcon fontSize="small" />
-                    {location || "Unknown"}
+                        {location || "Unknown"}
                     </div>
                     <div className="detail_item">
                         {/* <BedroomIcon /> {property_bedrooms} */}
                         <EventAvailableIcon fontSize="small" />
-                    {eventsCompleted || 0}
+                        {eventsCompleted || 0}
                     </div>
                     <div className="detail_item">
                         <Rating name="pet-rating" value={review || 0} readOnly />

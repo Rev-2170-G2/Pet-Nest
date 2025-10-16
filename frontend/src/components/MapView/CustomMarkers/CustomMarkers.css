@@ -1,13 +1,11 @@
-.map-container .pets-items-marker {
+ .pets-items-marker {
   cursor: pointer;
   position: relative;
   transform: translateY(-5px);
   transition: all 0.2s ease-in-out;
-  z-index: 10;
-  position: relative;
 }
 
-.map-container .pets-items-marker .tip {
+ .pets-items-marker .tip {
   position: absolute;
   bottom: 0;
   width: 0;
@@ -21,7 +19,7 @@
   transition: all 0.2s ease-in-out;
 }
 
-.map-container .custom-pin {
+ .custom-pin {
   position: relative;
   height: 34px;
   width: fit-content;
@@ -42,7 +40,7 @@
     border-radius 0.2s ease-in-out;
 }
 
-.map-container .custom-pin .close-button {
+ .custom-pin .close-button {
   display: none;
   position: absolute;
   top: 8px;
@@ -55,7 +53,7 @@
   cursor: pointer;
 }
 
-.map-container .custom-pin .image-container {
+ .custom-pin .image-container {
   width: 100%;
   height: 100%;
   max-width: 285px;
@@ -70,24 +68,24 @@
   transition: opacity 0.2s ease-in-out;
 }
 
-.map-container .custom-pin .image-container .icon {
+ .custom-pin .image-container .icon {
   position: absolute;
   opacity: 1;
   transition: opacity 0.2s ease-in-out;
 }
 
-.map-container .pets-items-marker.hovered {
+ .pets-items-marker.hovered {
   z-index: 2;
 
   transform: translateY(-9px);
 }
-.map-container .pets-items-marker.hovered .custom-pin {
+ .pets-items-marker.hovered .custom-pin {
   max-width: 80px;
   height: 80px;
   border-radius: 50%;
 }
 
-.map-container
+
   .pets-items-marker.hovered
   .custom-pin
   .image-container {
@@ -95,7 +93,7 @@
   border-radius: inherit;
 }
 
-.map-container
+
   .pets-items-marker.hovered
   .custom-pin
   .image-container
@@ -103,17 +101,17 @@
   opacity: 0;
 }
 
-.map-container .pets-items-marker.hovered .tip {
+ .pets-items-marker.hovered .tip {
   transform: translateY(23%) translateX(-50%) rotate(45deg) scale(1.4);
 }
 
-.map-container .pets-items-marker.activeMarker {
+ .pets-items-marker.activeMarker {
   z-index: 3;
 
   transform: translateY(-9px);
 }
 
-.map-container .pets-items-marker.activeMarker .custom-pin {
+ .pets-items-marker.activeMarker .custom-pin {
   background-color: var(--estate-green-dark);
   border-radius: 0;
   width: fit-content;
@@ -121,14 +119,14 @@
   height: 317px;
 }
 
-.map-container
+
   .pets-items-marker.activeMarker
   .custom-pin
   .image-container {
   border-radius: inherit;
 }
 
-.map-container
+
   .pets-items-marker.activeMarker
   .custom-pin
   .image-container
@@ -137,7 +135,7 @@
   visibility: hidden;
 }
 
-.map-container
+
   .pets-items-marker.activeMarker
   .custom-pin
   .details-container {
@@ -148,7 +146,7 @@
   animation: slideInFadeIn 0.7s ease-in-out;
 }
 
-.map-container
+
   .pets-items-marker.activeMarker
   .custom-pin
   .details-container
@@ -156,7 +154,7 @@
   display: flex;
 }
 
-.map-container
+
   .pets-items-marker.activeMarker
   .custom-pin
   .details-container
@@ -165,7 +163,7 @@
   font-size: 24px;
 }
 
-.map-container .pets-items-marker.activeMarker .tip {
+ .pets-items-marker.activeMarker .tip {
   transform: translateY(23%) translateX(-50%) rotate(45deg) scale(1.4);
 }
 
