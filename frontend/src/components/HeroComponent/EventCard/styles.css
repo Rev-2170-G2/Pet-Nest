@@ -9,9 +9,10 @@
 }
 
 .event-card {
-  width: 250px;
-  height: 350px;
-  display: flex;
+  width: 250px !important;
+  height: 375px !important;
+  /* prevents flex shrink inside Bootstrap Col */
+  flex: none !important;       
 }
 
 .card-root {
@@ -22,6 +23,7 @@
 
 .card-media {
   height: 150px;
+  flex: none !important;  
 }
 
 .card-actions {
