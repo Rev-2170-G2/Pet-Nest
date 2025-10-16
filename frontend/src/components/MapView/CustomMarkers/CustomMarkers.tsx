@@ -6,6 +6,7 @@ import { Pet } from '../../../types/Pet';
 import { Event } from '../../../types/Event';
 import PetDetails from '../../Pet/PetDetails';
 import EventDetails from '../../Event/EventDetails';
+import RoomIcon from '@mui/icons-material/Room';
 import PetListingDetails from '../ListingDetails/PetListingDetails';
 import EventListingDetails from '../ListingDetails/EventListingDetails';
 
@@ -41,9 +42,9 @@ function CustomMarker({markerSpots, markerType}: Props) {
         return (
         <>
             <div className="custom-pin">
-            {/* <button className="close-button">
+            <button className="close-button">
                 <span className="material-symbols-outlined"> close </span>
-            </button> */}
+            </button>
             {markerType === 'pets' ? (
                 <PetListingDetails details={item as Pet}/>
             ) : (
@@ -59,7 +60,7 @@ function CustomMarker({markerSpots, markerType}: Props) {
 
     return (
     <>
-      {markerSpots.map(({ item, location }, i) => (
+      {markerSpots.map(({ item, location }) => (
         <AdvancedMarker
           key={item.id}
           position={location}
@@ -70,14 +71,15 @@ function CustomMarker({markerSpots, markerType}: Props) {
             activeMarker: activeMarker === item.id, 
             hovered })}
           onClick={() => setActiveMarker(activeMarker === item.id ? null : item.id )}
+          zIndex={activeMarker === item.id ? 9999 : 1}
         >
           {activeMarker === item.id
           ? renderCustomPin(item)
-          : <div className='custom-pin'><div className='icon'>📍</div></div>}
+          : <div className='custom-pin'><RoomIcon className='icon' /></div>}
         </AdvancedMarker>
       ))}
     </>
   );
 }
 
-export default React.memo(CustomMarker);
+export default React.memo(CustomMarker); //thought this might reduce lag
