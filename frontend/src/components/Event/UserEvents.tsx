@@ -6,18 +6,27 @@ import { Event } from "../../types/Event";
 
 const URL = "http://localhost:3000";
 
-export default function UserEvents({ userId }: { userId: string }) {
+interface UserEventsProps {
+  userId: string;
+  excludeEventId: string;
+}
+
+export default function UserEvents({ userId, excludeEventId }: UserEventsProps) {
   const [events, setEvents] = useState<Event[]>([]);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    if (!userId) return;
+useEffect(() => {
+  if (!userId) return;
 
-    axios
-      .get(`${URL}/api/events/user/${userId}?status=open`)
-      .then((res) => setEvents(res.data?.data || []))
-      .catch((err) => console.error(err))
-  }, [userId]);
+  axios
+    .get(`${URL}/api/events/user/${userId}?status=open`)
+    .then((res) => 
+      setEvents(
+        (res.data?.data || []).filter((event: Event) => event.id !== excludeEventId)
+      )
+    )
+    .catch((err) => console.error(err));
+}, [userId, excludeEventId]);
 
   return (
     <div className="container mt-4">

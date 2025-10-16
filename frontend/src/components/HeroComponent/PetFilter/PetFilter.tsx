@@ -3,7 +3,7 @@ import { FormControl, InputLabel, Select, MenuItem } from "@mui/material";
 //https://mui.com/material-ui/react-select/
 
 export default function PetFilter({ onSelectType }: { onSelectType: (type: string) => void }) {
-  const types = ["Cat", "Dog", "Bird"];
+  const types = ["Cat", "Dog", "Bird", "Other"];
   const [selected, setSelected] = useState("");
 
   const handleChange = (event: any) => {
