@@ -3,8 +3,6 @@ import React, {FunctionComponent} from 'react';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import LocationPinIcon from '@mui/icons-material/LocationPin';
 import EventAvailableIcon from '@mui/icons-material/EventAvailable';
-import { Rating } from "@mui/material";
-
 
 import './pets-events-listing-details.css';
 import { Event } from '../../../types/Event';

@@ -29,7 +29,7 @@ const PetListingDetails: FunctionComponent<Props> = ({ details }) => {
         <div className="details-container container py-5 d-flex flex-column justify-content-center">
             <div className="listing-content">
                 <h2>{name}</h2>
-                <p>{location}</p>
+                <p className="description">{description}</p>
                 <div className="details">
                     <div className="detail_item">
                         <PetsIcon fontSize="small" />
@@ -48,8 +48,6 @@ const PetListingDetails: FunctionComponent<Props> = ({ details }) => {
                         <Rating name="pet-rating" value={review || 0} readOnly />
                     </div>
                 </div>
-
-                <p className="description">{description}</p>
 
                 {/* <p className="price">{getFormattedCurrency(property_price)}</p> */}
                 <h4 className="mb-3">Services Offered</h4>

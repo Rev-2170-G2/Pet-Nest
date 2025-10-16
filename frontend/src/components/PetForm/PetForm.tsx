@@ -207,7 +207,7 @@ export default function PetForm() {
               )}
               {validated && selectedPlace && (
                 <div className='valid-feedback d-block'>Looks good!</div>
-            )}
+              )}
             </Form.Group>
           </Col>
         </Row>
