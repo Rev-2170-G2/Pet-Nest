@@ -69,6 +69,7 @@ function NavBar({ onJoinClick }: NavBarProps) {
             Join
           </a>
           {user && <Link to="/offers" className="nav-link">Offers</Link>}
+          {user?.admin && <Link to="/admin" className="nav-link">Admin Dashboard</Link>}
 
           {user ? (
             <>
