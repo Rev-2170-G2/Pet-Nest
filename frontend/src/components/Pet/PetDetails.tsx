@@ -1,16 +1,18 @@
 import { Pet } from "../../types/Pet";
-import { Rating, Button } from "@mui/material";
+import { Rating } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import LocationPinIcon from '@mui/icons-material/LocationPin';
 import PetsIcon from '@mui/icons-material/Pets';
 import EventAvailableIcon from '@mui/icons-material/EventAvailable';
-import { useState } from "react";
+import { useContext, useState } from "react";
 import PetOfferModal from "../Offers/Pets/PetOfferModal";
+import { AuthContext } from "../../context/AuthContext";
 
 const DEFAULT_IMAGE = "https://jooinn.com/images/pet-70.jpg";
 
 export default function PetDetails({ pet }: { pet: Pet }) {
+    const { user } = useContext(AuthContext);
     const [open, setOpen] = useState(false);
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
@@ -72,7 +74,21 @@ export default function PetDetails({ pet }: { pet: Pet }) {
           </ul>
 
           <div className="d-flex justify-content-start">
-            <button className="btn btn-success btn-lg px-4" onClick={handleOpen}>
+            <button className="btn btn-success btn-lg px-4" onClick={() => {
+              // must be logged in and not same user to request service
+              if(!user) {
+                alert("You must be logged in to request a service");
+                return;
+              }
+              else if(user?.id === pet.PK) {
+                alert("You cannot request your own service");
+                return;
+              }
+              else{
+                handleOpen();
+              }
+            }}
+          >
               Request Service
             </button>
             <PetOfferModal pet={pet} open={open} handleClose={handleClose}/>
