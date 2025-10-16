@@ -6,6 +6,7 @@ import { Pet } from '../../../types/Pet';
 import { Event } from '../../../types/Event';
 import PetDetails from '../../Pet/PetDetails';
 import EventDetails from '../../Event/EventDetails';
+import PetListingDetails from '../ListingDetails/ListingDetails';
 
 type Props = { 
     markerSpots: Pet[] | Event[];
@@ -44,7 +45,7 @@ export default function CustomMarker({markerSpots, markerType}: Props) {
                 <span className="material-symbols-outlined"> close </span>
             </button>
             {markerType === 'pets' ? (
-                <PetDetails pet={item as Pet}/>
+                <PetListingDetails details={item as Pet}/>
             ) : (
                 <EventDetails event={item as Event}/>
             )}
