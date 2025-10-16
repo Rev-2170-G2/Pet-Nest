@@ -8,7 +8,7 @@
  
     /* Bundler mode */
     "moduleResolution": "bundler",
-    // "allowImportingTsExtensions": true,
+    // "allowImportingTsExtensions": true, // I commented it out since it was giving me issues. Can put it back
     "isolatedModules": true,
     "moduleDetection": "force",
     "noEmit": false,
