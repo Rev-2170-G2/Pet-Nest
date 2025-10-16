@@ -27,12 +27,12 @@ const handleApprove = (id: string) =>
   .then(() => setEvents(prev => prev.filter(e => e.id !== id))) //update UI
   .catch(err => console.log("Unable to approve event:", err))
 
-  //doesnt do anything since events are by default {approved: "false"}
 const handleDeny = (id: string) =>
   axios.patch(`${URL}/api/events/admin/${id}`,
     { approved: false },
     { headers: { Authorization: `Bearer ${user?.token}` } }
   )
+  .then(() => setEvents(prev => prev.filter(e => e.id !== id))) //update UI
   .catch(err => console.log("Unable to deny event:", err))
 
   if (loading) return <p>Loading...</p>;
@@ -40,7 +40,7 @@ const handleDeny = (id: string) =>
 return (
   <div className="eventcard-container">
     {events
-    .filter(event => event.approved === false) // filter all events {approved: false}
+    .filter(event => event.approved === null) // filter for all newly created events
       .map((event, index) => (
         <div key={index} className="event-card">
           <Card className="card-root d-flex flex-column h-100">
