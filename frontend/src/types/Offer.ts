@@ -14,3 +14,8 @@ export interface IndividualUser{
   name: string | undefined;
   id: string;
 }
+
+export interface OfferCardProps {
+  url: string;
+  tab: "sent" | "received";
+}

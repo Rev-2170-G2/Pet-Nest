@@ -60,7 +60,8 @@ async function deleteOffer(userId, petId, offerId) {
 
 async function getOffersSentByUser(userId) {
     try {
-        return await offerDAO.getOffersSentByUser(userId);
+        const offers = await offerDAO.getOffersSentByUser(userId);
+        return offers;
     } catch (error) {
         logger.error(error);
         return [];
@@ -68,11 +69,11 @@ async function getOffersSentByUser(userId) {
 }
 
 async function updateOfferStatus(ownerId, entityId, offerId, newStatus) {
-    if (!["approved", "denied"].includes(newStatus)) return null;
+    if (!["approved", "denied"].includes(newStatus.toLowerCase())) return null;
 
     const prefixes = ["PET#", "EVENT#"];
     for (const prefix of prefixes) {
-        const SK = prefix + entityId;
+        const SK = prefix + entityId; // requested EVENT or PET SK
         const entity = await offerDAO.getEntity(ownerId, SK);
         if (!entity?.offers) continue;
 
