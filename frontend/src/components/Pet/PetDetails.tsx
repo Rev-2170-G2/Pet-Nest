@@ -1,5 +1,5 @@
 import { Pet } from "../../types/Pet";
-import { Rating } from "@mui/material";
+import { Rating, Alert } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import LocationPinIcon from '@mui/icons-material/LocationPin';
@@ -17,12 +17,14 @@ export default function PetDetails({ pet }: { pet: Pet }) {
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
     const navigate = useNavigate();
+    const [showWarning, setShowWarning] = useState(false);
+    const [warningMessage, setWarningMessage] = useState("");
 
   return (
     <div className="container py-5 d-flex flex-column justify-content-center">
       <div className="row g-4 align-items-start">
         <div className="col-12 col-md-5 d-flex justify-content-center align-items-start">
-          <div className="w-100" style={{ maxWidth: "400px", height: "400px" }}>
+          <div className="w-100" style={{ maxWidth: "700px", height: "400px" }}>
             <img
               src={Array.isArray(pet.photos) ? pet.photos?.[0] || DEFAULT_IMAGE : pet.photos}
               alt={pet.name}
@@ -73,25 +75,30 @@ export default function PetDetails({ pet }: { pet: Pet }) {
             ))}
           </ul>
 
-          <div className="d-flex justify-content-start">
-            <button className="btn btn-success btn-lg px-4" onClick={() => {
-              // must be logged in and not same user to request service
-              if(!user) {
-                alert("You must be logged in to request a service");
-                return;
-              }
-              else if(user?.id === pet.PK) {
-                alert("You cannot request your own service");
-                return;
-              }
-              else{
-                handleOpen();
-              }
-            }}
-          >
+          <div className="d-flex flex-column" style={{ gap: '8px' }}>
+            <button className="btn btn-success btn-lg px-4"
+              onClick={() => {
+                if(!user) {
+                  setWarningMessage("You must be logged in to request a service");
+                  setShowWarning(true);
+                  return;
+                }
+                else if(user?.id === pet.PK) {
+                  setWarningMessage("You cannot request your own service");
+                  setShowWarning(true);
+                  return;
+                }
+                else{
+                  handleOpen();
+                }
+              }}
+            >
               Request Service
             </button>
             <PetOfferModal pet={pet} open={open} handleClose={handleClose}/>
+
+            {showWarning && 
+              (<Alert severity="warning" sx={{ ml: 2, width: 300, borderRadius: 4 }} onClose={() => setShowWarning(false)}>{warningMessage}</Alert>)}
           </div>
         </div>
       </div>
