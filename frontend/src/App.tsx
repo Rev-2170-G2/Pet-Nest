@@ -13,7 +13,7 @@ function App() {
   return (
     <AuthProvider>
       <NavBar />
-      <APIProvider apiKey={import.meta.env.VITE_MAPS_API_KEY}> 
+      <APIProvider apiKey={import.meta.env.VITE_MAPS_API_KEY} libraries={['marker']}> 
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/pets-events" element={<PetsEvents />} />

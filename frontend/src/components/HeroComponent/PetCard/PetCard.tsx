@@ -10,7 +10,7 @@ import MapView from '../../MapView/MapView';
 function PetCard() {
     const [pets, setPets] = useState<Pet[]>([]);
     const [loading, setLoading] = useState(true);
-    const [petLocations, setPetLocations] = useState<string[]>([]);
+    // const [petLocations, setPetLocations] = useState<string[]>([]);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -29,16 +29,15 @@ function PetCard() {
         fetchPets();
     }, [])
 
-    useEffect(() => {
-        if (pets) {
-            var update: string[] = [];
-            for (const pet of pets) { 
-                update.push(pet.location || '');
-            }
-            setPetLocations(update);
-            console.log(petLocations);
-        }
-    }, [pets])
+    // useEffect(() => {
+    //     if (pets) {
+    //         var update: string[] = [];
+    //         for (const pet of pets) { 
+    //             update.push(pet.location || '');
+    //         }
+    //         setPetLocations(update);
+    //     }
+    // }, [pets])
 
     const getPetsByType = async (type: string) => {
         setLoading(true);
@@ -58,13 +57,16 @@ function PetCard() {
     <div className="d-flex flex-column">
         <div className="mb-2 mx-3">
             <PetFilter onSelectType={(type: string) => getPetsByType(type)} />
-             <MapView
-                showAutoComplete={false}
-                positions={petLocations}
-                markerType={'pets'}
-                height={'20vh'}
-                width={'45vw'}
-            />
+             <div className='map-container'>
+                <MapView
+                    showAutoComplete={false}
+                    // positions={petLocations}
+                    positions={pets}
+                    markerType={'pets'}
+                    height={'20vh'}
+                    width={'45vw'}
+                />
+             </div>
         </div>
 
         <div className="petcard-container">

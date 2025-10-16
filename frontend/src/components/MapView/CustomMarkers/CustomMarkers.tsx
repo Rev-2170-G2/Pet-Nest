@@ -2,66 +2,70 @@ import {useEffect, useState} from 'react';
 import {AdvancedMarker} from '@vis.gl/react-google-maps';
 import classNames from 'classnames';
 import geocoder from '../../../util/geocoder';
+import { Pet } from '../../../types/Pet';
+import { Event } from '../../../types/Event';
+import PetDetails from '../../Pet/PetDetails';
+import EventDetails from '../../Event/EventDetails';
 
 type Props = { 
-    markerSpots: string[];
+    markerSpots: Pet[] | Event[];
     markerType: string;
 }
 
 export default function CustomMarker({markerSpots, markerType}: Props) {
-    const [positions, setPositions] = useState<google.maps.LatLng[]>([]);
-    const [clicked, setClicked] = useState(false);
+    const [positions, setPositions] = useState<
+    { item: Pet | Event; location: google.maps.LatLng }[]
+    >([]);
+    const [activeMarker, setActiveMarker] = useState<string | null>(null);
     const [hovered, setHovered] = useState(false);
 
     useEffect(() => {
         const getLocations = async () => {
-            setPositions(await geocoder(markerSpots));
-        } 
+            const locations = await geocoder(markerSpots.map(i => i.location));
+            console.log(locations);
+            setPositions(markerSpots.map((item, i) => ({
+                item,
+                location: locations[i],
+            })));
+        };
         getLocations();
-        console.log(positions);
     }, [markerSpots])
 
 
-    //  const renderCustomPin = () => {
-    //     return (
-    //     <>
-    //         <div className="custom-pin">
-    //         <button className="close-button">
-    //             <span className="material-symbols-outlined"> close </span>
-    //         </button>
+     const renderCustomPin = (item: Pet | Event) => {
+        return (
+        <>
+            <div className="custom-pin">
+            <button className="close-button">
+                <span className="material-symbols-outlined"> close </span>
+            </button>
+            {markerType === 'pets' ? (
+                <PetDetails pet={item as Pet}/>
+            ) : (
+                <EventDetails event={item as Event}/>
+            )}
+            </div>
 
-    //         <div className="image-container">
-    //             <Gallery
-    //             images={pet.photos}
-    //             isExtended={clicked}
-    //             />
-    //             <span className="icon">
-    //             <h3>something goes here</h3>
-    //             </span>
-    //         </div>
-
-    //         <PetListingDetails details={pet.name, pet.description, pet.location, pet.services} />
-    //         </div>
-
-    //         <div className="tip" />
-    //     </>
-    //     );
-    // };
+            <div className="tip" />
+        </>
+        );
+    };
 
 
     return (
     <>
-      {positions.map((position, i) => (
+      {positions.map(({ item, location }, i) => (
         <AdvancedMarker
-          key={i}
-          position={position}
-          title="AdvancedMarker with custom html content."
+          key={item.id}
+          position={location}
+          title={`${item.name}`}
           onMouseEnter={() => setHovered(true)}
           onMouseLeave={() => setHovered(false)}
-          className={classNames('real-estate-marker', { clicked, hovered })}
-          onClick={() => setClicked(!clicked)}
+          className={classNames('pets-items-marker', { activeMarker, hovered })}
+          onClick={() => setActiveMarker(activeMarker === item.id ? null : item.id )}
         >
-          {/* {renderCustomPin()} */}
+          {activeMarker === item.id && renderCustomPin(item)}
+          {/* <div>something is gonna go here</div> */}
         </AdvancedMarker>
       ))}
     </>

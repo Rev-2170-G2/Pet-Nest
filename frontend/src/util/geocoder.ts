@@ -1,6 +1,5 @@
 const geocodeAddress = async (addresses: string[]) => {
   if (!addresses) return [];
-  console.log(addresses);
 
   const geocoder = new google.maps.Geocoder();
 
@@ -23,7 +22,6 @@ const geocodeAddress = async (addresses: string[]) => {
   // Filter out nulls
   const positions = results.filter((pos): pos is google.maps.LatLng => !!pos);
 
-  console.log(positions); // ✅ Now this shows the filled array
   return positions;
 };
 

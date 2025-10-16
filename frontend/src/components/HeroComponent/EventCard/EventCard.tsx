@@ -5,11 +5,13 @@ import './styles.css'
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { Event } from "../../../types/Event";
+import MapView from '../../MapView/MapView';
 
 
 function EventCard() {
     const [events, setEvents] = useState<Event[]>([])
     const [loading, setLoading] = useState(true)
+    const [petLocations, setPetLocations] = useState<string[]>([]);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -27,6 +29,16 @@ function EventCard() {
         fetchEvents();    
     }, [])
 
+    useEffect(() => {
+        if (events) {
+            var update: string[] = [];
+            for (const event of events) { 
+                update.push(event.location || '');
+            }
+            setPetLocations(update);
+        }
+    }, [events])
+
     if (loading) return <p>Loading...</p>
 
   return (
@@ -35,6 +47,13 @@ function EventCard() {
             .filter(event => event.status === "pending")
             .map((event, index) => (
               <div key={index} className="event-card">
+                 <MapView
+                    showAutoComplete={false}
+                    positions={petLocations}
+                    markerType={'events'}
+                    height={'20vh'}
+                    width={'45vw'}
+                />
                 <Card className="card-root">
                     <CardMedia className="card-media"
                         image={event.photos}

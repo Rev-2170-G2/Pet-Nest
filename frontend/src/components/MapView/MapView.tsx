@@ -4,6 +4,8 @@ import { useState, useEffect, CSSProperties } from 'react';
 import AutoCompleteControl from './AutoComplete/AutoCompleteControl';
 import AutoCompleteResult from './AutoComplete/AutoCompleteResult';
 import CustomMarker from './CustomMarkers/CustomMarkers';
+import { Pet } from '../../types/Pet';
+import { Event } from '../../types/Event';
 import './AutoComplete/AutoCompleteControl.css';
 
 type Props = {
@@ -12,7 +14,7 @@ type Props = {
   setSelectedPlace?: (  place: google.maps.places.Place | null) => void;
   height: string;
   width: string;
-  positions?: any;
+  positions?: Pet[] | Event[];
   markerType?: string | null;
 }
 
