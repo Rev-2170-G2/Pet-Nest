@@ -1,18 +1,18 @@
-.eventcard-container {
+.offer-container {
     display: flex;
     flex-direction: 'column';
     justify-content: 'flex-start';
-    gap: 20px;
+    gap: 40px;
     flex-wrap: wrap;  
     padding: 100px;
     /* justify-content: center; for centering the cards if needed*/ 
 }
 
-.event-card {
-  width: 250px !important;
-  height: 375px !important;
-  /* prevents flex shrink inside Bootstrap Col */
-  flex: none !important;       
+.offer-card {
+    width: 300px !important;
+    height: 475px !important;
+    /* prevents flex shrink inside Bootstrap Col */
+    flex: none !important;       
 }
 
 .card-root {
@@ -29,4 +29,13 @@
 .card-actions {
   margin-top: auto;
   align-self: flex-start;
+}
+
+button {
+    size: small;
+    margin-left: "5px";
+}
+
+.fa-cat {
+  margin-right: 3px;
 }

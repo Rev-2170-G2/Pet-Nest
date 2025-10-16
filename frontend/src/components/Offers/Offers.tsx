@@ -1,7 +1,9 @@
 import { useState } from "react";
 import OffersList from "./OffersList";
+import OfferCard from "./OfferCard/OfferCard";
 
 export default function Offers() {
+  const baseUrl = import.meta.env.VITE_BACKEND_URL || "http://localhost:3000";
   const [tab, setTab] = useState<"sent" | "received">("sent");
 
   // update color as needed
@@ -10,7 +12,7 @@ export default function Offers() {
   return (
     <div className="container mt-3">
       <div className="d-flex justify-content-center">
-        <div className="btn-group w-50" >
+        <div className="btn-group w-50">
           <button
             type="button"
             className="btn flex-fill"
@@ -18,7 +20,7 @@ export default function Offers() {
             style={{
               backgroundColor: tab === "sent" ? olive : "transparent",
               color: tab === "sent" ? "white" : olive,
-              borderColor: olive
+              borderColor: olive,
             }}
           >
             Sent
@@ -30,7 +32,7 @@ export default function Offers() {
             style={{
               backgroundColor: tab === "received" ? olive : "transparent",
               color: tab === "received" ? "white" : olive,
-              borderColor: olive
+              borderColor: olive,
             }}
           >
             Received
@@ -40,7 +42,13 @@ export default function Offers() {
 
       <div className="d-flex justify-content-center">
         <div>
-          <OffersList url={tab === "sent" ? "/api/offers/sent" : "/api/offers/received"} />
+          <OfferCard
+            url={
+              tab === "sent"
+                ? `${baseUrl}/offers/sent`
+                : `${baseUrl}/offers/received`}   
+            tab={tab}
+          />
         </div>
       </div>
     </div>

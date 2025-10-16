@@ -69,7 +69,7 @@ async function getOffersSentByUser(req, res) {
  */
 async function getAllReceivedOffers(req, res) {
     const userId = req.user.id;
-
+    console.log("userId from getAllReceivedOffers: ", userId)
     try {
         const offers = await offerService.getAllReceivedOffers(userId);
         return res.status(200).json({message: "All received offers retrieved", data: offers});
@@ -86,12 +86,12 @@ async function getAllReceivedOffers(req, res) {
  * @param {JSON} res object to be manipulated and sent back to client
  */
 const updateOfferStatus = async (req, res) => {
-    const {id} = req.params; // offerId
+    const { id } = req.params; // offerId
     const {requestedSK, status} = req.body; // requestedSK (prev entityId is PET or EVENT id)
     const userId = req.user.id;
 
     logger.info("offerController | updateOfferStatus", req.body);
-    if (!id || !requestedSK || !status) {
+    if (!id|| !requestedSK || !status) {
         return res.status(400).json({message: "Offer ID, entity ID, and status are required"});
     }
 
