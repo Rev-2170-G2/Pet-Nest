@@ -6,10 +6,11 @@ const { buildPetUpdates } = require('../util/pet/petUpdateBuilder');
 async function createPet(userId, pet){
     //check if userId exists(not needed - already checked in middleware)
     if(userId){
+        const formattedType = pet.type.charAt(0).toUpperCase() + pet.type.slice(1).toLowerCase();
         const data = await petDAO.createPet(userId, {
             id: 'p' + nanoid(5),
             entity: "PET",
-            type: pet.type,
+            type: formattedType,
             name: pet.name,
             services: pet.services.map(s => ({
                 service: s.service,

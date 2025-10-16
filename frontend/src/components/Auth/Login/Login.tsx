@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import axios from "axios";
 import "./Login.css";
 import { AuthContext, User } from "../../../context/AuthContext";
@@ -15,6 +15,17 @@ function Login({ onClose, onSubmit }: LoginProps) {
 
   const { login } = useContext(AuthContext);
 
+  useEffect(() => {
+    document.body.style.overflow = "hidden";
+    const root = document.getElementById("root");
+    if (root) root.style.pointerEvents = "none";
+
+    return () => {
+      document.body.style.overflow = "auto";
+      if (root) root.style.pointerEvents = "auto";
+    };
+  }, []);
+
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     onSubmit?.();
@@ -28,9 +39,10 @@ function Login({ onClose, onSubmit }: LoginProps) {
       const data = response.data;
 
       const user: User = {
-        username,
+        id: data.id,
+        username: data.username,
         token: data.token,
-        admin: data.admin || false,
+        admin: data.admin,
       };
 
       login(user);
@@ -47,7 +59,7 @@ function Login({ onClose, onSubmit }: LoginProps) {
 
   return (
     <div className="popup-overlay">
-      <div className="popup-box">
+      <div className="popup-box" style={{ pointerEvents: "auto" }}>
         <button className="close-btn" onClick={onClose}>X</button>
         <h2>Login</h2>
 
