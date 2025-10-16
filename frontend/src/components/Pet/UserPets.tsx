@@ -20,17 +20,20 @@ export default function UserEvents({ userId, excludePetId }: UserPetsProps) {
 
     axios
       .get(`${URL}/api/pets/user/${userId}`)
-      .then((res) => setPets(res.data?.data || []))
-      .catch((err) => console.error(err))
-  }, [userId]);
+      .then((res) =>
+        setPets(
+          (res.data?.data || []).filter((pet: Pet) => pet.id !== excludePetId)
+        )
+      )
+      .catch((err) => console.error(err));
+  }, [userId, excludePetId]);
 
-  const filteredPets = pets.filter((pet) => pet.id !== excludePetId)
 
   return (
     <div className="container mt-4">
       <h3>More pets from this owner</h3>
       <div className="row">
-        {filteredPets.map((pet) => (
+        {pets.map((pet) => (
           <div
             key={pet.id}
             className="col-md-4 mb-3"
