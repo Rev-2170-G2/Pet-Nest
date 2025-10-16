@@ -45,7 +45,7 @@ function EventCard() {
         </div>
         <div className="eventcard-container">
         {events
-            .filter(event => event.status === "pending") //(NEW: .filter(event => event.status === "pending"))
+            .filter(event => event.approved === true) //(PREVIOUS: .filter(event => event.status === "pending"))
             .map((event, index) => (
               <div key={index} className="event-card">
                 <Card className="card-root">
