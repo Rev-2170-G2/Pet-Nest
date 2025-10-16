@@ -8,21 +8,24 @@ import { AuthProvider } from "./context/AuthContext";
 import PetsEvents from './components/PetsEvents/PetsEvents';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Offers from './components/Offers/Offers';
+import ThemeProviderComponent from './components/ThemeProviderComponent';
 
 function App() {
   return (
-    <AuthProvider>
-      <NavBar />
-      <APIProvider apiKey={import.meta.env.VITE_MAPS_API_KEY}> 
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/pets-events" element={<PetsEvents />} />
-        <Route path="/pets/:id" element={<PetPage />} />
-        <Route path="/events/:id" element={<EventPage />} />
-        <Route path="/offers" element={<Offers />} />
-      </Routes>
-      </APIProvider>
-    </AuthProvider>
+    <ThemeProviderComponent>
+      <AuthProvider>
+        <NavBar />
+        <APIProvider apiKey={import.meta.env.VITE_MAPS_API_KEY}>
+        <Routes>
+          <Route path="/" element={<Home />} />
+         <Route path="/pets-events" element={<PetsEvents />} />
+          <Route path="/pets/:id" element={<PetPage />} />
+          <Route path="/events/:id" element={<EventPage />} />
+          <Route path="/offers" element={<Offers />} />
+        </Routes>
+        </APIProvider>
+      </AuthProvider>
+    </ThemeProviderComponent>
   );
 }
 
