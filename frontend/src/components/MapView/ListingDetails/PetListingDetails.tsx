@@ -1,5 +1,4 @@
 import React, {FunctionComponent} from 'react';
-
 import PetsIcon from '@mui/icons-material/Pets';
 import LocationPinIcon from '@mui/icons-material/LocationPin';
 import EventAvailableIcon from '@mui/icons-material/EventAvailable';
@@ -26,7 +25,7 @@ const PetListingDetails: FunctionComponent<Props> = ({ details }) => {
     } = details;
 
     return (
-        <div className="details-container container py-5 d-flex flex-column justify-content-center">
+        <div className="details-container container py-3 d-flex flex-column justify-content-center border border-secondary rounded">
             <div className="listing-content">
                 <h2>{name}</h2>
                 <p className="description">{description}</p>

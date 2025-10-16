@@ -1,6 +1,7 @@
 .details-container {
   background-color: white;
 }
+
 .advanced-marker-example .details-container {
   background-color: whitesmoke;
   height: 100%;
@@ -36,7 +37,7 @@
 }
 
 .advanced-marker-example .listing-content h2 {
-  color: var(--estate-green-light);
+  color: var(--listing-green-light);
   font-size: 20px;
   font-style: normal;
   font-weight: 700;
@@ -46,7 +47,7 @@
 }
 
 .advanced-marker-example .listing-content p {
-  color: var(--estate-green-light);
+  color: var(--listing-green-light);
   font-size: 14px;
   font-style: normal;
   font-weight: 400;
@@ -64,7 +65,7 @@
 }
 
 .advanced-marker-example .listing-content .price {
-  color: var(--estate-green-light);
+  color: var(--listing-green-light);
   font-size: 18px;
   font-style: normal;
   font-weight: 700;
@@ -79,7 +80,7 @@
 }
 
 .advanced-marker-example .details .detail_item {
-  color: var(--estate-grey-main);
+  color: var(--listing-grey-main);
   font-size: 14px;
   font-style: normal;
   font-weight: 600;
@@ -94,5 +95,5 @@
 .advanced-marker-example .details .detail_item span,
 .advanced-marker-example .details .detail_item svg {
   font-size: 17px;
-  color: var(--estate-yellow);
+  color: var(--listing-yellow);
 }

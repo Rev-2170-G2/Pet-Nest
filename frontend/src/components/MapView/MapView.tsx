@@ -42,7 +42,6 @@ export default function MapView({showAutoComplete, setSelectedPlace, selectedPla
 
   return (
     <>
-    <Container>
       <Map
         mapId={'DEMO_MAP_ID'}
         style={{height: height, width: width}}
@@ -66,7 +65,6 @@ export default function MapView({showAutoComplete, setSelectedPlace, selectedPla
         <CustomMarker markerSpots={spots} markerType={markerType} />
       )}
       </Map>
-    </Container>
     </>
   )
 }

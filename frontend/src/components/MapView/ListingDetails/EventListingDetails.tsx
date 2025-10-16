@@ -22,10 +22,10 @@ const EventListingDetails: FunctionComponent<Props> = ({ details }) => {
     } = details;
 
     return (
-        <div className="details-container container py-5 d-flex flex-column justify-content-center">
+        <div className="details-container container py-3 d-flex flex-column justify-content-center border border-secondary rounded">
             <div className="listing-content">
-                <h1 className="mb-4">{name}</h1>
-                <p>{location}</p>
+                <h2 className="mb-4">{name}</h2>
+                <p className="description">{description}</p>
                 <div className="details">
                     <div className="detail_item">
                         <CalendarMonthIcon fontSize="medium" className="me-1" />
@@ -41,8 +41,6 @@ const EventListingDetails: FunctionComponent<Props> = ({ details }) => {
                         {status}
                     </div>
                 </div>
-
-                <p className="description">{description}</p>
 
             </div>
         </div>
