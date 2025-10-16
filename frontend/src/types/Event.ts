@@ -10,6 +10,7 @@ export interface Event {
   status?: string;
   photos?: string;
   PK: string;
+  approved: boolean;
 }
 
 export interface EventOfferFormProps {

@@ -15,6 +15,7 @@ import Footer from "./components/Footer/Footer";
 import About from "./pages/About/About";
 import Terms from "./pages/Terms/Terms";
 import ScrollToTop from "./components/ScrollToTop";
+import Admin from "./components/Admin/Admin";
 
 function App() {
   const joinRef = useRef<HTMLDivElement | null>(null);
@@ -44,6 +45,7 @@ function App() {
             <Route path="/event-form" element={<EventForm />} />
             <Route path="/about" element={<About />} />
             <Route path="/terms" element={<Terms />} />
+            <Route path="/admin" element={<Admin />} />
           </Routes>
         </main>
         <Footer />
