@@ -1,4 +1,5 @@
 import React, {FunctionComponent} from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import LocationPinIcon from '@mui/icons-material/LocationPin';
@@ -19,10 +20,12 @@ const EventListingDetails: FunctionComponent<Props> = ({ details }) => {
         description,
         date,
         status,
+        id,
     } = details;
 
+    const navigate = useNavigate();
     return (
-        <div className="details-container container py-3 d-flex flex-column justify-content-center border border-secondary rounded">
+        <div className="details-container container py-3 d-flex flex-column justify-content-center border border-secondary rounded overflow-auto">
             <div className="listing-content">
                 <h2 className="mb-4">{name}</h2>
                 <p className="description">{description}</p>
@@ -41,8 +44,8 @@ const EventListingDetails: FunctionComponent<Props> = ({ details }) => {
                         {status}
                     </div>
                 </div>
-
             </div>
+            <button className="btn btn-secondary mx-auto" onClick={(() => navigate(`/events/${id}`))}>More Info</button>
         </div>
     );
 };
