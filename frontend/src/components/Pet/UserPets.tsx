@@ -6,7 +6,12 @@ import { Pet } from "../../types/Pet";
 
 const URL = "http://localhost:3000";
 
-export default function UserEvents({ userId }: { userId: string }) {
+interface UserPetsProps {
+  userId: string;
+  excludePetId?: string;
+}
+
+export default function UserEvents({ userId, excludePetId }: UserPetsProps) {
   const [pets, setPets] = useState<Pet[]>([]);
   const navigate = useNavigate();
 
@@ -15,9 +20,14 @@ export default function UserEvents({ userId }: { userId: string }) {
 
     axios
       .get(`${URL}/api/pets/user/${userId}`)
-      .then((res) => setPets(res.data?.data || []))
-      .catch((err) => console.error(err))
-  }, [userId]);
+      .then((res) =>
+        setPets(
+          (res.data?.data || []).filter((pet: Pet) => pet.id !== excludePetId)
+        )
+      )
+      .catch((err) => console.error(err));
+  }, [userId, excludePetId]);
+
 
   return (
     <div className="container mt-4">

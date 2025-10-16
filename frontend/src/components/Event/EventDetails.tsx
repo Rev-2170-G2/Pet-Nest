@@ -17,13 +17,16 @@ export default function EventDetails({ event }: { event: Event }) {
   const userId = user?.id?.split("#")[1];
   const [open, setOpen] = useState(false);
   const [showWarning, setShowWarning] = useState(false);
+  const [warningMessage, setWarningMessage] = useState("");
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
   const [userPets, setUserPets] = useState<Pet[]>([]);
   const navigate = useNavigate();
 
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+  // const handleOpen = () => setOpen(true);
+  // const handleClose = () => setOpen(false);
 
-  const isOwner = event?.PK === user?.id;
+  // const isOwner = event?.PK === user?.id;
 
   useEffect(() => {
     const fetchPetsByUser = async () => {
@@ -71,33 +74,40 @@ export default function EventDetails({ event }: { event: Event }) {
 
         <p className="mb-4">{event.description}</p>
 
-        <div className="d-flex justify-content-center justify-content-md-start">
-          {!isOwner ? (
-            <button
-              className="btn btn-success btn-lg px-4"
-              onClick={() => {
-                if (userPets.length > 0) {
-                  handleOpen();
-                } else {
-                  setShowWarning(true);
-                }
-              }}
-            >
-              Join Event
-            </button>
-          ) : (
-            <p className="text-muted mt-2">You are the owner of this event.</p>
-          )}
+        <div className="d-flex justify-content-center justify-content-md-start" style={{gap: '8px', alignItems: 'flex-start'}}>
+          <button className="btn btn-success btn-lg px-4"
+            onClick={() => {
+              if(!user) {
+                setWarningMessage("You must be logged in to join an event");
+                setShowWarning(true);
+                return;
+              }
+              else if(user?.id === event.PK) {
+                setWarningMessage("You cannot join your own event");
+                setShowWarning(true);
+                return;
+              }
+              else if(userPets.length <= 0) {
+                setWarningMessage("Create a pet first to join an event");
+                setShowWarning(true);
+                return;
+              }
+              else {
+                handleOpen();
+              }
+            }}
+          >
+            Join Event
+          </button>
 
-          {userPets.length > 0 && !isOwner && (
-            <EventOfferModal event={event} userPets={userPets} open={open} handleClose={handleClose} />
-          )}
+          {userPets.length > 0 && 
+            (<EventOfferModal event={event} userPets={userPets} open={open} handleClose={handleClose}/>)}
 
-          {showWarning && (
-            <Alert severity="warning" sx={{ ml: 2, width: 300, borderRadius: 4 }}>
-              Create a pet first to join an event.
-            </Alert>
-          )}
+          {showWarning && 
+            (<Alert severity="warning" sx={{ ml: 2, width: 300, borderRadius: 4 }} 
+              onClose={() => setShowWarning(false)}>
+                {warningMessage}
+            </Alert>)}
         </div>
       </div>
     </div>

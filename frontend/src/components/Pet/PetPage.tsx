@@ -39,7 +39,7 @@ return (
     ) : (
       <div className="d-flex flex-column">
         <PetDetails pet={pet} />
-        {pet?.PK && <UserPets userId={pet.PK.slice(2)} />}
+        {pet?.PK && <UserPets userId={pet.PK.slice(2)} excludePetId={pet.id} />}
       </div>
     )}
   </div>
