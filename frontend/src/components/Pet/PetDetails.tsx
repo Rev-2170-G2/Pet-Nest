@@ -7,14 +7,18 @@ import PetsIcon from '@mui/icons-material/Pets';
 import EventAvailableIcon from '@mui/icons-material/EventAvailable';
 import { useState } from "react";
 import PetOfferModal from "../Offers/Pets/PetOfferModal";
+import { useAuth } from "../../context/AuthContext";
 
 const DEFAULT_IMAGE = "https://jooinn.com/images/pet-70.jpg";
 
 export default function PetDetails({ pet }: { pet: Pet }) {
-    const [open, setOpen] = useState(false);
-    const handleOpen = () => setOpen(true);
-    const handleClose = () => setOpen(false);
-    const navigate = useNavigate();
+  const [open, setOpen] = useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+  const navigate = useNavigate();
+  const { user } = useAuth();
+
+  const isOwner = pet?.PK === user?.id;
 
   return (
     <div className="container py-5 d-flex flex-column justify-content-center">
@@ -41,16 +45,13 @@ export default function PetDetails({ pet }: { pet: Pet }) {
 
           <div className="d-flex flex-wrap mb-3 gap-3 align-items-center">
             <span className="d-flex align-items-center gap-1">
-              <PetsIcon fontSize="small" />
-              {pet.type}
+              <PetsIcon fontSize="small" /> {pet.type}
             </span>
             <span className="d-flex align-items-center gap-1">
-              <LocationPinIcon fontSize="small" />
-              {pet.location || "Unknown"}
+              <LocationPinIcon fontSize="small" /> {pet.location || "Unknown"}
             </span>
             <span className="d-flex align-items-center gap-1">
-              <EventAvailableIcon fontSize="small" />
-              {pet.eventsCompleted || 0} events completed
+              <EventAvailableIcon fontSize="small" /> {pet.eventsCompleted || 0} events completed
             </span>
           </div>
 
@@ -64,7 +65,10 @@ export default function PetDetails({ pet }: { pet: Pet }) {
           <h4 className="mb-3">Services Offered</h4>
           <ul className="list-group mb-4">
             {pet.services?.map((service, index) => (
-              <li key={index} className="list-group-item d-flex justify-content-between align-items-center">
+              <li
+                key={index}
+                className="list-group-item d-flex justify-content-between align-items-center"
+              >
                 {service.service}
                 <span className="badge bg-primary rounded-pill">${service.price}</span>
               </li>
@@ -72,10 +76,16 @@ export default function PetDetails({ pet }: { pet: Pet }) {
           </ul>
 
           <div className="d-flex justify-content-start">
-            <button className="btn btn-success btn-lg px-4" onClick={handleOpen}>
-              Request Service
-            </button>
-            <PetOfferModal pet={pet} open={open} handleClose={handleClose}/>
+            {!isOwner ? (
+              <>
+                <button className="btn btn-success btn-lg px-4" onClick={handleOpen}>
+                  Request Service
+                </button>
+                <PetOfferModal pet={pet} open={open} handleClose={handleClose} />
+              </>
+            ) : (
+              <p className="text-muted mt-2">You are the owner of this pet.</p>
+            )}
           </div>
         </div>
       </div>

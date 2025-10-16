@@ -1,0 +1,9 @@
+/* Container for all cards */
+.profile-pet-container,
+.profile-event-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: flex-start;
+  padding: 10px 0;
+}
