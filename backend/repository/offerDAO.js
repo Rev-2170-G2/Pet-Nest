@@ -98,13 +98,14 @@ async function getOffersSentByUser(userId) {
         const offersSent = [];
 
         Items.forEach(item => {
-            if (Array.isArray(item.offers)) {
+            if (item.offers && Array.isArray(item.offers)) {
                 item.offers.forEach(o => {
-                    if (o.requesterPK === userId) offersSent.push({...o, entityId: item.SK});
+                    if (o.requesterPK === userId){
+                        offersSent.push({...o, entityId: item.SK});
+                    }
                 });
             }
         });
-
         return offersSent;
     } catch (err) {
         logger.error(`Error fetching offers sent by user ${userId}: ${err}`);
