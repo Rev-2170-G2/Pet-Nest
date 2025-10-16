@@ -8,10 +8,12 @@ import NavBar from "./components/NavBar/NavBar";
 import { AuthProvider } from "./context/AuthContext";
 import PetsEvents from './components/PetsEvents/PetsEvents';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import Offers from './components/Offers/Offers';
+import 'bootstrap/dist/js/bootstrap.bundle.min.js';
+// import Offers from './components/Offers/Offers';
 import PetForm from "./components/PetForm/PetForm";
 import EventForm from "./components/EventForm/EventForm";
 import Admin from "./components/Admin/Admin";
+import Profile from "./pages/Profile/Profile";
 
 function App() {
   const joinRef = useRef<HTMLDivElement | null>(null);
@@ -34,10 +36,11 @@ function App() {
           <Route path="/pets-events" element={<PetsEvents />} />
           <Route path="/pets/:id" element={<PetPage />} />
           <Route path="/events/:id" element={<EventPage />} />
-          <Route path="/offers" element={<Offers />} />
+          {/* <Route path="/offers" element={<Offers />} /> */}
           <Route path="/pet-form" element={<PetForm />} />
           <Route path="/event-form" element={<EventForm />} />
           <Route path="/admin" element={<Admin />} />
+          <Route path="/profile" element={<Profile />} />
         </Routes>
       </APIProvider>
     </AuthProvider>
