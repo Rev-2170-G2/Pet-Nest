@@ -6,10 +6,8 @@ import PetPage from './components/Pet/PetPage';
 import EventPage from './components/Event/EventPage';
 import NavBar from "./components/NavBar/NavBar";
 import { AuthProvider } from "./context/AuthContext";
-import PetsEvents from './components/PetsEvents/PetsEvents';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
-// import Offers from './components/Offers/Offers';
 import PetForm from "./components/PetForm/PetForm";
 import EventForm from "./components/EventForm/EventForm";
 import Footer from "./components/Footer/Footer";
@@ -39,10 +37,8 @@ function App() {
         <main>
           <Routes>
             <Route path="/" element={<Home joinRef={joinRef} />} />
-            <Route path="/pets-events" element={<PetsEvents />} />
             <Route path="/pets/:id" element={<PetPage />} />
             <Route path="/events/:id" element={<EventPage />} />
-            {/* <Route path="/offers" element={<Offers />} /> */}
             <Route path="/pet-form" element={<PetForm />} />
             <Route path="/event-form" element={<EventForm />} />
             <Route path="/about" element={<About />} />
