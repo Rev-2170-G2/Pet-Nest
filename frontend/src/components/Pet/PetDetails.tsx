@@ -5,14 +5,14 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import LocationPinIcon from '@mui/icons-material/LocationPin';
 import PetsIcon from '@mui/icons-material/Pets';
 import EventAvailableIcon from '@mui/icons-material/EventAvailable';
-import { useContext, useState } from "react";
+import { useState } from "react";
 import PetOfferModal from "../Offers/Pets/PetOfferModal";
-import { AuthContext } from "../../context/AuthContext";
+import { useAuth } from "../../context/AuthContext";
 
 const DEFAULT_IMAGE = "https://jooinn.com/images/pet-70.jpg";
 
 export default function PetDetails({ pet }: { pet: Pet }) {
-    const { user } = useContext(AuthContext);
+    const { user } = useAuth();
     const [open, setOpen] = useState(false);
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
@@ -75,7 +75,7 @@ export default function PetDetails({ pet }: { pet: Pet }) {
             ))}
           </ul>
 
-          <div className="d-flex flex-column" style={{ gap: '8px' }}>
+          <div className="d-flex flex-row align-items-start" style={{gap: '8px', position: 'relative'}}>
             <button className="btn btn-success btn-lg px-4"
               onClick={() => {
                 if(!user) {
@@ -98,7 +98,12 @@ export default function PetDetails({ pet }: { pet: Pet }) {
             <PetOfferModal pet={pet} open={open} handleClose={handleClose}/>
 
             {showWarning && 
-              (<Alert severity="warning" sx={{ ml: 2, width: 300, borderRadius: 4 }} onClose={() => setShowWarning(false)}>{warningMessage}</Alert>)}
+              <div style={{position: 'absolute', top: '100%', left: 0, marginTop: '4px'}}>
+                <Alert severity="warning" sx={{width: 300, borderRadius: 4}} onClose={() => setShowWarning(false)}>
+                  {warningMessage}
+                </Alert>
+              </div>
+            }
           </div>
         </div>
       </div>
