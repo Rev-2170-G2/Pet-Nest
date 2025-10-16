@@ -6,7 +6,12 @@ import { Pet } from "../../types/Pet";
 
 const URL = "http://localhost:3000";
 
-export default function UserEvents({ userId }: { userId: string }) {
+interface UserPetsProps {
+  userId: string;
+  excludePetId?: string;
+}
+
+export default function UserEvents({ userId, excludePetId }: UserPetsProps) {
   const [pets, setPets] = useState<Pet[]>([]);
   const navigate = useNavigate();
 
@@ -19,11 +24,13 @@ export default function UserEvents({ userId }: { userId: string }) {
       .catch((err) => console.error(err))
   }, [userId]);
 
+  const filteredPets = pets.filter((pet) => pet.id !== excludePetId)
+
   return (
     <div className="container mt-4">
       <h3>More pets from this owner</h3>
       <div className="row">
-        {pets.map((pet) => (
+        {filteredPets.map((pet) => (
           <div
             key={pet.id}
             className="col-md-4 mb-3"
