@@ -7,6 +7,10 @@
   padding: 15px 15px;
 }
 
+.navbar-logo {
+  font-size: xx-large;
+}
+
 .navbar-left,
 .navbar-right {
   display: flex;
@@ -55,4 +59,9 @@
   margin-left: 20px;
   margin-right: 10px;
   text-decoration: none;
+}
+
+.toggle-button{
+  margin-right: 10px !important;
+  background-color: #333823 !important;
 }
