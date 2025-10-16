@@ -1,0 +1,41 @@
+.offer-container {
+    display: flex;
+    flex-direction: 'column';
+    justify-content: 'flex-start';
+    gap: 40px;
+    flex-wrap: wrap;  
+    padding: 100px;
+    /* justify-content: center; for centering the cards if needed*/ 
+}
+
+.offer-card {
+    width: 300px !important;
+    height: 475px !important;
+    /* prevents flex shrink inside Bootstrap Col */
+    flex: none !important;       
+}
+
+.card-root {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.card-media {
+  height: 150px;
+  flex: none !important;  
+}
+
+.card-actions {
+  margin-top: auto;
+  align-self: flex-start;
+}
+
+button {
+    size: small;
+    margin-left: "5px";
+}
+
+.fa-cat {
+  margin-right: 3px;
+}
