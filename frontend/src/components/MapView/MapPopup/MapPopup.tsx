@@ -18,9 +18,6 @@ type Props = {
 export default function MapPopup({
   isOpen,
   onClose,
-  showAutoComplete = false,
-  selectedPlace,
-  setSelectedPlace,
   positions,
   markerType,
 }: Props) {
@@ -47,9 +44,6 @@ export default function MapPopup({
           <CloseIcon fontSize="inherit" />
         </IconButton>
         <MapView
-          showAutoComplete={showAutoComplete}
-          selectedPlace={selectedPlace}
-          setSelectedPlace={setSelectedPlace}
           height="100vh"
           width="100vw"
           positions={positions}

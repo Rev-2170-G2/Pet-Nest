@@ -5,13 +5,13 @@ import './styles.css'
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { Event } from "../../../types/Event";
-import MapView from '../../MapView/MapView';
+import MapPopup from '../../MapView/MapPopup/MapPopup';
 
 
 function EventCard() {
     const [events, setEvents] = useState<Event[]>([])
     const [loading, setLoading] = useState(true)
-    const [petLocations, setPetLocations] = useState<string[]>([]);
+    const [showMap, setShowMap] = useState<boolean>(false);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -29,29 +29,18 @@ function EventCard() {
         fetchEvents();    
     }, [])
 
-    useEffect(() => {
-        if (events) {
-            var update: string[] = [];
-            for (const event of events) { 
-                update.push(event.location || '');
-            }
-            setPetLocations(update);
-        }
-    }, [events])
-
     if (loading) return <p>Loading...</p>
 
   return (
     <>
         <div className="d-flex flex-column">
             <div className="mb-2 mx-3">
-                <MapView
-                    showAutoComplete={false}
-                    positions={events}
-                    markerType={'events'}
-                    height={'50vh'}
-                    width={'60vw'}
-                />
+                <button className='btn btn-info' onClick={() => setShowMap(true)}>Show Map</button>
+                <MapPopup
+                isOpen={showMap}
+                onClose={() => setShowMap(false)}
+                positions={events}
+                markerType='events' />
             </div>
         </div>
         <div className="eventcard-container">

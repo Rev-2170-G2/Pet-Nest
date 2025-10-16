@@ -4,12 +4,13 @@ import { useState, useEffect, CSSProperties } from 'react';
 import AutoCompleteControl from './AutoComplete/AutoCompleteControl';
 import AutoCompleteResult from './AutoComplete/AutoCompleteResult';
 import CustomMarker from './CustomMarkers/CustomMarkers';
+import geocoder from '../../util/geocoder';
 import { Pet } from '../../types/Pet';
 import { Event } from '../../types/Event';
 import './AutoComplete/AutoCompleteControl.css';
 
 type Props = {
-  showAutoComplete: boolean;
+  showAutoComplete?: boolean;
   selectedPlace?: google.maps.places.Place | null;
   setSelectedPlace?: (  place: google.maps.places.Place | null) => void;
   height: string;
@@ -19,7 +20,25 @@ type Props = {
 }
 
 export default function MapView({showAutoComplete, setSelectedPlace, selectedPlace, height, width, positions, markerType}: Props) {
+  const [spots, setSpots] = useState<
+    { item: Pet | Event; location: google.maps.LatLng }[]
+    >([]);
   
+    useEffect(() => {
+      const getLocations = async () => {
+        if (positions) {
+          const validSpots = positions
+          .filter(i => i.location && i.location.trim().length > 0);
+
+            const locations = await geocoder(validSpots.map(i => i.location!));
+            setSpots(positions.map((item, i) => ({
+                item,
+                location: locations[i],
+            })));
+        };
+      }
+      getLocations();
+  }, [positions])
 
   return (
     <>
@@ -44,7 +63,7 @@ export default function MapView({showAutoComplete, setSelectedPlace, selectedPla
       )}
 
       {positions && markerType && (
-        <CustomMarker markerSpots={positions} markerType={markerType} />
+        <CustomMarker markerSpots={spots} markerType={markerType} />
       )}
       </Map>
     </Container>

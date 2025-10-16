@@ -10,31 +10,31 @@ import PetListingDetails from '../ListingDetails/PetListingDetails';
 import EventListingDetails from '../ListingDetails/EventListingDetails';
 
 type Props = { 
-    markerSpots: Pet[] | Event[];
+    markerSpots: { item: Pet | Event; location: google.maps.LatLng}[];
     markerType: string;
 }
 
 function CustomMarker({markerSpots, markerType}: Props) {
-    const [positions, setPositions] = useState<
-    { item: Pet | Event; location: google.maps.LatLng }[]
-    >([]);
+    // const [positions, setPositions] = useState<
+    // { item: Pet | Event; location: google.maps.LatLng }[]
+    // >([]);
     const [activeMarker, setActiveMarker] = useState<string | null>(null);
     const [hovered, setHovered] = useState(false);
 
-    useEffect(() => {
-        const getLocations = async () => {
+    // useEffect(() => {
+    //     const getLocations = async () => {
           
-          const validSpots = markerSpots
-          .filter(i => i.location && i.location.trim().length > 0);
+    //       const validSpots = markerSpots
+    //       .filter(i => i.location && i.location.trim().length > 0);
 
-            const locations = await geocoder(validSpots.map(i => i.location!));
-            setPositions(markerSpots.map((item, i) => ({
-                item,
-                location: locations[i],
-            })));
-        };
-        getLocations();
-    }, [markerSpots])
+    //         const locations = await geocoder(validSpots.map(i => i.location!));
+    //         setPositions(markerSpots.map((item, i) => ({
+    //             item,
+    //             location: locations[i],
+    //         })));
+    //     };
+    //     getLocations();
+    // }, [markerSpots])
 
 
      const renderCustomPin = (item: Pet | Event) => {
@@ -59,7 +59,7 @@ function CustomMarker({markerSpots, markerType}: Props) {
 
     return (
     <>
-      {positions.map(({ item, location }, i) => (
+      {markerSpots.map(({ item, location }, i) => (
         <AdvancedMarker
           key={item.id}
           position={location}
