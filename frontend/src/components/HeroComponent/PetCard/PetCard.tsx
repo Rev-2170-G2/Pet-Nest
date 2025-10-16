@@ -47,13 +47,13 @@ function PetCard() {
   return (
     <div className="d-flex flex-column">
         <div className="mb-2 mx-3 d-flex flex-row">
-            <button className='btn btn-info' onClick={() => setShowMap(true)}>Show Map</button>
             <PetFilter onSelectType={(type: string) => getPetsByType(type)} />
-                <MapPopup
-                isOpen={showMap}
-                onClose={() => setShowMap(false)}
-                positions={pets}
-                markerType='pets' />
+            <button className='btn btn-info h-75 my-auto' onClick={() => setShowMap(true)}>Show Map</button>
+            <MapPopup
+            isOpen={showMap}
+            onClose={() => setShowMap(false)}
+            positions={pets}
+            markerType='pets' />
         </div>
 
         <div className="petcard-container">

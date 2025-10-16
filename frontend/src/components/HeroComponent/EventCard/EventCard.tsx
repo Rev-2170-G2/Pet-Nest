@@ -35,7 +35,7 @@ function EventCard() {
     <>
         <div className="d-flex flex-column">
             <div className="mb-2 mx-3">
-                <button className='btn btn-info' onClick={() => setShowMap(true)}>Show Map</button>
+                <button className='btn btn-info h-80 my-2' onClick={() => setShowMap(true)}>Show Map</button>
                 <MapPopup
                 isOpen={showMap}
                 onClose={() => setShowMap(false)}
