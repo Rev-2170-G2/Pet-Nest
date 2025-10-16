@@ -1,4 +1,5 @@
 import React, {FunctionComponent} from 'react';
+import { useNavigate } from 'react-router-dom';
 import PetsIcon from '@mui/icons-material/Pets';
 import LocationPinIcon from '@mui/icons-material/LocationPin';
 import EventAvailableIcon from '@mui/icons-material/EventAvailable';
@@ -21,11 +22,13 @@ const PetListingDetails: FunctionComponent<Props> = ({ details }) => {
         type,
         review,
         description,
-        services
+        services,
+        id
     } = details;
 
+    const navigate = useNavigate();
     return (
-        <div className="details-container container py-3 d-flex flex-column justify-content-center border border-secondary rounded">
+        <div className="details-container container py-3 d-flex flex-column justify-content-center border border-secondary rounded overflow-auto">
             <div className="listing-content">
                 <h2>{name}</h2>
                 <p className="description">{description}</p>
@@ -59,6 +62,7 @@ const PetListingDetails: FunctionComponent<Props> = ({ details }) => {
                     ))}
                 </ul>
             </div>
+            <button className="btn btn-secondary mx-auto" onClick={(() => navigate(`/pets/${id}`))}>More Info</button>
         </div>
     );
 };
