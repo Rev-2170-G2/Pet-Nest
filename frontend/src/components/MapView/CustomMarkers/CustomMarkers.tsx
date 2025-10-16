@@ -1,11 +1,8 @@
 import React, {useEffect, useState} from 'react';
 import {AdvancedMarker} from '@vis.gl/react-google-maps';
 import classNames from 'classnames';
-import geocoder from '../../../util/geocoder';
 import { Pet } from '../../../types/Pet';
 import { Event } from '../../../types/Event';
-import PetDetails from '../../Pet/PetDetails';
-import EventDetails from '../../Event/EventDetails';
 import RoomIcon from '@mui/icons-material/Room';
 import PetListingDetails from '../ListingDetails/PetListingDetails';
 import EventListingDetails from '../ListingDetails/EventListingDetails';
@@ -75,7 +72,7 @@ function CustomMarker({markerSpots, markerType}: Props) {
         >
           {activeMarker === item.id
           ? renderCustomPin(item)
-          : <div className='custom-pin'><RoomIcon className='icon' /></div>}
+          : <div className='custom-pin'><RoomIcon className='icon' color='info' fontSize='medium'/></div>}
         </AdvancedMarker>
       ))}
     </>

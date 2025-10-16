@@ -201,7 +201,7 @@ export default function PetForm() {
           {/* Map Column */}
           <Col>
             <Form.Group className='mb-3' controlId='formMap'>
-              <MapView setSelectedPlace={setSelectedPlace} selectedPlace={selectedPlace} width={'50vw'} height={'45vh'}/>
+              <MapView showAutoComplete={true} setSelectedPlace={setSelectedPlace} selectedPlace={selectedPlace} width={'50vw'} height={'45vh'}/>
               {validated && !selectedPlace && (
                 <div className='invalid-feedback d-block'>Please choose a location by searching</div>
               )}
