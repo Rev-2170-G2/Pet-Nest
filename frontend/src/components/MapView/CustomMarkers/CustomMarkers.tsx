@@ -21,7 +21,11 @@ export default function CustomMarker({markerSpots, markerType}: Props) {
 
     useEffect(() => {
         const getLocations = async () => {
-            const locations = await geocoder(markerSpots.map(i => i.location));
+          
+          const validSpots = markerSpots
+          .filter(i => i.location && i.location.trim().length > 0);
+
+            const locations = await geocoder(validSpots.map(i => i.location!));
             console.log(locations);
             setPositions(markerSpots.map((item, i) => ({
                 item,
@@ -61,10 +65,14 @@ export default function CustomMarker({markerSpots, markerType}: Props) {
           title={`${item.name}`}
           onMouseEnter={() => setHovered(true)}
           onMouseLeave={() => setHovered(false)}
-          className={classNames('pets-items-marker', { activeMarker, hovered })}
+          className={classNames('pets-items-marker', { 
+            activeMarker: activeMarker === item.id, 
+            hovered })}
           onClick={() => setActiveMarker(activeMarker === item.id ? null : item.id )}
         >
-          {activeMarker === item.id && renderCustomPin(item)}
+          {activeMarker === item.id
+          ? renderCustomPin(item)
+          : <div className='custom-pin'><div className='icon'>📍</div></div>}
           {/* <div>something is gonna go here</div> */}
         </AdvancedMarker>
       ))}

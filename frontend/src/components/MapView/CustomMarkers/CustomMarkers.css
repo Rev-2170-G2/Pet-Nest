@@ -3,6 +3,8 @@
   position: relative;
   transform: translateY(-5px);
   transition: all 0.2s ease-in-out;
+  z-index: 10;
+  position: relative;
 }
 
 .map-container .pets-items-marker .tip {
@@ -25,7 +27,8 @@
   width: fit-content;
   max-width: 34px;
   padding: 4px;
-  background-color: var(--estate-green-dark);
+  /* background-color: var(--estate-green-dark); */
+  background-color: red;
   border-radius: 50%;
 
   display: flex;

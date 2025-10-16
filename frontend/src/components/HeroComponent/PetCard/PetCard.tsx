@@ -57,7 +57,7 @@ function PetCard() {
     <div className="d-flex flex-column">
         <div className="mb-2 mx-3">
             <PetFilter onSelectType={(type: string) => getPetsByType(type)} />
-             <div className='map-container'>
+             <div>
                 <MapView
                     showAutoComplete={false}
                     // positions={petLocations}
