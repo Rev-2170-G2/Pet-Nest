@@ -16,6 +16,7 @@ import ModalSelect from "../ModalSelect";
 import { FormControl, FormLabel, Typography, Box } from "@mui/material";
 
 function PetOfferForm({ pet, handleClose }: PetOfferFormProps) {
+  const baseUrl = import.meta.env.VITE_BACKEND_URL || "http://localhost:3000/api";
   const { user } = useAuth();
   const userId = user?.id.split("#")[1];
   const [userEvents, setUserEvents] = useState<Event[] | IndividualUser[]>([{ name: "request as a individual", id: userId  ?? ""}]);
@@ -27,7 +28,7 @@ function PetOfferForm({ pet, handleClose }: PetOfferFormProps) {
     const fetchEventsByUser = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:3000/api/events/user/${userId}`
+          `${baseUrl}/events/user/${userId}`
         );
         console.log(
           `From fetchEventsByUser: ${JSON.stringify(response.data.data)}`
@@ -72,7 +73,7 @@ function PetOfferForm({ pet, handleClose }: PetOfferFormProps) {
     try {
       setLoading(true);
       const response = await axios.post(
-        "http://localhost:3000/api/offers",
+        `${baseUrl}/offers`,
         offer,
         {
           headers: {
