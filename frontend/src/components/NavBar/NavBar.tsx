@@ -64,6 +64,10 @@ function NavBar({ onJoinClick }: NavBarProps) {
           </div>
         </div>
 
+        <IconButton className="toggle-button" onClick={colorMode.toggleColorMode}>
+          <DarkMode />
+        </IconButton>
+
         <div className="navbar-right">
           <Link to="/" className="nav-link" onClick={handleGoHome}>
             Home

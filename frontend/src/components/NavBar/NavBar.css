@@ -70,6 +70,10 @@
 }
 
 .toggle-button{
-  margin-right: 10px !important;
+  margin-left: 1100px !important;
   background-color: #333823 !important;
+}
+
+.toggle-button:hover {
+  background-color: #333823 !important; /* keep same on hover */
 }
