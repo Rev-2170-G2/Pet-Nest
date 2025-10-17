@@ -7,16 +7,17 @@ import { Pet } from "../../../types/Pet";
 import PetFilter from "../PetFilter/PetFilter";
 import MapPopup from '../../MapView/MapPopup/MapPopup';
 
-function PetCard() {
+export default function PetCard() {
     const [pets, setPets] = useState<Pet[]>([]);
     const [loading, setLoading] = useState(true);
     const [showMap, setShowMap] = useState<boolean>(false);
     const navigate = useNavigate();
+    const URL = import.meta.env.VITE_BASE_URL || "http://localhost:3000";
 
     useEffect(() => {
         const fetchPets = async () => {
             try {
-                const response = await axios.get("http://localhost:3000/api/pets");
+                const response = await axios.get(`${URL}/api/pets`);
                 console.log(response.data);
                 setPets(response.data.data.Items);
             } catch (error) {
@@ -56,33 +57,37 @@ function PetCard() {
         </div>
 
         <div className="petcard-container">
-            {pets.map((pet, index) => (
-            <div key={index} className="pet-card">
-                <Card className="card-root">
-                <CardMedia className="card-media"
-                    image={Array.isArray(pet.photos) ? pet.photos?.[0] : pet.photos}
-                    title={pet.entity}
-                />
-                <CardContent>
-                    <Typography gutterBottom variant="h5" component="div">
-                    {pet.name}
-                    </Typography>
-                    <Typography variant="body2" sx={{ color: 'text.primary' }}>
-                    {"Location: " + pet.location}
-                    </Typography>
-                    <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                    {pet.description}
-                    </Typography>
-                </CardContent>
-                <CardActions className="card-actions">
-                    <Button size="small" onClick={() => navigate(`/pets/${pet.id}`)}>Pick Me</Button>
-                </CardActions>
-                </Card>
-            </div>
-            ))}
+            {pets.length === 0 ? (
+                <p style={{ textAlign: 'center', width: '100%', marginTop: '20px' }}>
+                    No pets found matching your filter.
+                </p>
+            ) : (
+                pets.map((pet, index) => (
+                    <div key={index} className="pet-card">
+                        <Card className="card-root">
+                            <CardMedia
+                                className="card-media"
+                                image={Array.isArray(pet.photos) ? pet.photos?.[0] : pet.photos}
+                                title={pet.entity}
+                            />
+                            <CardContent>
+                                <Typography gutterBottom variant="h5" component="div">
+                                    {pet.name}
+                                </Typography>
+                                <Typography variant="body2" sx={{ color: 'text.primary' }}>
+                                    {"Location: " + pet.location}
+                                </Typography>
+                                <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                                    {pet.description}
+                                </Typography>
+                            </CardContent>
+                            <CardActions className="card-actions">
+                                <Button size="small" onClick={() => navigate(`/pets/${pet.id}`)}>Pick Me</Button>
+                            </CardActions>
+                        </Card>
+                    </div>
+                ))
+            )}
         </div>
     </div>
-  );
-}
-
-export default PetCard;
+)};
