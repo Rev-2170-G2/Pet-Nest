@@ -83,6 +83,20 @@ const getPetsByType = async (req, res) => {
     }
 }
 
+const addReview = async (req, res) => {
+  const { petId } = req.params;
+  const userId = req.user.id;
+  const { rating, reviewText } = req.body;
+
+  try {
+    const data = await petService.addPetReview(petId, userId, rating, reviewText);
+    res.status(200).json({ message: 'Review added', data });
+  } catch (err) {
+    res.status(400).json({ message: 'Failed to add review', error: err.message });
+  }
+};
+
+
 module.exports = {
     createPet,
     updatePet,
@@ -90,5 +104,6 @@ module.exports = {
     getAllPetServices,
     getPetById,
     getPetsByUser,
-    getPetsByType
+    getPetsByType,
+    addReview
 }
