@@ -4,6 +4,7 @@ phases:
     runtime-versions:
       nodejs: 22
     commands:
+      - cd frontend
       - npm install -g npm@latest vite@latest
   pre_build:
     commands: 
