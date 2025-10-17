@@ -38,7 +38,7 @@ function CustomMarker({markerSpots, markerType}: Props) {
      const renderCustomPin = (item: Pet | Event) => {
         return (
         <>
-            <div className="custom-pin border border-secondary rounded"
+            <div className="custom-pin"
               style={{
                 border: '2px solid 12271e',
                 borderRadius: '12px',

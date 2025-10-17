@@ -1,5 +1,5 @@
 import React, { useState, KeyboardEvent, ChangeEvent } from 'react';
-import { Form, Button, Badge, InputGroup } from "react-bootstrap";
+import { Form, Button, Badge, InputGroup, Row } from "react-bootstrap";
 
 type Props = {
     label: string;
@@ -18,6 +18,7 @@ export default function MultiPhotoInput({onChange, label}: Props) {
             setValues(updated);
             onChange?.(updated);
           }
+          setInputValue('');
       };
     
       const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
@@ -43,7 +44,7 @@ export default function MultiPhotoInput({onChange, label}: Props) {
           value={inputValue}
           onChange={(e: ChangeEvent<HTMLInputElement>) => setInputValue(e.target.value)}
           onKeyDown={handleKeyDown}
-          placeholder="Type a value and press Enter"
+          placeholder="Share a photo link and press enter"
         />
         <Button variant="primary" onClick={handleAdd}>Add</Button>
       </InputGroup>
@@ -55,7 +56,7 @@ export default function MultiPhotoInput({onChange, label}: Props) {
             pill
             bg="secondary"
             className="me-2"
-            style={{ cursor: "pointer" }}
+            style={{ cursor: "pointer", zIndex: 1 }}
             onClick={() => handleRemove(v)}
           >
             {v} ✕
