@@ -28,6 +28,10 @@ useEffect(() => {
     .catch((err) => console.error(err));
 }, [userId, excludeEventId]);
 
+if(events.length === 0){
+  return null;
+}
+
   return (
     <div className="container mt-4">
       <h3>More events from this organizer</h3>

@@ -28,6 +28,10 @@ export default function UserEvents({ userId, excludePetId }: UserPetsProps) {
       .catch((err) => console.error(err));
   }, [userId, excludePetId]);
 
+  if(pets.length === 0){
+    return null;
+  }
+
 
   return (
     <div className="container mt-4">
