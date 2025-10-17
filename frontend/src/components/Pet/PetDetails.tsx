@@ -45,16 +45,13 @@ export default function PetDetails({ pet }: { pet: Pet }) {
 
           <div className="d-flex flex-wrap mb-3 gap-3 align-items-center">
             <span className="d-flex align-items-center gap-1">
-              <PetsIcon fontSize="small" />
-              {pet.type}
+              <PetsIcon fontSize="small" /> {pet.type}
             </span>
             <span className="d-flex align-items-center gap-1">
-              <LocationPinIcon fontSize="small" />
-              {pet.location || "Unknown"}
+              <LocationPinIcon fontSize="small" /> {pet.location || "Unknown"}
             </span>
             <span className="d-flex align-items-center gap-1">
-              <EventAvailableIcon fontSize="small" />
-              {pet.eventsCompleted || 0} events completed
+              <EventAvailableIcon fontSize="small" /> {pet.eventsCompleted || 0} events completed
             </span>
           </div>
 
@@ -68,7 +65,10 @@ export default function PetDetails({ pet }: { pet: Pet }) {
           <h4 className="mb-3">Services Offered</h4>
           <ul className="list-group mb-4">
             {pet.services?.map((service, index) => (
-              <li key={index} className="list-group-item d-flex justify-content-between align-items-center">
+              <li
+                key={index}
+                className="list-group-item d-flex justify-content-between align-items-center"
+              >
                 {service.service}
                 <span className="badge bg-primary rounded-pill">${service.price}</span>
               </li>

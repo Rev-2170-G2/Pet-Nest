@@ -22,7 +22,7 @@ function NavBar({ onJoinClick }: NavBarProps) {
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    navigate('/', {replace: true});
+    navigate('/', { replace: true });
     logout();
     navigate("/");
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -68,13 +68,10 @@ function NavBar({ onJoinClick }: NavBarProps) {
           <Link to="/" className="nav-link" onClick={handleGoHome}>
             Home
           </Link>
-          <Link to="/pets-events" className="nav-link">
-            Pets & Events
-          </Link>
           <a href="#join" className="nav-link" onClick={handleJoinClick}>
             Join
           </a>
-          {user && <Link to="/offers" className="nav-link">Offers</Link>}
+          {user && (<Link to="/profile" className="nav-link">Profile</Link>)}
           {user?.admin && <Link to="/admin" className="nav-link">Admin Dashboard</Link>}
 
           {user ? (

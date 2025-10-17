@@ -1,0 +1,78 @@
+.profile-card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  border-radius: 16px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  background-color: #fff;
+  overflow: hidden;
+}
+
+.profile-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+}
+
+.card-media {
+  height: 200px;
+  background-size: cover;
+  background-position: center;
+}
+
+.card-content {
+  flex-grow: 1;
+  padding: 16px;
+}
+
+.card-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: auto;
+  gap: 8px;
+  padding: 8px 16px;
+}
+
+.MuiButton-containedError {
+  background-color: #c94d4d;
+  color: white;
+  text-transform: none;
+}
+
+.MuiButton-containedError:hover {
+  background-color: #a63939;
+}
+
+.MuiButton-outlinedError {
+  border-color: #c94d4d;
+  color: #c94d4d;
+  text-transform: none;
+}
+
+.MuiButton-outlinedError:hover {
+  background-color: #f8dada;
+}
+
+.MuiButton-outlined {
+  border-color: #6d8b5c;
+  color: #6d8b5c;
+  text-transform: none;
+}
+
+.MuiButton-outlined:hover {
+  background-color: #e4edd9;
+}
+
+.petcard-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;
+  margin-top: 20px;
+}
+
+.eventcard-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;
+  margin-top: 20px;
+}
