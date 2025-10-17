@@ -16,6 +16,9 @@ import Terms from "./pages/Terms/Terms";
 import ScrollToTop from "./components/ScrollToTop";
 import Admin from "./components/Admin/Admin";
 import Profile from "./pages/Profile/Profile";
+import ThemeProviderComponent from './components/ThemeProviderComponent';
+
+import './style.css';
 
 function App() {
   const joinRef = useRef<HTMLDivElement | null>(null);
@@ -30,6 +33,7 @@ function App() {
   };
 
   return (
+    <ThemeProviderComponent>
     <AuthProvider>
       <NavBar onJoinClick={scrollToJoin} />
       <APIProvider apiKey={import.meta.env.VITE_MAPS_API_KEY}>
@@ -50,6 +54,7 @@ function App() {
         <Footer />
       </APIProvider>
     </AuthProvider>
+  </ThemeProviderComponent>
   );
 }
 

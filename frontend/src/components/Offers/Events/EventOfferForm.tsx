@@ -16,6 +16,7 @@ import ModalSelect from "../ModalSelect";
 import { FormControl, FormLabel, Typography, Box } from "@mui/material";
 
 function EventOfferForm({ event, userPets, handleClose }: EventOfferFormProps) {
+  const baseUrl = import.meta.env.VITE_BACKEND_URL || "http://localhost:3000/api";
   const { user } = useAuth();
   const userId = user?.id.split("#")[1];
   const [requesterSK, setRequesterSK] = useState<string>("");
@@ -56,7 +57,7 @@ function EventOfferForm({ event, userPets, handleClose }: EventOfferFormProps) {
     try {
       setLoading(true);
       const response = await axios.post(
-        "http://localhost:3000/api/offers",
+        `${baseUrl}/offers`,
         offer,
         {
           headers: {

@@ -4,6 +4,10 @@ import { useContext, useState } from "react";
 import { AuthContext } from "../../context/AuthContext";
 import Login from "../Auth/Login/Login";
 import Register from "../Auth/Register/Register";
+import { IconButton } from "@mui/material";
+import { DarkMode } from "@mui/icons-material";
+import { ColorModeContext } from "../../context/ColorModeContext"
+
 
 interface NavBarProps {
   onJoinClick?: () => void;
@@ -13,10 +17,12 @@ function NavBar({ onJoinClick }: NavBarProps) {
   const { user, logout } = useContext(AuthContext);
   const [showLogin, setShowLogin] = useState(false);
   const [showRegister, setShowRegister] = useState(false);
+  const colorMode = useContext(ColorModeContext)
   const location = useLocation();
   const navigate = useNavigate();
 
   const handleLogout = () => {
+    navigate('/', {replace: true});
     logout();
     navigate("/");
     window.scrollTo({ top: 0, behavior: "smooth" });
