@@ -9,7 +9,6 @@ export default function Admin() {
   const [events, setEvents] = useState<Event[]>([]);
   const [loading, setLoading] = useState(true);
   const { user } = useAuth()
-  const URL = import.meta.env.VITE_BASE_URL || "http://localhost:3000";
 
 useEffect(() => {
   axios

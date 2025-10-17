@@ -12,12 +12,11 @@ export default function PetCard() {
     const [loading, setLoading] = useState(true);
     const [showMap, setShowMap] = useState<boolean>(false);
     const navigate = useNavigate();
-    const URL = import.meta.env.VITE_BASE_URL || "http://localhost:3000";
 
     useEffect(() => {
         const fetchPets = async () => {
             try {
-                const response = await axios.get(`${URL}/api/pets`);
+                const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/pets`);
                 console.log(response.data);
                 setPets(response.data.data.Items);
             } catch (error) {

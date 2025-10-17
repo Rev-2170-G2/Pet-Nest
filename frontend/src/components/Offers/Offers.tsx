@@ -3,7 +3,7 @@ import OffersList from "./OffersList";
 import OfferCard from "./OfferCard/OfferCard";
 
 export default function Offers() {
-  const baseUrl = import.meta.env.VITE_BACKEND_URL || "http://localhost:3000";
+  const baseUrl = import.meta.env.VITE_BACKEND_URL;
   const [tab, setTab] = useState<"sent" | "received">("sent");
 
   // update color as needed

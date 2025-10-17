@@ -16,7 +16,7 @@ import ModalSelect from "../ModalSelect";
 import { FormControl, FormLabel, Typography, Box } from "@mui/material";
 
 function EventOfferForm({ event, userPets, handleClose }: EventOfferFormProps) {
-  const baseUrl = import.meta.env.VITE_BACKEND_URL || "http://localhost:3000/api";
+  const baseUrl = import.meta.env.VITE_BACKEND_URL;
   const { user } = useAuth();
   const userId = user?.id.split("#")[1];
   const [requesterSK, setRequesterSK] = useState<string>("");

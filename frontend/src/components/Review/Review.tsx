@@ -12,7 +12,7 @@ interface ReviewProps {
 }
 
 function Review({ pet, onReviewSubmit } : ReviewProps){
-  const baseUrl = import.meta.env.VITE_BACKEND_URL || "http://localhost:3000/api";
+  const baseUrl = import.meta.env.VITE_BACKEND_URL;
   const { user } = useAuth();
   const [rating, setRating] = useState<number | null>(0);
   const [reviewText, setReviewText] = useState('');

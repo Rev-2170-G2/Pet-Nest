@@ -13,7 +13,7 @@ const DEFAULT_IMAGE = "https://cdn.pixabay.com/photo/2016/12/05/09/36/applicatio
 const DEFAULT_IMAGE_2 ="https://cdn.pixabay.com/photo/2016/07/21/14/18/dog-1532627_1280.png";
 
 export default function OfferCard( { url, tab } : OfferCardProps) {
-  const baseUrl = import.meta.env.VITE_BACKEND_URL || "http://localhost:3000/api";
+  const baseUrl = import.meta.env.VITE_BACKEND_URL;
   const { user } = useContext(AuthContext);
   const [offers, setOffers] = useState<Offer[]>([]);
   const [disabledValue, setDisabledValue ] = useState<boolean>(false)
