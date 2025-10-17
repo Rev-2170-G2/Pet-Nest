@@ -2,8 +2,8 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useAuth } from "../../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
-import ProfilePetCard from "./ProfilePetCard";
-import "./ProfilePets.css";
+import ProfileCard from "../ProfileCard/ProfileCard";
+import "../ProfileCard/ProfileCard.css";
 
 interface Pet {
   id: string;
@@ -40,6 +40,10 @@ const ProfilePets: React.FC = () => {
     fetchPets();
   }, [user?.token, userId]);
 
+  const handleDelete = (deletedId: string) => {
+    setPets(pets.filter((p) => p.id !== deletedId));
+  };
+
   return (
     <div className="profile-section">
       <div className="d-flex justify-content-between align-items-center mb-3">
@@ -54,7 +58,18 @@ const ProfilePets: React.FC = () => {
 
       <div className="petcard-container">
         {pets.map((pet) => (
-          <ProfilePetCard key={pet.id} pet={pet} />
+          <ProfileCard
+            key={pet.id}
+            id={pet.id}
+            title={pet.name}
+            description={pet.description}
+            imageUrl={pet.photos?.[0]}
+            locationOrDate={pet.location}
+            viewLink={`/pets/${pet.id}`}
+            onDeleteUrl="http://localhost:3000/api/pets"
+            token={user?.token}
+            onDelete={handleDelete}
+          />
         ))}
       </div>
     </div>
