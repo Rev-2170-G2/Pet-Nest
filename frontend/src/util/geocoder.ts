@@ -1,4 +1,3 @@
-
 const geocodeAddress = async (addresses: string[]) => {
   if (!addresses) return [];
 
