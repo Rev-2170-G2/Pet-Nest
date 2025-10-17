@@ -19,6 +19,7 @@ import Profile from "./pages/Profile/Profile";
 import ThemeProviderComponent from './components/ThemeProviderComponent';
 
 import './style.css';
+import { ToastContainer } from "react-toastify";
 
 function App() {
   const joinRef = useRef<HTMLDivElement | null>(null);
@@ -54,7 +55,8 @@ function App() {
           <Footer />
         </APIProvider>
       </AuthProvider>
-    </ThemeProviderComponent>
+      <ToastContainer />
+  </ThemeProviderComponent>
   );
 }
 

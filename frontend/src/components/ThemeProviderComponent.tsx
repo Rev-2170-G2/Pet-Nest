@@ -1,4 +1,3 @@
-// ThemeProviderComponent.jsx
 import { useState, useMemo } from "react";
 import { createTheme, ThemeProvider, CssBaseline } from "@mui/material";
 import { ColorModeContext } from "../context/ColorModeContext";

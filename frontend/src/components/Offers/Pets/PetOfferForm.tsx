@@ -2,18 +2,20 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "../../../context/AuthContext";
 import axios from "axios";
+import "./PetOfferForm.css"
 
 // Types
 import { PetOfferFormProps } from "../../../types/Pet";
 import { Event } from "../../../types/Event";
 import { Offer, IndividualUser } from "../../../types/Offer";
 
-// Modal & MUI Components
+// Modal & MUI Components & Supporting libraries
 import ModalButton from "../ModalButton";
 import ModalTextField from "../ModalTextField";
 import ModalCheckBox from "../ModalCheckBox";
 import ModalSelect from "../ModalSelect";
 import { FormControl, FormLabel, Typography, Box } from "@mui/material";
+import { toast } from "react-toastify";
 
 function PetOfferForm({ pet, handleClose }: PetOfferFormProps) {
   const baseUrl = import.meta.env.VITE_BACKEND_URL || "http://localhost:3000/api";
@@ -23,6 +25,7 @@ function PetOfferForm({ pet, handleClose }: PetOfferFormProps) {
   const [requesterSK, setRequesterSK] = useState<string>("");
   const [serviceSelection, setServiceSelection] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
+  // const [message, setMessage] = useState("");
 
   useEffect(() => {
     const fetchEventsByUser = async () => {
@@ -83,11 +86,17 @@ function PetOfferForm({ pet, handleClose }: PetOfferFormProps) {
         }
       );
       console.log("Offer submitted:", response.data);
-      handleClose();
+      const newMessage = response           
+        ? `Success! You’ve made an offer for ${pet.name}! 🐾` 
+        : `Something went wrong with your offer for ${pet.name}. Try again!`
+      setMessage(newMessage);
+      toast(newMessage);
     } catch (error) {
-      console.log(`Error creating offer: ${error}`);
+        console.log(`Error creating offer: ${error}`);
+        setMessage(`Offer failed! ${pet.name} is still waiting… 🐾`);
     } finally {
       setLoading(false);
+      handleClose();
     }
   }
 
@@ -139,7 +148,6 @@ function PetOfferForm({ pet, handleClose }: PetOfferFormProps) {
 
         {/* description information */}
         <ModalTextField />
-
       </FormControl>
       <ModalButton />
     </Box>

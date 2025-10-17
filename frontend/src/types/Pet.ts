@@ -6,7 +6,7 @@ export interface Pet {
   description: string;
   services: { service: string; price: number; }[];
   eventsCompleted: number;
-  review: number;
+  review: { createdAt: string; rating: number; reviewText: string; }[];
   photos: string[] | string;
   location?: string;
   PK: string;
