@@ -14,7 +14,7 @@ const DEFAULT_IMAGE = "https://th.bing.com/th/id/OIP.5t0ye0TwtLcy8ihTtU-0fQHaDs?
 
 export default function EventDetails({ event }: { event: Event }) {
   const { user } = useAuth();
-  const userId = user?.id.split("#")[1];
+  const userId = user?.id?.split("#")[1];
   const [open, setOpen] = useState(false);
   const [showWarning, setShowWarning] = useState(false);
   const [warningMessage, setWarningMessage] = useState("");
@@ -23,31 +23,26 @@ export default function EventDetails({ event }: { event: Event }) {
   const [userPets, setUserPets] = useState<Pet[]>([]);
   const navigate = useNavigate();
 
+  // const handleOpen = () => setOpen(true);
+  // const handleClose = () => setOpen(false);
+
+  // const isOwner = event?.PK === user?.id;
+
   useEffect(() => {
     const fetchPetsByUser = async () => {
+      if (!userId) return;
       try {
-        const response = await axios.get(
-          `http://localhost:3000/api/pets/user/${userId}`
-        );
-        console.log(
-          `From fetchPetsByUser: ${JSON.stringify(response.data.data)}`
-        );
-        
-        if (!response.data.data){
-          return null;
-        } else {
-          setUserPets(response.data.data);
-        }
+        const response = await axios.get(`http://localhost:3000/api/pets/user/${userId}`);
+        if (response.data.data) setUserPets(response.data.data);
       } catch (error) {
         console.log(`Error fetching pets: ${error}`);
-      } 
+      }
     };
     fetchPetsByUser();
   }, [userId]);
 
   return (
     <div className="container py-5 min-vh-100">
-
       <div className="mb-4">
         <button className="btn btn-secondary" onClick={() => navigate(-1)}>
           ← Back
@@ -116,4 +111,5 @@ export default function EventDetails({ event }: { event: Event }) {
         </div>
       </div>
     </div>
-  )};
+  );
+}

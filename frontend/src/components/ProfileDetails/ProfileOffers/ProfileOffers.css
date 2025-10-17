@@ -1,0 +1,4 @@
+/* Keep Offers section styling scoped */
+.profile-section > div {
+  width: 100%;
+}

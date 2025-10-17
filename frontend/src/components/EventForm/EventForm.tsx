@@ -1,4 +1,4 @@
-import { useState, useEffect, ChangeEvent, useContext } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import {  Form, Button, Container, Row, Col } from 'react-bootstrap';
 import { useNavigate } from "react-router-dom";
 import DatePicker from "react-datepicker";
@@ -89,6 +89,7 @@ export default function eventForm() {
   return (
     <>
    <Container>
+    <h1>Create Event</h1>
       <Form noValidate onSubmit={handleSubmit} id='event-form'>
         <Row className='mb-3'>
           <Col>
@@ -160,7 +161,7 @@ export default function eventForm() {
           {/* Map Column */}
           <Col>
             <Form.Group className='mb-3' controlId='formMap'>
-              <MapView setSelectedPlace={setSelectedPlace} selectedPlace={selectedPlace} />
+              <MapView showAutoComplete={true} setSelectedPlace={setSelectedPlace} selectedPlace={selectedPlace} width={'50vw'} height={'45vh'}/>
               {validated && !selectedPlace && (
                 <div className='invalid-feedback d-block'>Please choose a location by searching</div>
               )}

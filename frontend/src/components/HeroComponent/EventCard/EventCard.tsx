@@ -5,11 +5,13 @@ import './styles.css'
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { Event } from "../../../types/Event";
+import MapPopup from '../../MapView/MapPopup/MapPopup';
 
 
 function EventCard() {
     const [events, setEvents] = useState<Event[]>([])
     const [loading, setLoading] = useState(true)
+    const [showMap, setShowMap] = useState<boolean>(false);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -30,7 +32,18 @@ function EventCard() {
     if (loading) return <p>Loading...</p>
 
   return (
-    <div className="eventcard-container">
+    <>
+        <div className="d-flex flex-column">
+            <div className="mb-2 mx-3">
+                <button className='btn btn-info h-80 my-2' onClick={() => setShowMap(true)}>Show Map</button>
+                <MapPopup
+                isOpen={showMap}
+                onClose={() => setShowMap(false)}
+                positions={events}
+                markerType='events' />
+            </div>
+        </div>
+        <div className="eventcard-container">
         {events
             .filter(event => event.approved === true) //(PREVIOUS: .filter(event => event.status === "pending"))
             .map((event, index) => (
@@ -57,7 +70,8 @@ function EventCard() {
                 </Card>
             </div>
         ))}
-    </div>
+    </div>    
+    </>
   )
 }
 

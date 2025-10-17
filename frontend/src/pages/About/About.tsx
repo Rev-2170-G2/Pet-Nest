@@ -6,7 +6,7 @@ export default function About() {
       <h1>About PetNest</h1>
       <p>
         PetNest is a community-driven platform that connects pet owners with event organizers.
-        Whether you want to showcase your pet’s talents or find amazing pets for your events,
+        Whether you want to showcase your pet's talents or find amazing pets for your events,
         PetNest makes it simple, fun, and trustworthy.
       </p>
 
