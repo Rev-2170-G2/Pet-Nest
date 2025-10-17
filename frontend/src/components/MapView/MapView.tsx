@@ -1,38 +1,70 @@
 import { Map, ControlPosition } from '@vis.gl/react-google-maps';
 import { Container } from 'react-bootstrap';
-import { useState, useEffect } from 'react';
-import AutoCompleteControl from './AutoCompleteControl';
-import AutoCompleteResult from './AutoCompleteResult';
-import './AutoCompleteControl.css';
+import { useState, useEffect, CSSProperties } from 'react';
+import AutoCompleteControl from './AutoComplete/AutoCompleteControl';
+import AutoCompleteResult from './AutoComplete/AutoCompleteResult';
+import CustomMarker from './CustomMarkers/CustomMarkers';
+import geocoder from '../../util/geocoder';
+import { Pet } from '../../types/Pet';
+import { Event } from '../../types/Event';
+import './AutoComplete/AutoCompleteControl.css';
 
 type Props = {
-  selectedPlace: google.maps.places.Place | null;
-  setSelectedPlace: (  place: google.maps.places.Place | null) => void;
-  style?: ({width: number, height: number} | null);
+  showAutoComplete?: boolean;
+  selectedPlace?: google.maps.places.Place | null;
+  setSelectedPlace?: (  place: google.maps.places.Place | null) => void;
+  height: string;
+  width: string;
+  positions?: Pet[] | Event[];
+  markerType?: string | null;
 }
 
-export default function MapView({setSelectedPlace, selectedPlace}: Props) {
+export default function MapView({showAutoComplete, setSelectedPlace, selectedPlace, height, width, positions, markerType}: Props) {
+  const [spots, setSpots] = useState<
+    { item: Pet | Event; location: google.maps.LatLng }[]
+    >([]);
+  
+    useEffect(() => {
+      const getLocations = async () => {
+        if (positions) {
+          const validSpots = positions
+          .filter(i => i.location && i.location.trim().length > 0);
+
+            const locations = await geocoder(validSpots.map(i => i.location!));
+            setSpots(positions.map((item, i) => ({
+                item,
+                location: locations[i],
+            })));
+        };
+      }
+      getLocations();
+  }, [positions])
 
   return (
     <>
-    <Container>
       <Map
         mapId={'DEMO_MAP_ID'}
-        style={{width: '50vw', height: '45vh'}}
+        style={{height: height, width: width}}
         defaultCenter={{lat: 37, lng: -80}}
         defaultZoom={4}
         gestureHandling='greedy'
         disableDefaultUI
       >
-      <AutoCompleteControl
-        controlPosition={ControlPosition.TOP_LEFT}
-        onPlaceSelect={setSelectedPlace}
+      {showAutoComplete && setSelectedPlace &&(
+        <AutoCompleteControl
+          controlPosition={ControlPosition.TOP_LEFT}
+          onPlaceSelect={setSelectedPlace}
       />
+      )}
 
-      <AutoCompleteResult place={selectedPlace} />
+      {selectedPlace && (
+        <AutoCompleteResult place={selectedPlace} />
+      )}
 
+      {positions && markerType && (
+        <CustomMarker markerSpots={spots} markerType={markerType} />
+      )}
       </Map>
-    </Container>
     </>
   )
 }
