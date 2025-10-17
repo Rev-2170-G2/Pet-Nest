@@ -1,6 +1,5 @@
 import { Map, ControlPosition } from '@vis.gl/react-google-maps';
-import { Container } from 'react-bootstrap';
-import { useState, useEffect, CSSProperties } from 'react';
+import { useState, useEffect } from 'react';
 import AutoCompleteControl from './AutoComplete/AutoCompleteControl';
 import AutoCompleteResult from './AutoComplete/AutoCompleteResult';
 import CustomMarker from './CustomMarkers/CustomMarkers';

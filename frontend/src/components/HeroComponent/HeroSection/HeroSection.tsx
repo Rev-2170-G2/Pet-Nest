@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import Video from '../Video/Video';
 import Button from '../Button/Button';
 import './styles.css';

@@ -48,7 +48,7 @@ function EventOfferForm({ event, userPets, handleClose }: EventOfferFormProps) {
     const offer: Offer = {
       requesterSK: formattedRequesterSK,
       requestedSK: "EVENT#" + event.id,
-      requestedOwnerId: event["PK"],
+      requestedPK: event["PK"],
       services: serviceSelection,
       description: formData.get("description") as string,
     };

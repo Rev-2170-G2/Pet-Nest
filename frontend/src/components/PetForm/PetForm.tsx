@@ -103,7 +103,7 @@ export default function PetForm() {
 
   return (
     <>
-   <Container>
+   <Container className='mt-4'>
     <h1>Create Pet</h1>
       <Form noValidate onSubmit={handleSubmit} id='pet-form'>
         <Row className='mb-3'>
@@ -196,6 +196,10 @@ export default function PetForm() {
                 <div className='valid-feedback d-block'>Looks good!</div>
             )}
           </Form.Group>
+
+          <Button variant='primary' type='submit'>
+            Submit
+          </Button>
           </Col>
 
           {/* Map Column */}
@@ -220,9 +224,6 @@ export default function PetForm() {
             Please confirm information is correct.
           </Form.Control.Feedback>
         </Form.Group> */}
-        <Button variant='primary' type='submit'>
-          Submit
-        </Button>
       </Form>
     </Container>
     </>

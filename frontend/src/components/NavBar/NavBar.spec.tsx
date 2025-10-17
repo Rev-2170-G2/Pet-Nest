@@ -23,7 +23,7 @@ describe("NavBar Component", () => {
   });
 
   test("should show welcome message and logout button when user is logged in", () => {
-    const mockUser: User = { username: "testuser", token: "testtoken", admin: false };
+    const mockUser: User = { id: "someid", username: "testuser", token: "testtoken", admin: false };
     render(
       <MemoryRouter>
         <AuthContext.Provider value={{ user: mockUser, login: jest.fn(), logout: jest.fn(), setUser: jest.fn() }}>
@@ -37,7 +37,7 @@ describe("NavBar Component", () => {
   });
 
   test("should call logout and clears localStorage on logout", () => {
-    const mockUser: User = { username: "testuser", token: "testtoken", admin: true };
+    const mockUser: User = { id: "someid", username: "testuser", token: "testtoken", admin: true };
     const mockLogout = jest.fn();
 
     localStorage.setItem("token", mockUser.token);

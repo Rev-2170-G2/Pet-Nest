@@ -1,4 +1,4 @@
-import React, {FunctionComponent} from 'react';
+import {FunctionComponent} from 'react';
 import { useNavigate } from 'react-router-dom';
 import PetsIcon from '@mui/icons-material/Pets';
 import LocationPinIcon from '@mui/icons-material/LocationPin';
@@ -27,6 +27,11 @@ const PetListingDetails: FunctionComponent<Props> = ({ details }) => {
     } = details;
 
     const navigate = useNavigate();
+
+    const averageRating = review && review.length > 0
+      ? review.reduce((sum, r) => sum + r.rating, 0) / review.length
+      : 0;
+
     return (
         <div className="details-container container py-3 d-flex flex-column justify-content-center border border-secondary rounded overflow-auto">
             <div className="listing-content">
@@ -47,7 +52,7 @@ const PetListingDetails: FunctionComponent<Props> = ({ details }) => {
                         {eventsCompleted || 0}
                     </div>
                     <div className="detail_item">
-                        <Rating name="pet-rating" value={review || 0} readOnly />
+                        <Rating name="pet-rating" value={averageRating || 0} readOnly />
                     </div>
                 </div>
 

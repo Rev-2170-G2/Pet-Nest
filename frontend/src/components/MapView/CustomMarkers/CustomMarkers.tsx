@@ -38,13 +38,13 @@ function CustomMarker({markerSpots, markerType}: Props) {
      const renderCustomPin = (item: Pet | Event) => {
         return (
         <>
-            <div className="custom-pin border border-secondary rounded"
-              style={{
-                border: '2px solid 12271e',
-                borderRadius: '12px',
-                background: '#f4f4f4',
-                boxShadow: '0 2px 8px rgba(0,0,0,0,2)',
-              }}
+            <div className="custom-pin"
+              // style={{
+              //   border: '2px solid 12271e',
+              //   borderRadius: '12px',
+              //   background: '#f4f4f4',
+              //   boxShadow: '0 2px 8px rgba(0,0,0,0,2)',
+              // }}
               >
             <button className="close-button">
                 <span className="material-symbols-outlined"> close </span>
@@ -76,7 +76,6 @@ function CustomMarker({markerSpots, markerType}: Props) {
             hovered })}
           onClick={() => setActiveMarker(activeMarker === item.id ? null : item.id )}
           zIndex={activeMarker === item.id ? 9999 : 1}
-          borderColor
         >
           {activeMarker === item.id
           ? renderCustomPin(item)

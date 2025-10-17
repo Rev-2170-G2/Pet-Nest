@@ -1,5 +1,5 @@
 // MapPopup.tsx
-import React, { useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 import { Box, IconButton } from "@mui/material";
 import CloseIcon from '@mui/icons-material/Close';
 import MapView from "../MapView";
