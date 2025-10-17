@@ -19,7 +19,7 @@ function Register({ onClose, onSwitchToLogin, onSubmit }: RegisterProps) {
     onSubmit?.();
 
     try {
-      await axios.post("http://localhost:3000/api/users/register", {
+      await axios.post(`${import.meta.env.VITE_BACKEND_URL}/users/register`, {
         username,
         password,
         email,
