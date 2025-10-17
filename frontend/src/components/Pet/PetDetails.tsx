@@ -20,7 +20,11 @@ export default function PetDetails({ pet }: { pet: Pet }) {
     const navigate = useNavigate();
     const [showWarning, setShowWarning] = useState(false);
     const [warningMessage, setWarningMessage] = useState("");
+    const averageRating = pet.review && pet.review.length > 0
+      ? pet.review.reduce((sum, r) => sum + r.rating, 0) / pet.review.length
+      : 0;
 
+  console.log("averageRating", pet)
   return (
     <div className="container py-5 d-flex flex-column justify-content-center">
       <div className="row g-4 align-items-start">
@@ -57,8 +61,15 @@ export default function PetDetails({ pet }: { pet: Pet }) {
           </div>
 
           <div className="d-flex align-items-center mb-3">
-            <Rating name="pet-rating" value={pet.review || 0} readOnly />
-            <span className="ms-2 text-muted">({pet.review || 0})</span>
+            <Rating
+              name="pet-rating"
+              value={averageRating}
+              precision={0.5}
+              readOnly
+            />
+            <span className="ms-2 text-muted">
+              ({averageRating.toFixed(1)}) 
+            </span>
           </div>
 
           <p className="mb-4">{pet.description}</p>

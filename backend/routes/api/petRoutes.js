@@ -25,4 +25,7 @@ router.get('/user/:id', petController.getPetsByUser);
 //view all pets by type
 router.get('/type/:type', petController.getPetsByType);
 
+// add a review for a pet
+router.patch('/:petId/reviews', authenticateToken, petController.addReview);
+
 module.exports = router;
