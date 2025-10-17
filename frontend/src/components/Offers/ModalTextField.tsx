@@ -8,7 +8,7 @@ function ModalTextField() {
         <TextField
           id="outlined-basic"
           name="description"
-          label="Description of Request"
+          label="Description"
           variant="outlined"
           multiline
           required

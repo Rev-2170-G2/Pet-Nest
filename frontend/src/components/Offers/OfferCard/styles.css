@@ -1,6 +1,6 @@
 .offer-container {
     display: flex;
-    flex-direction: 'column';
+    flex-direction: 'row';
     justify-content: 'flex-start';
     gap: 40px;
     flex-wrap: wrap;  
@@ -10,7 +10,7 @@
 
 .offer-card {
     width: 300px !important;
-    height: 475px !important;
+    height: 550px !important;
     /* prevents flex shrink inside Bootstrap Col */
     flex: none !important;       
 }
