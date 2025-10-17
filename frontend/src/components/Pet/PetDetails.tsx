@@ -8,8 +8,9 @@ import EventAvailableIcon from '@mui/icons-material/EventAvailable';
 import { useState } from "react";
 import PetOfferModal from "../Offers/Pets/PetOfferModal";
 import { useAuth } from "../../context/AuthContext";
+import defaultPetImage from "../../assets/default_pet_image.png"
 
-const DEFAULT_IMAGE = "https://jooinn.com/images/pet-70.jpg";
+const DEFAULT_IMAGE = defaultPetImage;
 
 export default function PetDetails({ pet }: { pet: Pet }) {
     const { user } = useAuth();
@@ -28,7 +29,7 @@ export default function PetDetails({ pet }: { pet: Pet }) {
     <div className="container py-5 d-flex flex-column justify-content-center">
       <div className="row g-4 align-items-start">
         <div className="col-12 col-md-5 d-flex justify-content-center align-items-start">
-          <div className="w-100" style={{ maxWidth: "700px", height: "400px" }}>
+          <div className="w-100" style={{ maxWidth: "500px", height: "400px" }}>
             <img
               src={Array.isArray(pet.photos) ? pet.photos?.[0] || DEFAULT_IMAGE : pet.photos}
               alt={pet.name}

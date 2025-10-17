@@ -4,7 +4,7 @@ import axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Event } from "../../types/Event";
 
-const URL = "http://localhost:3000";
+const URL = import.meta.env.VITE_BASE_URL || "http://localhost:3000";
 
 interface UserEventsProps {
   userId: string;
@@ -27,6 +27,10 @@ useEffect(() => {
     )
     .catch((err) => console.error(err));
 }, [userId, excludeEventId]);
+
+if(events.length === 0){
+  return null;
+}
 
   return (
     <div className="container mt-4">

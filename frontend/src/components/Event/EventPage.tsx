@@ -5,7 +5,7 @@ import EventDetails from "./EventDetails";
 import UserEvents from "./UserEvents";
 import { Event } from "../../types/Event";
 
-const URL = "http://localhost:3000";
+const URL = import.meta.env.VITE_BASE_URL || "http://localhost:3000";
 
 export default function EventPage() {
   const { id } = useParams();
