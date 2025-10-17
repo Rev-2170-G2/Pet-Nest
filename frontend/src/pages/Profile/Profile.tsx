@@ -9,20 +9,50 @@ const Profile: React.FC = () => {
 
   return (
     <div className="profile-container">
-      <h1 className="text-center mb-4">Your Profile</h1>
-
-      <div className="dropdown mb-4 text-center">
-        <button className="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown">
-          {selectedTab === "pets" ? "My Pets" : selectedTab === "events" ? "My Events" : "My Offers"}
-        </button>
-        <ul className="dropdown-menu">
-          <li><button className="dropdown-item" onClick={() => setSelectedTab("pets")}>My Pets</button></li>
-          <li><button className="dropdown-item" onClick={() => setSelectedTab("events")}>My Events</button></li>
-          <li><button className="dropdown-item" onClick={() => setSelectedTab("offers")}>My Offers</button></li>
-        </ul>
+      <div className="profile-header">
+        <h1>Your Profile</h1>
+        <div className="dropdown">
+          <button
+            className="dropdown-toggle-btn"
+            type="button"
+            data-bs-toggle="dropdown"
+          >
+            {selectedTab === "pets"
+              ? "My Pets"
+              : selectedTab === "events"
+              ? "My Events"
+              : "My Offers"}
+          </button>
+          <ul className="dropdown-menu">
+            <li>
+              <button
+                className="dropdown-item"
+                onClick={() => setSelectedTab("pets")}
+              >
+                My Pets
+              </button>
+            </li>
+            <li>
+              <button
+                className="dropdown-item"
+                onClick={() => setSelectedTab("events")}
+              >
+                My Events
+              </button>
+            </li>
+            <li>
+              <button
+                className="dropdown-item"
+                onClick={() => setSelectedTab("offers")}
+              >
+                My Offers
+              </button>
+            </li>
+          </ul>
+        </div>
       </div>
 
-      <div className="profile-content">
+      <div className="profile-content fade-in">
         {selectedTab === "pets" && <ProfilePets />}
         {selectedTab === "events" && <ProfileEvents />}
         {selectedTab === "offers" && <ProfileOffers />}

@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useAuth } from "../../../context/AuthContext";
-import ProfilePetCard from "./ProfilePetCard.tsx";
 import { useNavigate } from "react-router-dom";
-import "./ProfilePets.css"
+import ProfilePetCard from "./ProfilePetCard";
+import "./ProfilePets.css";
 
 interface Pet {
   id: string;
@@ -48,9 +48,11 @@ const ProfilePets: React.FC = () => {
           Add Pet
         </button>
       </div>
+
       {loading && <p>Loading...</p>}
       {pets.length === 0 && !loading && <p>You haven't added any pets yet.</p>}
-      <div className="profile-pet-container">
+
+      <div className="petcard-container">
         {pets.map((pet) => (
           <ProfilePetCard key={pet.id} pet={pet} />
         ))}

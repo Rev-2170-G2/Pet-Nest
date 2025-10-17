@@ -1,6 +1,6 @@
 import React from "react";
+import { Button, Card, CardActions, CardContent, CardMedia, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import "./ProfilePetCard.css"
 
 interface Pet {
   id: string;
@@ -12,19 +12,38 @@ interface Pet {
 
 const ProfilePetCard: React.FC<{ pet: Pet }> = ({ pet }) => {
   const navigate = useNavigate();
+
+  const imageSrc = Array.isArray(pet.photos) && pet.photos.length > 0 ? pet.photos[0] : undefined;
+
   return (
-    <div className="profile-pet-card" onClick={() => navigate(`/pets/${pet.id}`)}>
-      {pet.photos && pet.photos[0] && (
-        <div
-          className="profile-card-media"
-          style={{ backgroundImage: `url(${Array.isArray(pet.photos) ? pet.photos[0] : pet.photos})` }}
-        />
-      )}
-      <div className="profile-card-content">
-        <h4>{pet.name}</h4>
-        {pet.location && <p>Location: {pet.location}</p>}
-        <p>{pet.description}</p>
-      </div>
+    <div className="profile-pet-card">
+      <Card className="card-root">
+        {imageSrc && (
+          <CardMedia
+            className="card-media"
+            image={imageSrc}
+            title={pet.name}
+          />
+        )}
+        <CardContent>
+          <Typography gutterBottom variant="h5" component="div">
+            {pet.name}
+          </Typography>
+          {pet.location && (
+            <Typography variant="body2" sx={{ color: "text.primary" }}>
+              {pet.location}
+            </Typography>
+          )}
+          <Typography variant="body2" sx={{ color: "text.secondary" }}>
+            {pet.description}
+          </Typography>
+        </CardContent>
+        <CardActions className="card-actions">
+          <Button size="small" onClick={() => navigate(`/pets/${pet.id}`)}>
+            View Details
+          </Button>
+        </CardActions>
+      </Card>
     </div>
   );
 };
