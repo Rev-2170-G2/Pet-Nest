@@ -1,6 +1,6 @@
 // below code provided by https://github.com/visgl/react-google-maps.git
 import { FormEvent, useCallback, useState } from 'react';import { ControlPosition, MapControl, useMapsLibrary } from '@vis.gl/react-google-maps';
-import {useAutocompleteSuggestions} from '../../hooks/UseAutoCompleteSuggestions';
+import {useAutocompleteSuggestions} from '../../../hooks/UseAutoCompleteSuggestions';
 
 type CustomAutocompleteControlProps = {
   controlPosition: ControlPosition;

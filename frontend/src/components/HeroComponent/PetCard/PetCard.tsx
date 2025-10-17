@@ -5,10 +5,13 @@ import axios from 'axios';
 import { useNavigate } from "react-router-dom";
 import { Pet } from "../../../types/Pet";
 import PetFilter from "../PetFilter/PetFilter";
+import MapView from '../../MapView/MapView';
+import MapPopup from '../../MapView/MapPopup/MapPopup';
 
 function PetCard() {
     const [pets, setPets] = useState<Pet[]>([]);
     const [loading, setLoading] = useState(true);
+    const [showMap, setShowMap] = useState<boolean>(false);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -43,8 +46,14 @@ function PetCard() {
 
   return (
     <div className="d-flex flex-column">
-        <div className="mb-2 mx-3">
+        <div className="mb-2 mx-3 d-flex flex-row">
             <PetFilter onSelectType={(type: string) => getPetsByType(type)} />
+            <button className='btn btn-info h-75 my-auto' onClick={() => setShowMap(true)}>Show Map</button>
+            <MapPopup
+            isOpen={showMap}
+            onClose={() => setShowMap(false)}
+            positions={pets}
+            markerType='pets' />
         </div>
 
         <div className="petcard-container">

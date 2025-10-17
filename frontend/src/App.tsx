@@ -18,6 +18,8 @@ import ScrollToTop from "./components/ScrollToTop";
 import Admin from "./components/Admin/Admin";
 import ThemeProviderComponent from './components/ThemeProviderComponent';
 
+import './style.css';
+
 function App() {
   const joinRef = useRef<HTMLDivElement | null>(null);
 
