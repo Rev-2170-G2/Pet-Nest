@@ -1,0 +1,17 @@
+version: 0.2
+phases: 
+  install: 
+    runtime-versions:
+      nodejs: 22
+    commands:
+      - npm install -g npm@latest vite@latest
+    pre_build:
+      commands: 
+        - npm install
+    build:
+      commands:
+        - npm run build
+artifacts:
+  base-directory: frontend/dist/
+  files:
+  - '**/*'
