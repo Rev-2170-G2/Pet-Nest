@@ -34,27 +34,27 @@ function App() {
 
   return (
     <ThemeProviderComponent>
-    <AuthProvider>
-      <NavBar onJoinClick={scrollToJoin} />
-      <APIProvider apiKey={import.meta.env.VITE_MAPS_API_KEY}>
-        <ScrollToTop />
-        <main>
-          <Routes>
-            <Route path="/" element={<Home joinRef={joinRef} />} />
-            <Route path="/pets/:id" element={<PetPage />} />
-            <Route path="/events/:id" element={<EventPage />} />
-            <Route path="/pet-form" element={<PetForm />} />
-            <Route path="/event-form" element={<EventForm />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/terms" element={<Terms />} />
-            <Route path="/admin" element={<Admin />} />
-            <Route path="/profile" element={<Profile />} />
-          </Routes>
-        </main>
-        <Footer />
-      </APIProvider>
-    </AuthProvider>
-  </ThemeProviderComponent>
+      <AuthProvider>
+        <NavBar onJoinClick={scrollToJoin} />
+        <APIProvider apiKey={import.meta.env.VITE_MAPS_API_KEY}>
+          <ScrollToTop />
+          <main>
+            <Routes>
+              <Route path="/" element={<Home joinRef={joinRef} />} />
+              <Route path="/pets/:id" element={<PetPage />} />
+              <Route path="/events/:id" element={<EventPage />} />
+              <Route path="/pet-form" element={<PetForm />} />
+              <Route path="/event-form" element={<EventForm />} />
+              <Route path="/about" element={<About />} />
+              <Route path="/terms" element={<Terms />} />
+              <Route path="/admin" element={<Admin />} />
+              <Route path="/profile" element={<Profile />} />
+            </Routes>
+          </main>
+          <Footer />
+        </APIProvider>
+      </AuthProvider>
+    </ThemeProviderComponent>
   );
 }
 

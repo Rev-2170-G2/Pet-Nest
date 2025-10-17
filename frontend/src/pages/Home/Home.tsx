@@ -1,6 +1,5 @@
 import HeroSection from '../../components/HeroComponent/HeroSection/HeroSection';
 import JoinSection from "../../components/JoinSection/JoinSection";
-import './Home.css';
 
 interface HomeProps {
   joinRef: React.RefObject<HTMLDivElement | null>;
