@@ -25,7 +25,7 @@ function PetOfferForm({ pet, handleClose }: PetOfferFormProps) {
   const [requesterSK, setRequesterSK] = useState<string>("");
   const [serviceSelection, setServiceSelection] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
-  const [message, setMessage] = useState("");
+  // const [message, setMessage] = useState("");
 
   useEffect(() => {
     const fetchEventsByUser = async () => {
@@ -148,11 +148,6 @@ function PetOfferForm({ pet, handleClose }: PetOfferFormProps) {
 
         {/* description information */}
         <ModalTextField />
-        
-        {/* <Typography className="message">
-            {message}
-        </Typography> */}
-
       </FormControl>
       <ModalButton />
     </Box>
