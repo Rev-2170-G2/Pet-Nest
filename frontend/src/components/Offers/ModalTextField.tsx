@@ -1,5 +1,4 @@
 import { InputLabel, TextField } from '@mui/material'
-import React from 'react'
 
 function ModalTextField() {
   return (

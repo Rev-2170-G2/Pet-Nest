@@ -1,12 +1,10 @@
-import react, { useState } from 'react';
+import { useState } from 'react';
 import Rating from '@mui/material/Rating';
 import { Box, Button, FormControl, TextField, Typography } from '@mui/material';
 import { Pet } from '../../types/Pet';
 import axios from 'axios';
 import { useAuth } from '../../context/AuthContext';
 import { toast } from 'react-toastify';
-import { lightBlue } from '@mui/material/colors';
-
 interface ReviewProps {
   pet: Pet;
   onReviewSubmit: (review: { rating: number; reviewText: string; createdAt: string }) => void;

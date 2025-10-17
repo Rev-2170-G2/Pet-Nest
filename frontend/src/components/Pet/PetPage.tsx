@@ -6,7 +6,6 @@ import { Pet } from "../../types/Pet";
 import UserPets from "./UserPets";
 import Review from "../Review/Review";
 import { Box, Container } from "@mui/material";
-import { yellow } from "@mui/material/colors";
 import { useAuth } from "../../context/AuthContext";
 
 const URL = "http://localhost:3000";

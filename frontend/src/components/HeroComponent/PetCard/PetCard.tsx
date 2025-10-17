@@ -5,7 +5,6 @@ import axios from 'axios';
 import { useNavigate } from "react-router-dom";
 import { Pet } from "../../../types/Pet";
 import PetFilter from "../PetFilter/PetFilter";
-import MapView from '../../MapView/MapView';
 import MapPopup from '../../MapView/MapPopup/MapPopup';
 
 function PetCard() {

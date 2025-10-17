@@ -1,5 +1,5 @@
-import React, { useState, KeyboardEvent, ChangeEvent } from 'react';
-import { Form, Button, Badge, InputGroup, Row } from "react-bootstrap";
+import { useState, KeyboardEvent, ChangeEvent } from 'react';
+import { Form, Button, Badge, InputGroup } from "react-bootstrap";
 
 type Props = {
     label: string;

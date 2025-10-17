@@ -76,7 +76,6 @@ function CustomMarker({markerSpots, markerType}: Props) {
             hovered })}
           onClick={() => setActiveMarker(activeMarker === item.id ? null : item.id )}
           zIndex={activeMarker === item.id ? 9999 : 1}
-          borderColor
         >
           {activeMarker === item.id
           ? renderCustomPin(item)

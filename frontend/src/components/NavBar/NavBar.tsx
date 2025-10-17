@@ -17,7 +17,7 @@ function NavBar({ onJoinClick }: NavBarProps) {
   const { user, logout } = useContext(AuthContext);
   const [showLogin, setShowLogin] = useState(false);
   const [showRegister, setShowRegister] = useState(false);
-  const colorMode = useContext(ColorModeContext)
+  const colorMode = useContext(ColorModeContext);
   const location = useLocation();
   const navigate = useNavigate();
 
