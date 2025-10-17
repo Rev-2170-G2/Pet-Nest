@@ -5,8 +5,6 @@ import EventDetails from "./EventDetails";
 import UserEvents from "./UserEvents";
 import { Event } from "../../types/Event";
 
-const URL = "http://localhost:3000";
-
 export default function EventPage() {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -18,7 +16,7 @@ export default function EventPage() {
 
     setLoading(true);
     axios
-      .get(`${URL}/api/events/${id}`)
+      .get(`${import.meta.env.VITE_BACKEND_URL}/events/${id}`)
       .then((res) => setEvent(res.data?.data?.[0] || null))
       .catch((err) => console.error(err))
       .finally(() => setLoading(false));

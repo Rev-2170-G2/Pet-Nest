@@ -32,7 +32,7 @@ export default function EventDetails({ event }: { event: Event }) {
     const fetchPetsByUser = async () => {
       if (!userId) return;
       try {
-        const response = await axios.get(`http://localhost:3000/api/pets/user/${userId}`);
+        const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/pets/user/${userId}`);
         if (response.data.data) setUserPets(response.data.data);
       } catch (error) {
         console.log(`Error fetching pets: ${error}`);

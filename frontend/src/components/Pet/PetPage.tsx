@@ -9,7 +9,6 @@ import { Box, Container } from "@mui/material";
 import { yellow } from "@mui/material/colors";
 import { useAuth } from "../../context/AuthContext";
 
-const URL = "http://localhost:3000";
 const DEFAULT_PIC_1 = `url("https://cdn.pixabay.com/photo/2017/07/22/08/49/cat-2528119_1280.jpg")`;
 const DEFAULT_PIC_2 = `url("https://cdn.pixabay.com/photo/2016/02/25/15/55/leather-1222379_1280.jpg")`;
 
@@ -28,7 +27,7 @@ export default function PetPage() {
 
     setLoading(true);
     axios
-      .get(`${URL}/api/pets/${id}`)
+      .get(`${import.meta.env.VITE_BACKEND_URL}/pets/${id}`)
       .then((res) => setPet(res.data?.data?.[0] || null))
       .catch((err) => console.error(err))
       .finally(() => setLoading(false));

@@ -10,11 +10,10 @@ export default function EventCard() {
   const [events, setEvents] = useState<Event[]>([]);
   const [loading, setLoading] = useState(true);
   const { user } = useContext(AuthContext);
-  const URL = "http://localhost:3000"
 
 useEffect(() => {
   axios
-    .get(`${URL}/api/events`)
+    .get(`${import.meta.env.VITE_BACKEND_URL}/events`)
     .then((res) =>
       setEvents(
         (res.data?.data || []).filter((event: Event) => event.approved === null)
@@ -25,7 +24,7 @@ useEffect(() => {
 }, []);
 
 const handleApprove = (id: string) =>
-  axios.patch(`${URL}/api/events/admin/${id}`,
+  axios.patch(`${import.meta.env.VITE_BACKEND_URL}/events/admin/${id}`,
     { approved: true },
     { headers: { Authorization: `Bearer ${user?.token}` } }
   )
@@ -33,7 +32,7 @@ const handleApprove = (id: string) =>
   .catch(err => console.error("Unable to approve event:", err))
 
 const handleDeny = (id: string) =>
-  axios.patch(`${URL}/api/events/admin/${id}`,
+  axios.patch(`${import.meta.env.VITE_BACKEND_URL}/events/admin/${id}`,
     { approved: false },
     { headers: { Authorization: `Bearer ${user?.token}` } }
   )

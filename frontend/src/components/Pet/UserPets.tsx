@@ -4,8 +4,6 @@ import axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Pet } from "../../types/Pet";
 
-const URL = "http://localhost:3000";
-
 interface UserPetsProps {
   userId: string;
   excludePetId?: string;
@@ -19,7 +17,7 @@ export default function UserEvents({ userId, excludePetId }: UserPetsProps) {
     if (!userId) return;
 
     axios
-      .get(`${URL}/api/pets/user/${userId}`)
+      .get(`${import.meta.env.VITE_BACKEND_URL}/pets/user/${userId}`)
       .then((res) =>
         setPets(
           (res.data?.data || []).filter((pet: Pet) => pet.id !== excludePetId)
