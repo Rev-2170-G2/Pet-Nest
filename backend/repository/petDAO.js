@@ -18,7 +18,6 @@ async function createPet(userId, pet){
             PK: userId,
             SK: `PET#${pet.id}`,
             ...pet,
-            review: 0,
             eventsCompleted: 0,
         }
     })
@@ -171,6 +170,28 @@ async function getPetsByType(petType) {
     }
 }
 
+async function addPetReview(userId, petId, review) {
+  try {
+    const command = new UpdateCommand({
+      TableName,
+      Key: { PK: userId, SK: `PET#${petId}` }, 
+      UpdateExpression: "SET review = list_append(if_not_exists(review, :empty), :newReview)",
+      ExpressionAttributeValues: {
+        ":newReview": [review],
+        ":empty": [],
+      },
+      ReturnValues: "ALL_NEW",
+    });
+
+    const data = await documentClient.send(command);
+    logger.info(`Review added for pet ${petId}: ${JSON.stringify(review)}`);
+    return data.Attributes;
+  } catch (err) {
+    logger.error(`Failed to add review for pet ${petId}: ${err.message}`);
+    throw err;
+  }
+}
+
 module.exports = {
     createPet,
     updatePet,
@@ -178,5 +199,6 @@ module.exports = {
     getAllPetServices,
     getPetById,
     getPetsByUser,
-    getPetsByType
+    getPetsByType,
+    addPetReview
 }

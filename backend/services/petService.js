@@ -19,7 +19,8 @@ async function createPet(userId, pet){
             description: pet.description,
             photos: pet.photos ?? [],
             location: pet.location ?? null,
-            offers: []
+            offers: [],
+            review: [],
 
         })
         logger.info(`${userId} added new pet: ${JSON.stringify(data)}`);
@@ -106,6 +107,27 @@ async function getPetsByType(petType) {
     }
 }
 
+async function addPetReview(petId, userId, rating, reviewText) {
+  if (!petId || !userId) {
+    logger.info("Missing petId or userId for review");
+    return null;
+  }
+
+  const review = {
+    rating,
+    reviewText,
+    createdAt: new Date().toISOString(),
+  };
+
+  try {
+    const updatedPet = await petDAO.addPetReview(userId, petId, review);
+    return updatedPet;
+  } catch (err) {
+    logger.info(`Service failed to add review for pet ${petId}: ${err.message}`);
+    return null;
+  }
+}
+
 module.exports = {
     createPet,
     updatePet,
@@ -113,5 +135,6 @@ module.exports = {
     getAllPetServices,
     getPetById,
     getPetsByUser,
-    getPetsByType
+    getPetsByType,
+    addPetReview
 }
