@@ -3,13 +3,13 @@ import CardMedia from '@mui/material/CardMedia';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Event } from "../../types/Event";
-import { useContext } from "react";
-import { AuthContext } from "../../context/AuthContext";
+import { useAuth } from "../../context/AuthContext";
 
-export default function EventCard() {
+export default function Admin() {
   const [events, setEvents] = useState<Event[]>([]);
   const [loading, setLoading] = useState(true);
-  const { user } = useContext(AuthContext);
+  const { user } = useAuth()
+  const URL = import.meta.env.VITE_BASE_URL || "http://localhost:3000";
 
 useEffect(() => {
   axios

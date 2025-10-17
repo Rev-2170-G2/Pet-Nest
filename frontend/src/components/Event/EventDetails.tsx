@@ -22,18 +22,29 @@ export default function EventDetails({ event }: { event: Event }) {
   const handleClose = () => setOpen(false);
   const [userPets, setUserPets] = useState<Pet[]>([]);
   const navigate = useNavigate();
-
-  // const handleOpen = () => setOpen(true);
-  // const handleClose = () => setOpen(false);
-
-  // const isOwner = event?.PK === user?.id;
+  const URL = import.meta.env.VITE_BASE_URL || "http://localhost:3000";
 
   useEffect(() => {
     const fetchPetsByUser = async () => {
       if (!userId) return;
       try {
+<<<<<<< HEAD
         const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/pets/user/${userId}`);
         if (response.data.data) setUserPets(response.data.data);
+=======
+        const response = await axios.get(
+          `${URL}/api/pets/user/${userId}`
+        );
+        console.log(
+          `From fetchPetsByUser: ${JSON.stringify(response.data.data)}`
+        );
+        
+        if (!response.data.data){
+          return null;
+        } else {
+          setUserPets(response.data.data);
+        }
+>>>>>>> main
       } catch (error) {
         console.log(`Error fetching pets: ${error}`);
       }

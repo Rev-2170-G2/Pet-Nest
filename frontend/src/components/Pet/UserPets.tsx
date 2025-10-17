@@ -4,6 +4,11 @@ import axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Pet } from "../../types/Pet";
 
+<<<<<<< HEAD
+=======
+const URL = import.meta.env.VITE_BASE_URL || "http://localhost:3000";
+
+>>>>>>> main
 interface UserPetsProps {
   userId: string;
   excludePetId?: string;
@@ -25,6 +30,10 @@ export default function UserEvents({ userId, excludePetId }: UserPetsProps) {
       )
       .catch((err) => console.error(err));
   }, [userId, excludePetId]);
+
+  if(pets.length === 0){
+    return null;
+  }
 
 
   return (

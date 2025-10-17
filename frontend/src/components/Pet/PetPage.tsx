@@ -6,9 +6,12 @@ import { Pet } from "../../types/Pet";
 import UserPets from "./UserPets";
 import Review from "../Review/Review";
 import { Box, Container } from "@mui/material";
-import { yellow } from "@mui/material/colors";
 import { useAuth } from "../../context/AuthContext";
 
+<<<<<<< HEAD
+=======
+const URL = import.meta.env.VITE_BASE_URL || "http://localhost:3000";
+>>>>>>> main
 const DEFAULT_PIC_1 = `url("https://cdn.pixabay.com/photo/2017/07/22/08/49/cat-2528119_1280.jpg")`;
 const DEFAULT_PIC_2 = `url("https://cdn.pixabay.com/photo/2016/02/25/15/55/leather-1222379_1280.jpg")`;
 
@@ -18,9 +21,6 @@ export default function PetPage() {
   const navigate = useNavigate();
   const [pet, setPet] = useState<Pet | null>(null);
   const [loading, setLoading] = useState(true);
-
-  // console.log("from pet page", user?.id)
-  //   console.log("from pet page", user?.id)
 
   useEffect(() => {
     if (!id) return;
