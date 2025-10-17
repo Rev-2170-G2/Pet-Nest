@@ -39,12 +39,12 @@ function CustomMarker({markerSpots, markerType}: Props) {
         return (
         <>
             <div className="custom-pin"
-              style={{
-                border: '2px solid 12271e',
-                borderRadius: '12px',
-                background: '#f4f4f4',
-                boxShadow: '0 2px 8px rgba(0,0,0,0,2)',
-              }}
+              // style={{
+              //   border: '2px solid 12271e',
+              //   borderRadius: '12px',
+              //   background: '#f4f4f4',
+              //   boxShadow: '0 2px 8px rgba(0,0,0,0,2)',
+              // }}
               >
             <button className="close-button">
                 <span className="material-symbols-outlined"> close </span>
