@@ -17,6 +17,7 @@ import Terms from "./pages/Terms/Terms";
 import ScrollToTop from "./components/ScrollToTop";
 import Admin from "./components/Admin/Admin";
 import ThemeProviderComponent from './components/ThemeProviderComponent';
+import { ToastContainer } from "react-toastify";
 
 function App() {
   const joinRef = useRef<HTMLDivElement | null>(null);
@@ -53,6 +54,7 @@ function App() {
         <Footer />
       </APIProvider>
     </AuthProvider>
+    <ToastContainer />
   </ThemeProviderComponent>
   );
 }
