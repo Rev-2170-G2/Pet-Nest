@@ -5,7 +5,7 @@ import PetDetails from "./PetDetails";
 import { Pet } from "../../types/Pet";
 import UserPets from "./UserPets";
 
-const URL = "http://localhost:3000";
+const URL = import.meta.env.VITE_BASE_URL || "http://localhost:3000";
 
 export default function PetPage() {
   const { id } = useParams();

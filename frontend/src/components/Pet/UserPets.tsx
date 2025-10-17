@@ -4,7 +4,7 @@ import axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Pet } from "../../types/Pet";
 
-const URL = "http://localhost:3000";
+const URL = import.meta.env.VITE_BASE_URL || "http://localhost:3000";
 
 interface UserPetsProps {
   userId: string;
