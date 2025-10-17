@@ -2,18 +2,22 @@ import React, { useState, useContext, useEffect } from "react";
 import axios from "axios";
 import "./Login.css";
 import { AuthContext, User } from "../../../context/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 interface LoginProps {
   onClose: () => void;
   onSubmit?: () => void;
+  message?: string;
+  redirectTo?: string;
 }
 
-function Login({ onClose, onSubmit }: LoginProps) {
+function Login({ onClose, onSubmit, message, redirectTo }: LoginProps) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [message, setMessage] = useState("");
+  const [localMessage, setLocalMessage] = useState(message || "");
 
   const { login } = useContext(AuthContext);
+  const navigate = useNavigate();
 
   useEffect(() => {
     document.body.style.overflow = "hidden";
@@ -46,13 +50,18 @@ function Login({ onClose, onSubmit }: LoginProps) {
       };
 
       login(user);
-      setMessage("Login successful!");
+      setLocalMessage("Login successful!");
+
       onClose();
+
+      if (redirectTo) {
+        navigate(redirectTo);
+      }
     } catch (error: any) {
       if (axios.isAxiosError(error)) {
-        setMessage(error.response?.data?.message || "Login failed");
+        setLocalMessage(error.response?.data?.message || "Login failed");
       } else {
-        setMessage("Error connecting to server");
+        setLocalMessage("Error connecting to server");
       }
     }
   };
@@ -62,6 +71,12 @@ function Login({ onClose, onSubmit }: LoginProps) {
       <div className="popup-box" style={{ pointerEvents: "auto" }}>
         <button className="close-btn" onClick={onClose}>X</button>
         <h2>Login</h2>
+
+        {localMessage && (
+          <div className="login-alert">
+            {localMessage}
+          </div>
+        )}
 
         <form onSubmit={handleLogin}>
           <label htmlFor="username" className="visually-hidden">Username</label>
@@ -86,8 +101,6 @@ function Login({ onClose, onSubmit }: LoginProps) {
 
           <button type="submit">Login</button>
         </form>
-
-        {message && <p className="message">{message}</p>}
       </div>
     </div>
   );
