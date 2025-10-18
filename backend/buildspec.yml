@@ -4,6 +4,7 @@ phases:
     runtime-versions:
       nodejs: 18
     commands:
+      - cd backend
       - npm install
 
 artifacts:
