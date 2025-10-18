@@ -1,5 +1,4 @@
 import { FormLabel, FormControlLabel, Checkbox } from '@mui/material'
-import React, { useState } from 'react'
 import { Pet } from '../../types/Pet'
 
 interface ModalCheckBoxProps{

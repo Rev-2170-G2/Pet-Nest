@@ -1,13 +1,14 @@
 export interface Offer {
-  id: string;
-  requesterPK: string;
+  id?: string;
+  requesterPK?: string;
   requesterSK: string;
   requestedPK: string;
   requestedSK: string;
-  services: { service: string; price: number }[];
+  // services: { service: string; price: number }[];
+  services: string[],
   description?: string;
-  status: "pending" | "approved" | "denied";
-  createdAt: string;
+  status?: "pending" | "approved" | "denied";
+  createdAt?: string;
 }
 
 export interface IndividualUser{

@@ -170,7 +170,7 @@ export default function OfferCard( { url, tab } : OfferCardProps) {
                       <span>
                         <strong>Created at: </strong>
                       </span>
-                      {new Date(offer.createdAt).toLocaleString([], {
+                      {offer && offer.createdAt && new Date(offer.createdAt).toLocaleString([], {
                         hour: "2-digit",
                         minute: "2-digit",
                       })}

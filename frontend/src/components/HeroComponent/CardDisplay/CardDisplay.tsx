@@ -1,4 +1,3 @@
-import React, { useState } from 'react';
 import PetCard from '../PetCard/PetCard';
 import EventCard from '../EventCard/EventCard';
 
