@@ -4,19 +4,19 @@
   padding: 2rem;
   text-align: center;
   font-family: 'Poppins', sans-serif;
-  color: #333823;
+  color: rgb(120, 148, 129);
 }
 
 .about-container h1 {
   font-size: 2.2rem;
-  color: #333823;
+  color: rgb(120, 148, 129);
   margin-bottom: 1rem;
 }
 
 .about-container p {
   font-size: 1rem;
   line-height: 1.6;
-  color: #4A4A4A;
+  color: rgb(120, 148, 129);
   margin-bottom: 2rem;
 }
 

@@ -27,6 +27,7 @@
 
 .autocomplete-container .custom-list-item {
   padding: 8px;
+  color: black
 }
 
 .autocomplete-container .custom-list-item:hover {

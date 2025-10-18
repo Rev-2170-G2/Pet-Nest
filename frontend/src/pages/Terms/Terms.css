@@ -10,19 +10,19 @@
 .terms-container h1 {
   text-align: center;
   font-size: 2.2rem;
-  color: #333823;
+  color: rgb(120, 148, 129);
   margin-bottom: 1.5rem;
 }
 
 .terms-container h2 {
   margin-top: 2rem;
   font-size: 1.3rem;
-  color: #444;
+  color: rgb(120, 148, 129);
 }
 
 .terms-container p {
   font-size: 1rem;
-  color: #4A4A4A;
+  color: rgb(120, 148, 129);
   margin-top: 0.8rem;
 }
 
