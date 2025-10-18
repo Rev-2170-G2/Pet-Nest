@@ -1,5 +1,4 @@
 import { useState } from "react";
-import OffersList from "./OffersList";
 import OfferCard from "./OfferCard/OfferCard";
 
 export default function Offers() {

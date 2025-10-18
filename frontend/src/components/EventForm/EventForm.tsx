@@ -88,7 +88,7 @@ export default function eventForm() {
 
   return (
     <>
-   <Container>
+   <Container className='mt-4'>
     <h1>Create Event</h1>
       <Form noValidate onSubmit={handleSubmit} id='event-form'>
         <Row className='mb-3'>
@@ -114,18 +114,6 @@ export default function eventForm() {
               </Col>
             </Form.Group>
 
-            {/* Date */}
-            <Form.Group  as={Row} className='mb-3' controlId='formDate'>
-              <Form.Label column sm={3}>Date</Form.Label>
-              <Col>
-                <DatePicker selected={date} onChange={(date: Date | null | [Date | null, Date | null]) => {
-                  if (date && !Array.isArray(date)) {
-                    setDate(date);
-                  }
-                }} />
-              </Col>
-            </Form.Group>
-
             {/* Description */}
             <Form.Group as={Row} className='mb-3' controlId='formBasicDesc'>
               <Form.Label column sm={3}>Description</Form.Label>
@@ -146,6 +134,7 @@ export default function eventForm() {
                 </Form.Control.Feedback>
               </Col>
             </Form.Group>
+
             {/* MultiStringInput for Photo URLs */}
             <Form.Group className='mb-3' controlId='formBasicPhotoLinks'>
               <MultiInput label='Photos' onChange={setPhotos} />
@@ -156,6 +145,22 @@ export default function eventForm() {
                   <div className='valid-feedback d-block'>Looks good!</div>
               )}
             </Form.Group>
+
+            {/* Date */}
+            <Form.Group className='mb-3' controlId='formDate'>
+              <Form.Label>Date</Form.Label>
+              <Col>
+                <DatePicker selected={date} onChange={(date: Date | null | [Date | null, Date | null]) => {
+                  if (date && !Array.isArray(date)) {
+                    setDate(date);
+                  }
+                }} />
+              </Col>
+            </Form.Group>
+
+          <Button variant='primary' type='submit'>
+            Submit
+          </Button>
           </Col>
 
           {/* Map Column */}
@@ -180,9 +185,6 @@ export default function eventForm() {
             Please confirm information is correct.
           </Form.Control.Feedback>
         </Form.Group> */}
-        <Button variant='primary' type='submit'>
-          Submit
-        </Button>
       </Form>
     </Container>
     </>

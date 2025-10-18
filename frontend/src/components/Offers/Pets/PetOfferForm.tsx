@@ -67,7 +67,7 @@ function PetOfferForm({ pet, handleClose }: PetOfferFormProps) {
     const offer: Offer = {
       requesterSK: formattedRequesterSK,
       requestedSK: "PET#" + pet.id,
-      requestedOwnerId: pet["PK"],
+      requestedPK: pet["PK"],
       services: serviceSelection,
       description: formData.get("description") as string,
     };
@@ -89,11 +89,11 @@ function PetOfferForm({ pet, handleClose }: PetOfferFormProps) {
       const newMessage = response           
         ? `Success! You’ve made an offer for ${pet.name}! 🐾` 
         : `Something went wrong with your offer for ${pet.name}. Try again!`
-      setMessage(newMessage);
+      // setMessage(newMessage);
       toast(newMessage);
     } catch (error) {
         console.log(`Error creating offer: ${error}`);
-        setMessage(`Offer failed! ${pet.name} is still waiting… 🐾`);
+        // setMessage(`Offer failed! ${pet.name} is still waiting… 🐾`);
     } finally {
       setLoading(false);
       handleClose();

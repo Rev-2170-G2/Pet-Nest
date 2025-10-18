@@ -1,6 +1,7 @@
 import { useState, useMemo } from "react";
 import { createTheme, ThemeProvider, CssBaseline } from "@mui/material";
 import { ColorModeContext } from "../context/ColorModeContext";
+import { PaletteMode } from "@mui/material/styles";
 
 export default function ThemeProviderComponent({ children }) {
   const [mode, setMode] = useState("light");
@@ -13,12 +14,15 @@ export default function ThemeProviderComponent({ children }) {
     }),
     []
   );
+  
+  //for silencing errors during project build
+  const modeCast = mode as PaletteMode;
 
   const theme = useMemo(
     () =>
       createTheme({
         palette: {
-          mode,
+          mode: modeCast
         },
       }),
     [mode]
