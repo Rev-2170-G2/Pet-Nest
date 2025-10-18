@@ -18,7 +18,7 @@ import { FormControl, FormLabel, Typography, Box } from "@mui/material";
 import { toast } from "react-toastify";
 
 function PetOfferForm({ pet, handleClose }: PetOfferFormProps) {
-  const baseUrl = import.meta.env.VITE_BACKEND_URL;
+  const baseUrl = import.meta.env.VITE_BACKEND_URL || "http://localhost:3000/api";
   const { user } = useAuth();
   const userId = user?.id.split("#")[1];
   const [userEvents, setUserEvents] = useState<Event[] | IndividualUser[]>([{ name: "request as a individual", id: userId  ?? ""}]);

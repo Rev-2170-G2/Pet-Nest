@@ -13,11 +13,12 @@ function EventCard() {
     const [loading, setLoading] = useState(true)
     const [showMap, setShowMap] = useState<boolean>(false);
     const navigate = useNavigate();
+    const URL = import.meta.env.VITE_BASE_URL || "http://localhost:3000";
 
     useEffect(() => {
         const fetchEvents = async () => {
             try {
-                const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/events`);
+                const response = await axios.get(`${URL}/api/events`);
                 console.log(response.data);
                 setEvents(response.data.data);
             } catch (error) {

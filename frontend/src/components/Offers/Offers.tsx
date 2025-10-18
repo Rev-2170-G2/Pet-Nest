@@ -2,7 +2,7 @@ import { useState } from "react";
 import OfferCard from "./OfferCard/OfferCard";
 
 export default function Offers() {
-  const baseUrl = import.meta.env.VITE_BACKEND_URL;
+  const baseUrl = import.meta.env.VITE_BACKEND_URL || "http://localhost:3000";
   const [tab, setTab] = useState<"sent" | "received">("sent");
 
   // update color as needed

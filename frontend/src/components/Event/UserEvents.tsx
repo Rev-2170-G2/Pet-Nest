@@ -4,6 +4,8 @@ import axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Event } from "../../types/Event";
 
+const URL = import.meta.env.VITE_BASE_URL || "http://localhost:3000";
+
 interface UserEventsProps {
   userId: string;
   excludeEventId: string;
@@ -17,7 +19,7 @@ useEffect(() => {
   if (!userId) return;
 
   axios
-    .get(`${import.meta.env.VITE_BACKEND_URL}/events/user/${userId}?status=open`)
+    .get(`${URL}/api/events/user/${userId}?status=open`)
     .then((res) => 
       setEvents(
         (res.data?.data || []).filter((event: Event) => event.id !== excludeEventId)
