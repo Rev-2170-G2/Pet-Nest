@@ -19,7 +19,7 @@ const ProfileEvents: React.FC = () => {
   const [events, setEvents] = useState<Event[]>([]);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  const URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:3000";
+  const URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:3000/api";
 
   useEffect(() => {
     if (!user?.token || !userId) return;
