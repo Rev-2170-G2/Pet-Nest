@@ -17,7 +17,6 @@ export default function PetCard() {
     useEffect(() => {
         const fetchPets = async () => {
             try {
-                console.log(URL);
                 const response = await axios.get(`${URL}/api/pets`);
                 console.log(response.data);
                 setPets(response.data.data.Items);

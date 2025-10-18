@@ -103,7 +103,7 @@ export default function PetForm() {
 
   return (
     <>
-   <Container className='mt-4'>
+   <Container className='mt-4 mw-75'>
     <h1>Create Pet</h1>
       <Form noValidate onSubmit={handleSubmit} id='pet-form'>
         <Row className='mb-3'>

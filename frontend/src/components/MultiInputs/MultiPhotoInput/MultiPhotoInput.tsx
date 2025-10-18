@@ -53,13 +53,12 @@ export default function MultiPhotoInput({onChange, label}: Props) {
         {values.map((v) => (
           <Badge
             key={v}
-            pill
             bg="secondary"
             className="me-2"
             style={{ cursor: "pointer", zIndex: 1 }}
             onClick={() => handleRemove(v)}
           >
-            {v} ✕
+            {v.length > 25 ? v.slice(0, 26) + '...' : v} ✕
           </Badge>
         ))}
       </div>

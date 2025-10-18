@@ -88,7 +88,7 @@ export default function eventForm() {
 
   return (
     <>
-   <Container className='mt-4'>
+   <Container className='mt-4 mw-75'>
     <h1>Create Event</h1>
       <Form noValidate onSubmit={handleSubmit} id='event-form'>
         <Row className='mb-3'>

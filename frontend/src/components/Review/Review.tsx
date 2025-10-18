@@ -22,11 +22,13 @@ function Review({ pet, onReviewSubmit } : ReviewProps){
       toast("Users cannot give ratings to their own pets.🐾")
       return null;
     }
+    const pk = pet.PK;
+    console.log(pk);
     const reviewData = {
       rating,
       reviewText,
+      pk
     };
-
     try {
       const response = await axios.patch(
         `${baseUrl}/pets/${pet.id}/reviews`,
