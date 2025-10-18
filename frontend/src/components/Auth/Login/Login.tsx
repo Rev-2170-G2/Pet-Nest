@@ -15,6 +15,8 @@ function Login({ onClose, onSubmit, message, redirectTo }: LoginProps) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [localMessage, setLocalMessage] = useState(message || "");
+  const URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:3000";
+
 
   const { login } = useContext(AuthContext);
   const navigate = useNavigate();
@@ -35,7 +37,7 @@ function Login({ onClose, onSubmit, message, redirectTo }: LoginProps) {
     onSubmit?.();
 
     try {
-      const response = await axios.post("http://localhost:3000/api/users/login", {
+      const response = await axios.post(`${URL}/api/users/login`, {
         username,
         password,
       });

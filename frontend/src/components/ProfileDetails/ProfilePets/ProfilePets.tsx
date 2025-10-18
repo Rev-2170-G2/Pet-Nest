@@ -19,6 +19,8 @@ const ProfilePets: React.FC = () => {
   const [pets, setPets] = useState<Pet[]>([]);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:3000";
+
 
   useEffect(() => {
     if (!user?.token || !userId) return;
@@ -26,7 +28,7 @@ const ProfilePets: React.FC = () => {
     const fetchPets = async () => {
       try {
         setLoading(true);
-        const res = await axios.get(`http://localhost:3000/api/pets/user/${userId}`, {
+        const res = await axios.get(`${URL}/pets/user/${userId}`, {
           headers: { Authorization: `Bearer ${user.token}` },
         });
         setPets(res.data.data || res.data);
@@ -66,7 +68,7 @@ const ProfilePets: React.FC = () => {
             imageUrl={pet.photos?.[0]}
             locationOrDate={pet.location}
             viewLink={`/pets/${pet.id}`}
-            onDeleteUrl="http://localhost:3000/api/pets"
+            onDeleteUrl={`${URL}/pets`}
             token={user?.token}
             onDelete={handleDelete}
           />

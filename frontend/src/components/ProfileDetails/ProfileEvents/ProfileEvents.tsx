@@ -19,6 +19,7 @@ const ProfileEvents: React.FC = () => {
   const [events, setEvents] = useState<Event[]>([]);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:3000";
 
   useEffect(() => {
     if (!user?.token || !userId) return;
@@ -26,7 +27,7 @@ const ProfileEvents: React.FC = () => {
     const fetchEvents = async () => {
       try {
         setLoading(true);
-        const res = await axios.get(`http://localhost:3000/api/events/user/${userId}`, {
+        const res = await axios.get(`${URL}/events/user/${userId}`, {
           headers: { Authorization: `Bearer ${user.token}` },
         });
         setEvents(res.data.data || res.data);
@@ -66,7 +67,7 @@ const ProfileEvents: React.FC = () => {
             imageUrl={event.photos?.[0]}
             locationOrDate={event.date}
             viewLink={`/events/${event.id}`}
-            onDeleteUrl="http://localhost:3000/api/events"
+            onDeleteUrl={`${URL}/events`}
             token={user?.token}
             onDelete={handleDelete}
           />
