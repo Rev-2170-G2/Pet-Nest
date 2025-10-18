@@ -19,7 +19,7 @@ async function postEvent(event) {
         const SK = entity + '#' + id;
         const photos = !event.photos ? [] : event.photos;
         const status = 'open'; // all events should be set to open upon creation and closed when event is completed
-        const approved = false; // boolean to represent whether an admin has approved or denied an event to be displayed
+        const approved = null; // boolean to represent whether an admin has approved or denied an event to be displayed
         const data = await eventDAO.createEvent({
             PK,
             SK,
