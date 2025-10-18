@@ -6,9 +6,9 @@ const {logger} = require('../util/logger');
 const client = new DynamoDBClient({region: "us-east-1"});
 const documentClient = DynamoDBDocumentClient.from(client);
 
-const TableName = process.env.TableName || 'pet_nest';
-const PetIndexName = process.env.PetIndexName || 'pets-by-id-index';
-const PetTypeIndexName = process.env.PetTypeIndexName || 'pets-by-type-index';
+const TableName = process.env.TableName;
+const PetIndexName = process.env.PetIndexName;
+const PetTypeIndexName = process.env.PetTypeIndexName;
 
 // link userId with new pet
 async function createPet(userId, pet){

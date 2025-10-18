@@ -26,7 +26,7 @@ const ProfilePets: React.FC = () => {
     const fetchPets = async () => {
       try {
         setLoading(true);
-        const res = await axios.get(`http://localhost:3000/api/pets/user/${userId}`, {
+        const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/pets/user/${userId}`, {
           headers: { Authorization: `Bearer ${user.token}` },
         });
         setPets(res.data.data || res.data);
@@ -66,7 +66,7 @@ const ProfilePets: React.FC = () => {
             imageUrl={pet.photos?.[0]}
             locationOrDate={pet.location}
             viewLink={`/pets/${pet.id}`}
-            onDeleteUrl="http://localhost:3000/api/pets"
+            onDeleteUrl={`${import.meta.env.VITE_BACKEND_URL}/pets`}
             token={user?.token}
             onDelete={handleDelete}
           />

@@ -26,7 +26,7 @@ const ProfileEvents: React.FC = () => {
     const fetchEvents = async () => {
       try {
         setLoading(true);
-        const res = await axios.get(`http://localhost:3000/api/events/user/${userId}`, {
+        const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/events/user/${userId}`, {
           headers: { Authorization: `Bearer ${user.token}` },
         });
         setEvents(res.data.data || res.data);
@@ -66,7 +66,7 @@ const ProfileEvents: React.FC = () => {
             imageUrl={event.photos?.[0]}
             locationOrDate={event.date}
             viewLink={`/events/${event.id}`}
-            onDeleteUrl="http://localhost:3000/api/events"
+            onDeleteUrl={`${import.meta.env.VITE_BACKEND_URL}/events`}
             token={user?.token}
             onDelete={handleDelete}
           />
