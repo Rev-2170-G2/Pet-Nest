@@ -170,11 +170,11 @@ async function getPetsByType(petType) {
     }
 }
 
-async function addPetReview(userId, petId, review) {
+async function addPetReview(petId, review, pk) {
   try {
     const command = new UpdateCommand({
       TableName,
-      Key: { PK: userId, SK: `PET#${petId}` }, 
+      Key: { PK: pk, SK: `PET#${petId}` }, 
       UpdateExpression: "SET review = list_append(if_not_exists(review, :empty), :newReview)",
       ExpressionAttributeValues: {
         ":newReview": [review],

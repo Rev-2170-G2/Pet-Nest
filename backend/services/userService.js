@@ -38,7 +38,6 @@ const validateLogin = async (username, password) => {
     try {
         const user = await userDAO.getUserByUsername(username);
         const isValid = !user ? null : await bcrypt.compare(password, user.password);
-
         if (user && isValid) {
             logger.info(`Returned data from validateLogin in userService: ${JSON.stringify(user)}`);
             return user;
