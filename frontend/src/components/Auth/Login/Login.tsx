@@ -15,7 +15,7 @@ function Login({ onClose, onSubmit, message, redirectTo }: LoginProps) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [localMessage, setLocalMessage] = useState(message || "");
-  const URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:3000";
+  const URL = import.meta.env.VITE_BASE_URL || "http://localhost:3000";
 
 
   const { login } = useContext(AuthContext);
