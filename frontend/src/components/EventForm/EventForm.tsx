@@ -177,14 +177,6 @@ export default function eventForm() {
           </Col>
         </Row>
         
-        {/* Confirmation Checkbox */}
-        {/* <Form.Group className='mb-3' controlId='formBasicCheckbox'>
-          <Form.Check type='checkbox' label='Confirm settings' isValid={validated} isInvalid ={validated} required />
-          <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
-          <Form.Control.Feedback type='invalid'>
-            Please confirm information is correct.
-          </Form.Control.Feedback>
-        </Form.Group> */}
       </Form>
     </Container>
     </>

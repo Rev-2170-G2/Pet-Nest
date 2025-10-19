@@ -107,6 +107,11 @@ export default function PetDetails({ pet }: { pet: Pet }) {
             >
               Request Service
             </button>
+            {user?.id === pet.PK && 
+            <button className='btn btn-warning btn-lg px-4' onClick={() => {
+              
+            }}>Edit</button>
+            }
             <PetOfferModal pet={pet} open={open} handleClose={handleClose}/>
 
             {showWarning && 

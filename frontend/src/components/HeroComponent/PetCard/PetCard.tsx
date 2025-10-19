@@ -13,6 +13,8 @@ export default function PetCard() {
     const [showMap, setShowMap] = useState<boolean>(false);
     const navigate = useNavigate();
     const URL = import.meta.env.VITE_BASE_URL || "http://localhost:3000";
+    const DEFAULT_PIC_1 = `url("https://cdn.pixabay.com/photo/2017/07/22/08/49/cat-2528119_1280.jpg")`;
+    
 
     useEffect(() => {
         const fetchPets = async () => {
@@ -67,7 +69,7 @@ export default function PetCard() {
                         <Card className="card-root">
                             <CardMedia
                                 className="card-media"
-                                image={Array.isArray(pet.photos) ? pet.photos?.[0] : pet.photos}
+                                image={pet.photos ? (Array.isArray(pet.photos) ? pet.photos?.[0] : pet.photos) : DEFAULT_PIC_1}
                                 title={pet.entity}
                             />
                             <CardContent>
