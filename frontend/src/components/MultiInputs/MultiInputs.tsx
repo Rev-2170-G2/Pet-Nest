@@ -5,14 +5,14 @@ import MultiServiceInput from './MultiServiceInput/MultiServiceInput';
 
 // runtime discriminator for switching data types based on input
 type MultiInputProps = 
-  | { label: 'Photos'; onChange?: (values: string[]) => void}
-  | { label: 'Services'; onChange?: (values: Service[]) => void};
+  | { label: 'Photos'; preSet: string[]; onChange?: (values: string[]) => void}
+  | { label: 'Services'; preSet: Service[]; onChange?: (values: Service[]) => void};
 
-const MultiInput: React.FC<MultiInputProps> = ({ label, onChange }) => {
+const MultiInput: React.FC<MultiInputProps> = ({ label, preSet, onChange }) => {
 
   return (
     <>
-    {label === 'Photos' ? <MultiPhotoInput onChange={onChange} label='Photos'/> : <MultiServiceInput onChange={onChange} label='Services'/>} 
+    {label === 'Photos' ? <MultiPhotoInput onChange={onChange} label='Photos' preSet={preSet}/> : <MultiServiceInput onChange={onChange} label='Services' preSet={preSet}/>} 
     </>
   );
 };

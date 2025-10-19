@@ -75,7 +75,7 @@ export default function OfferCard( { url, tab } : OfferCardProps) {
           <p>No offers</p>
         ) : (
           offers.map((offer, index) => (
-            <div key={index} className="offer-card">
+            <div key={index} className="offer-card mx-auto">
               <Card
                 className="card-root"
                 sx={{ fontFamily: "Helvetica, Arial, sans-serif" }}

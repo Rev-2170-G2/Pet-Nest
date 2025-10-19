@@ -1,13 +1,14 @@
-import { useState, KeyboardEvent, ChangeEvent } from 'react';
+import { useState, KeyboardEvent, ChangeEvent, useEffect } from 'react';
 import { Form, Button, Badge, InputGroup } from "react-bootstrap";
 import type { Service } from '../../PetForm/PetForm';
 
 type Props = {
     label: string;
     onChange?: ( values: Service[]) => void;
+    preSet?: Service[] | null;
 }
 
-export default function MultiServiceInput({onChange, label}: Props) {
+export default function MultiServiceInput({onChange, label, preSet}: Props) {
 
     const [values, setValues] = useState<Service[]>([]);
     const [serviceValue, setServiceValue] = useState('');
@@ -34,10 +35,19 @@ export default function MultiServiceInput({onChange, label}: Props) {
 
     const handleRemove = (valueToRemove: Service) => {
         const updated = values.filter((v) => v !== valueToRemove);
-        console.log(updated);
         setValues(updated);
         onChange?.(updated);
     };
+
+    useEffect(() => {
+      if (preSet) {
+        Object.values(preSet).forEach((val) => {
+          const updated = [...values, val]
+          setValues(updated);
+          onChange?.(updated);
+        })
+      }
+    }, [preSet])
 
   return (
     <>

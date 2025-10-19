@@ -1,6 +1,6 @@
 import { useState, useEffect, useContext } from 'react';
 import {  Form, Button, Container, Row, Col } from 'react-bootstrap';
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import MapView from '../MapView/MapView';
@@ -10,6 +10,14 @@ import MultiInput from '../MultiInputs/MultiInputs';
 // import './eventForm.css';
 
 
+type EventType = {
+  name: string;
+  description: string;
+  date: Date | string;
+  photos: string[];
+  location: google.maps.places.Place | string | null;
+}
+
 export default function eventForm() {
     const [selectedPlace, setSelectedPlace] = useState<google.maps.places.Place | null>(null);
     const [validated, setValidated] = useState<boolean>(false);
@@ -17,12 +25,14 @@ export default function eventForm() {
     const [photos, setPhotos] = useState<string[]>([]);
 
     const navigate = useNavigate();
+    const loc = useLocation();
 
-    const [event, setevent] = useState({
-        name: '',
-        description: '',
-        date: date,
-        photos: photos,
+    const eventFromLoc = loc.state?.event;
+    const [event, setevent] = useState<EventType>({
+        name: eventFromLoc?.name ?? '',
+        description: eventFromLoc?.description ?? '',
+        date: eventFromLoc?.date ?? date,
+        photos: eventFromLoc?.photos ?? photos,
         location: selectedPlace
     });
     const { user } = useContext(AuthContext);
@@ -33,26 +43,33 @@ export default function eventForm() {
     };
 
     // sync date and location and photos into event object
-    useEffect(() => {
-      if (selectedPlace && selectedPlace.location) {
-          setevent({ ...event, location: selectedPlace});
-      }
-    }, [selectedPlace, setSelectedPlace]);
+    // useEffect(() => {
+    //   if (selectedPlace && selectedPlace.location) {
+    //       setevent({ ...event, location: selectedPlace});
+    //   }
+    // }, [selectedPlace, setSelectedPlace]);
+
+    // useEffect(() => {
+    //   if (photos) {
+    //     setevent({ ...event, photos});
+    //   }
+    // }, [photos])
 
     useEffect(() => {
-      if (photos) {
-        setevent({ ...event, photos});
+      if(eventFromLoc) {
+        setSelectedPlace(eventFromLoc.location);
+        setevent({ ...event, location: eventFromLoc.location});
       }
-    }, [photos])
+    }, [loc])
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         const isFormValid = 
           event.name.trim() !== '' &&
           event.description.trim() !== '' &&
-          event.location && 
-          event.date && 
-          event.photos;
+          location && 
+          date && 
+          photos;
 
         // change validated attribute before checking validity to ensure react processes a change in the virtual DOM
         setValidated(true); 
@@ -67,21 +84,40 @@ export default function eventForm() {
           console.log('eventForm validation passed');
 
           if (user) { 
-            const formattedEvent = {
-              ...event, 
-              date: formatDate(event.date),
-              location: selectedPlace?.formattedAddress
-            };
+            let formattedEvent = { ...event};
+            if (!eventFromLoc) {
+              formattedEvent.location = selectedPlace?.formattedAddress ?? event.location;
+              if (date instanceof Date) formattedEvent.date = formatDate(date);
+              else formattedEvent.date = event.date;
+              formattedEvent.photos = photos;
+              
+              await axios
+              .post(`${import.meta.env.VITE_BACKEND_URL}/events/`, formattedEvent, {
+                headers: {
+                  'Authorization': `Bearer ${user.token}`
+                }
+              })
+              .then((res) => console.log(res))
+              .catch((err) => console.error(JSON.stringify(err)))
+              .finally(() => navigate('/'));
 
-            await axios
-            .post(`${import.meta.env.VITE_BACKEND_URL}/events/`, formattedEvent, {
-              headers: {
-                'Authorization': `Bearer ${user.token}`
-              }
-            })
-            .then((res) => console.log(res))
-            .catch((err) => console.error(JSON.stringify(err)))
-            .finally(() => navigate('/'));
+            } else {
+              formattedEvent.location = selectedPlace?.formattedAddress ?? event.location;
+              if (date instanceof Date) formattedEvent.date = formatDate(date);
+              else formattedEvent.date = date;
+              formattedEvent.photos = photos;
+
+              await axios
+              .patch(`${import.meta.env.VITE_BACKEND_URL}/events/${eventFromLoc.id}`, formattedEvent, {
+                headers: {
+                  'Authorization': `Bearer ${user.token}`
+                }
+              })
+              .then((res) => console.log(res))
+              .catch((err) => console.error(JSON.stringify(err)))
+              .finally(() => navigate('/'));
+
+            }
           }
         }
     }
@@ -89,7 +125,7 @@ export default function eventForm() {
   return (
     <>
    <Container className='mt-4 mw-75'>
-    <h1>Create Event</h1>
+    {eventFromLoc ? <h1>Update Event</h1> : <h1>Create Event</h1>}
       <Form noValidate onSubmit={handleSubmit} id='event-form'>
         <Row className='mb-3'>
           <Col>
@@ -137,7 +173,7 @@ export default function eventForm() {
 
             {/* MultiStringInput for Photo URLs */}
             <Form.Group className='mb-3' controlId='formBasicPhotoLinks'>
-              <MultiInput label='Photos' onChange={setPhotos} />
+              <MultiInput label='Photos' onChange={setPhotos} preSet={event.photos ?? []}/>
               {validated && photos.length === 0 && (
                   <div className='invalid-feedback d-block'>Please add at least one photo link</div>
               )}

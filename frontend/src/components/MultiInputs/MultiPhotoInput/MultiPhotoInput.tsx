@@ -1,12 +1,13 @@
-import { useState, KeyboardEvent, ChangeEvent } from 'react';
+import { useState, KeyboardEvent, ChangeEvent, useEffect } from 'react';
 import { Form, Button, Badge, InputGroup } from "react-bootstrap";
 
 type Props = {
     label: string;
     onChange?: ( values: string[]) => void;
+    preSet?: string[] | null;
 }
 
-export default function MultiPhotoInput({onChange, label}: Props) {
+export default function MultiPhotoInput({onChange, label, preSet}: Props) {
     
       const [values, setValues] = useState<string[]>([]);
       const [inputValue, setInputValue] = useState<string>('');
@@ -30,10 +31,20 @@ export default function MultiPhotoInput({onChange, label}: Props) {
     
       const handleRemove = (valueToRemove: string) => {
         const updated = values.filter((v) => v !== valueToRemove);
-        console.log(updated);
         setValues(updated);
         onChange?.(updated);
       };
+
+      useEffect(() => {
+        if (preSet) {
+          for (const item of preSet) {
+            const updated = [ ...values, item]
+            setValues(updated);
+            onChange?.(updated);
+          }
+        }
+      }, [preSet])
+
   return (
     <>
     <Form.Group className="mb-3">

@@ -1,6 +1,6 @@
-import { useState, useEffect, useContext } from 'react';
+import { useState, useContext, useEffect } from 'react';
 import {  Form, Button, Container, Row, Col } from 'react-bootstrap';
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import MultiInput from '../MultiInputs/MultiInputs';
 import MapView from '../../components/MapView/MapView';
 import { AuthContext } from '../../context/AuthContext';
@@ -18,25 +18,27 @@ type Pet = {
   description: string;
   services: Service[];
   photos: string[];
-  location: google.maps.places.Place | null;
+  location: google.maps.places.Place | string | null;
 }
 
 export default function PetForm() {
     const navigate = useNavigate();
-    const validTypes: string[] = ['cat', 'dog', 'bird', 'other'];
+    const loc = useLocation();
+    const validTypes: string[] = ['Cat', 'Dog', 'Bird', 'Other'];
 
     const [services, setServices] = useState<Service[]>([]);
     const [selectedPlace, setSelectedPlace] = useState<google.maps.places.Place | null>(null);
     const [validated, setValidated] = useState<boolean>(false);
     const [photos, setPhotos] = useState<string[]>([]);
-    
+
+    const petFromLoc = loc.state?.pet;
     const [pet, setPet] = useState<Pet>({
-        name: '',
-        type: '',
-        description: '',
-        services: services,
-        photos: photos,
-        location: selectedPlace
+      name: petFromLoc?.name ?? '',
+      type: petFromLoc?.type ?? '',
+      description: petFromLoc?.description ?? '',
+      services: petFromLoc?.services ?? [],
+      photos: petFromLoc?.photos ?? photos,
+      location: petFromLoc?.location ?? null,
     });
     const { user } = useContext(AuthContext);
     
@@ -46,21 +48,30 @@ export default function PetForm() {
     };
 
     // sync services and location and photos into pet object
-    useEffect(() => {
-        setPet({...pet, services});
-    },[services]);
+    // useEffect(() => {
+    //     setPet({...pet, services});
+    // },[services]);
+
+    // useEffect(() => {
+    // if(selectedPlace && selectedPlace.location) {
+    //     setPet({ ...pet, location: selectedPlace});
+    //   }
+    // }, [selectedPlace]);
+
+    // useEffect(() => {
+    //   if(photos.length > 0) {
+    //     setPet({...pet, photos});
+    //   }
+    // }, [photos]);
 
     useEffect(() => {
-    if(selectedPlace && selectedPlace.location) {
-        setPet({ ...pet, location: selectedPlace});
+      if (petFromLoc) {
+        setPet({ ...pet, 
+          location: petFromLoc.location
+        });
+        setSelectedPlace(petFromLoc.location);
       }
-    }, [selectedPlace]);
-
-    useEffect(() => {
-      if(photos.length > 0) {
-        setPet({...pet, photos});
-      }
-    }, [photos]);
+    }, [loc])
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement | HTMLSelectElement | HTMLTextAreaElement>) => {
         e.preventDefault();
@@ -68,10 +79,10 @@ export default function PetForm() {
           pet.name.trim() !== '' &&
           validTypes.includes(pet.type) &&
           pet.description.trim() !== '' &&
-          services.length > 0 &&
-          photos.length > 0 &&
-          pet.location;
-        console.log(pet);
+          services &&
+          photos &&
+          location;
+
         // change validated attribute before checking validity to ensure react processes a change in the virtual DOM
         setValidated(true); 
 
@@ -85,26 +96,51 @@ export default function PetForm() {
           console.log('PetForm validation passed');
 
           if (user) { 
-            const formattedPet = {
-              ...pet, location: selectedPlace?.formattedAddress
-            };
-            await axios
-            .post(`${import.meta.env.VITE_BACKEND_URL}/pets/`, formattedPet, {
-              headers: {
-                'Authorization': `Bearer ${user.token}`
+            let formattedPet = { ...pet };
+            if (!petFromLoc) {
+              // formattedPet = {
+              //   ...pet, 
+              //   services,
+              //   photos,
+              //   location: selectedPlace?.formattedAddress ?? pet.location
+              // };
+              formattedPet.services = services;
+              formattedPet.photos = photos;
+              formattedPet.location = selectedPlace?.formattedAddress ?? pet.location
+              
+              await axios
+              .post(`${import.meta.env.VITE_BACKEND_URL}/pets/`, formattedPet, {
+                headers: {
+                  'Authorization': `Bearer ${user.token}`
+                }
+              })
+              .then((res) => console.log(res))
+              .catch((err) => console.error(JSON.stringify(err)))
+              .finally(() => navigate('/'));
+
+            } else { 
+                formattedPet.location = selectedPlace?.formattedAddress ?? pet.location
+                formattedPet.photos = photos;
+                formattedPet.services = services;
+
+                await axios
+                .patch(`${import.meta.env.VITE_BACKEND_URL}/pets/${loc.state.pet.id}`, formattedPet, {
+                  headers: {
+                    'Authorization': `Bearer ${user.token}`
+                  }
+                })
+                .then((res) => console.log(res))
+                .catch((err) => console.error(JSON.stringify(err)))
+                .finally(() => navigate('/'));
               }
-            })
-            .then((res) => console.log(res))
-            .catch((err) => console.error(JSON.stringify(err)))
-            .finally(() => navigate('/'));
-          }
+            }
         }
     }
 
   return (
     <>
    <Container className='mt-4 mw-75'>
-    <h1>Create Pet</h1>
+    {petFromLoc ? <h1>Update Pet</h1> : <h1>Create Pet</h1>}
       <Form noValidate onSubmit={handleSubmit} id='pet-form'>
         <Row className='mb-3'>
           <Col>
@@ -133,20 +169,21 @@ export default function PetForm() {
             <Form.Group as={Row} className='mb-3' controlId='formBasicType'>
               <Form.Label column sm={3}>Type</Form.Label>
               <Col>
-                <Form.Select
+                <Form.Control as='select'
                   aria-label='pet type selector'
+                  value={pet.type ??  ''}
                   onChange={onChange}
                   name='type'
                   isInvalid={validated && !validTypes.includes(pet.type)}
-                  isValid={validated && validTypes.includes(pet.type)}
+                  isValid={validated && (validTypes.includes(pet.type))}
                   required
                 >
                   <option>Please select a type</option>
-                  <option value='cat'>Cat</option>
-                  <option value='dog'>Dog</option>
-                  <option value='bird'>Bird</option>
-                  <option value='other'>Other</option>
-                </Form.Select>
+                  <option value='Cat'>Cat</option>
+                  <option value='Dog'>Dog</option>
+                  <option value='Bird'>Bird</option>
+                  <option value='Other'>Other</option>
+                </Form.Control>
                 <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
                 <Form.Control.Feedback type='invalid'>
                   Please provide a pet type.
@@ -175,9 +212,9 @@ export default function PetForm() {
               </Col>
             </Form.Group>
 
-          {/* MultiStringInput for Photo URLs */}
+          {/* MultiInput for Photo URLs */}
           <Form.Group className='mb-3' controlId='formBasicPhotoLinks'>
-            <MultiInput label='Photos' onChange={setPhotos} />
+            <MultiInput label='Photos' onChange={setPhotos} preSet={pet.photos  ?? []}/>
             {validated && photos.length === 0 && (
                 <div className='invalid-feedback d-block'>Please add at least one photo link</div>
             )}
@@ -186,9 +223,9 @@ export default function PetForm() {
             )}
           </Form.Group>
 
-          {/* MultiStringInput for Services */}
+          {/* MultiInput for Services */}
           <Form.Group className='mb-3' controlId='formBasicServices'>
-            <MultiInput label='Services' onChange={setServices} />
+            <MultiInput label='Services' onChange={setServices} preSet={pet.services ?? []}/>
             {validated && services.length === 0 && (
                 <div className='invalid-feedback d-block'>Please add at least one service</div>
             )}
@@ -216,14 +253,6 @@ export default function PetForm() {
           </Col>
         </Row>
         
-        {/* Confirmation Checkbox */}
-        {/* <Form.Group className='mb-3' controlId='formBasicCheckbox'>
-          <Form.Check type='checkbox' label='Confirm settings' isValid={validated} isInvalid ={validated} required />
-          <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
-          <Form.Control.Feedback type='invalid'>
-            Please confirm information is correct.
-          </Form.Control.Feedback>
-        </Form.Group> */}
       </Form>
     </Container>
     </>
