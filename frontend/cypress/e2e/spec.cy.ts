@@ -73,6 +73,19 @@ describe('Logged In User Actions', () => {
     cy.contains('Fluffy');
   });
 
+  it('should allow a logged in user to edit a pet', () => {
+    cy.contains('Profile').click();
+    cy.contains('Your Profile');
+    cy.contains('My Offers').click();
+    cy.contains('My Pets').click();
+    cy.contains('Fluffy')
+      .closest('.profile-card')
+      .within(() => {
+        cy.contains('View Details').click();
+      });
+    cy.contains('Edit').click();
+  });
+
   it('should allow a logged in user to delete a pet', () => {
     cy.contains('Profile').click();
     cy.contains('Your Profile');
