@@ -8,6 +8,7 @@ import axios from "axios";
 import { Offer, OfferCardProps } from "../../../types/Offer";
 import "./styles.css";
 import { toast } from "react-toastify";
+import { Link } from "react-router-dom";
 
 const DEFAULT_IMAGE = "https://cdn.pixabay.com/photo/2016/12/05/09/36/application-1883452_1280.jpg";
 const DEFAULT_IMAGE_2 ="https://cdn.pixabay.com/photo/2016/07/21/14/18/dog-1532627_1280.png";
@@ -101,8 +102,8 @@ export default function OfferCard( { url, tab } : OfferCardProps) {
 
                 {/* Card links to the entity page */}
                 <CardActionArea
-                  component="a"
-                  href={`/${
+                  component={Link}
+                  to={`/${
                     offer.requestedSK.split("#")[0].toLowerCase() + "s"
                   }/${offer.requestedSK.split("#")[1]}`}
                 >
