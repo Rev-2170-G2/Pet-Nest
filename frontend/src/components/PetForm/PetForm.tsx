@@ -81,7 +81,7 @@ export default function PetForm() {
           pet.description.trim() !== '' &&
           services &&
           photos &&
-          location;
+          (pet.location || selectedPlace);
 
         // change validated attribute before checking validity to ensure react processes a change in the virtual DOM
         setValidated(true); 
@@ -98,12 +98,6 @@ export default function PetForm() {
           if (user) { 
             let formattedPet = { ...pet };
             if (!petFromLoc) {
-              // formattedPet = {
-              //   ...pet, 
-              //   services,
-              //   photos,
-              //   location: selectedPlace?.formattedAddress ?? pet.location
-              // };
               formattedPet.services = services;
               formattedPet.photos = photos;
               formattedPet.location = selectedPlace?.formattedAddress ?? pet.location

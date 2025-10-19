@@ -36,12 +36,9 @@ export default function MultiPhotoInput({onChange, label, preSet}: Props) {
       };
 
       useEffect(() => {
-        if (preSet) {
-          for (const item of preSet) {
-            const updated = [ ...values, item]
-            setValues(updated);
-            onChange?.(updated);
-          }
+        if (preSet && preSet.length > 0) {
+          setValues(preSet);
+          onChange?.(preSet);
         }
       }, [preSet])
 

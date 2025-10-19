@@ -67,7 +67,7 @@ export default function eventForm() {
         const isFormValid = 
           event.name.trim() !== '' &&
           event.description.trim() !== '' &&
-          location && 
+          (event.location || selectedPlace)&& 
           date && 
           photos;
 

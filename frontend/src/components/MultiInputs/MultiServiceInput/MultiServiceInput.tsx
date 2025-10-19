@@ -40,12 +40,9 @@ export default function MultiServiceInput({onChange, label, preSet}: Props) {
     };
 
     useEffect(() => {
-      if (preSet) {
-        Object.values(preSet).forEach((val) => {
-          const updated = [...values, val]
-          setValues(updated);
-          onChange?.(updated);
-        })
+      if (preSet && preSet.length > 0) {
+        setValues(preSet);
+        onChange?.(preSet);
       }
     }, [preSet])
 
