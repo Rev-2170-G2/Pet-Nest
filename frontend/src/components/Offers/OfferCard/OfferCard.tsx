@@ -102,7 +102,7 @@ export default function OfferCard( { url, tab } : OfferCardProps) {
                 {/* Card links to the entity page */}
                 <CardActionArea
                   component="a"
-                  href={`${
+                  href={`/${
                     offer.requestedSK.split("#")[0].toLowerCase() + "s"
                   }/${offer.requestedSK.split("#")[1]}`}
                 >
