@@ -11,7 +11,7 @@ describe("offerService tests", () => {
     const dummyOffer = {
         requesterSK: "PET#pet001",
         requestedSK: "PET#pet002",
-        requestedOwnerId: "owner2",
+        requestedPK: "u#owner2",
         services: ["walking"],
         description: "Test offer"
     };
@@ -38,7 +38,7 @@ describe("offerService tests", () => {
                     id: "offer123",
                     requesterPK: loggedInUserPK,
                     requesterSK: "PET#pet001",
-                    requestedPK: "u#owner2",
+                    requestedOwnerId: "u#owner2",
                     requestedSK: "PET#pet002",
                     services: ["walking"],
                     description: "Test offer",
@@ -53,7 +53,7 @@ describe("offerService tests", () => {
             const offer = {
                 requesterSK: "user1",
                 requestedSK: "PET#pet001",
-                requestedOwnerId: "owner2",
+                requestedPK: "u#owner2",
                 services: ["sitting"],
                 description: "User to pet"
             };
@@ -74,7 +74,7 @@ describe("offerService tests", () => {
             const offer = {
                 requesterSK: "PET#pet001",
                 requestedSK: "EVENT#event001",
-                requestedOwnerId: "owner2",
+                requestedPK: "u#owner2",
                 services: ["attendance"],
                 description: "Pet to event"
             };
@@ -94,7 +94,7 @@ describe("offerService tests", () => {
             const offer = {
                 requesterSK: "EVENT#event001",
                 requestedSK: "PET#pet001",
-                requestedOwnerId: "owner2",
+                requestedPK: "u#owner2",
                 services: ["showcase"],
                 description: "Event to pet"
             };
@@ -114,7 +114,7 @@ describe("offerService tests", () => {
             const offer = {
                 requesterSK: "user1",
                 requestedSK: "EVENT#event001",
-                requestedOwnerId: "owner2",
+                requestedPK: "u#owner2",
                 services: ["hosting"],
                 description: "User to event"
             };
@@ -129,7 +129,7 @@ describe("offerService tests", () => {
 
         test("should return null if required fields are missing", async () => {
             const incompleteOffer = {...dummyOffer};
-            delete incompleteOffer.requesterSK;
+            delete incompleteOffer.requestedPK;
 
             const result = await offerService.createOffer(incompleteOffer, loggedInUserPK);
             expect(result).toBeNull();

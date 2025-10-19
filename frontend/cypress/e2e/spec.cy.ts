@@ -57,7 +57,7 @@ describe('Logged In User Actions', () => {
     cy.contains('Logout');
   });
 
-  it('should allow a logged in user to add a pet', () => {
+  it('should allow a logged in user to create a pet', () => {
     cy.get('#join').click();
     cy.contains('Post A Pet').click();
     cy.get('input#formBasicName').type('Fluffy');
@@ -65,11 +65,11 @@ describe('Logged In User Actions', () => {
     cy.get('textarea#formBasicDesc').type('Fluffiest dog every, can dance too');
     cy.get('input[placeholder="Share a photo link and press enter"]')
       .type('https://images.unsplash.com/photo-1581753418434-51c11169a3c1{enter}');
-    cy.get('input[placeholder="Type a value and press Enter"]').type('Dancing');
     cy.get('input[placeholder="Search for a place"]').type('Boston');
-    cy.contains('Boston, MA, USA').click();
+    cy.contains('Boston, MA, USA').click({timeout: 10000});
+    cy.get('input[placeholder="Type a value and press Enter"]').type('dancing');
     cy.get('input[placeholder="Enter a dollar amount"]').clear().type('20{enter}');
-    cy.contains('Submit').click({ timeout: 10000 });
+    cy.contains('Submit').click({timeout: 10000});
     cy.contains('Fluffy');
   });
 
@@ -84,6 +84,19 @@ describe('Logged In User Actions', () => {
         cy.contains('View Details').click();
       });
     cy.contains('Edit').click();
+    cy.get('input[placeholder="Type a value and press Enter"]').type('parkour');
+    cy.get('input[placeholder="Enter a dollar amount"]').clear().type('25{enter}');
+    cy.contains('Submit').click({ timeout: 10000 });
+    cy.contains('Profile').click();
+    cy.contains('Your Profile');
+    cy.contains('My Offers').click();
+    cy.contains('My Pets').click();
+    cy.contains('Fluffy')
+      .closest('.profile-card')
+      .within(() => {
+        cy.contains('View Details').click();
+      });
+    cy.contains('parkour')
   });
 
   it('should allow a logged in user to delete a pet', () => {
@@ -98,6 +111,62 @@ describe('Logged In User Actions', () => {
         cy.contains('Confirm').click();
       })
     cy.contains('Fluffy').should('not.exist');
+  });
+
+  //event
+  it('should allow a logged in user to create an event', () => {
+    cy.contains('Profile').click();
+    cy.contains('Your Profile');
+    cy.contains('My Pets').click();
+    cy.contains('My Events').click();
+    cy.contains('Add Event').click();
+    cy.contains('Create Event')
+    cy.get('input#formBasicName').type('Dancing Dogs Show');
+    cy.get('textarea#formBasicDesc').type('Dog show to showcase your dancing dogs. Fun community event.');
+    cy.get('input[placeholder="Share a photo link and press enter"]')
+      .type('https://images.unsplash.com/photo-1581753418434-51c11169a3c1{enter}');
+    cy.get('input[placeholder="Search for a place"]').type('Boston');
+    cy.contains('Boston, MA, USA').click();
+    cy.contains('Submit').click({ timeout: 10000 });
+    cy.contains('Profile').click();
+    cy.contains('My Offers').click();
+    cy.contains('My Events').click();
+    cy.contains('Dancing Dogs Show');
+  });
+
+  it('should allow a logged in user to edit an event', () => {
+    cy.contains('Dancing Dogs Show')
+      .closest('.profile-card')
+      .within(() => {
+        cy.contains('View Details').click();
+      });
+    cy.contains('Edit').click();
+    cy.get('textarea#formBasicDesc').clear().type('Dog show to showcase your dancing dogs. Fun community event. URGENT');
+    cy.contains('Submit').click({timeout: 10000});
+    cy.contains('Profile').click();
+    cy.contains('Your Profile');
+    cy.contains('My Offers').click();
+    cy.contains('My Events').click();
+    cy.contains('Dancing Dogs Show')
+      .closest('.profile-card')
+      .within(() => {
+        cy.contains('View Details').click();
+      });
+    cy.contains('URGENT');
+  });
+
+  it('should allow a logged in user to delete an event', () => {
+    cy.contains('Profile').click();
+    cy.contains('Your Profile');
+    cy.contains('My Offers').click();
+    cy.contains('My Events').click();
+    cy.contains('Dancing Dogs Show')
+      .closest('.profile-card')
+      .within(() => {
+        cy.contains('Delete').click();
+        cy.contains('Confirm').click();
+      })
+    cy.contains('Dancing Dogs Show').should('not.exist');
   });
 
   after(() => {
