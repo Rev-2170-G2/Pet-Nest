@@ -46,8 +46,10 @@ describe('Positive testing on postEvent', () => {
             'PK': 'u#fa0s9d8f',
             'SK': 'EVENT#e12345',
             'photos': [],
-            'status': 'pending',
+            'status': 'open',
             'entity': 'EVENT',
+            'approved': null,
+            'offers': []
         };
         eventDAO.createEvent.mockResolvedValue(dummyData);
 
@@ -78,8 +80,10 @@ describe('Positive testing on postEvent', () => {
             'PK': 'u#fa0s9d8f',
             'SK': 'EVENT#e12345',
             'photos': ['link1', 'link2', 'link3'],
-            'status': 'pending',
+            'status': 'open',
             'entity': 'EVENT',
+            'offers': [],
+            'approved': null
         };
         eventDAO.createEvent.mockResolvedValue(dummyData);
 
@@ -110,8 +114,10 @@ describe('Positive testing on postEvent', () => {
             'PK': 'u#fa0s9d8f',
             'SK': 'EVENT#e12345',
             'photos': [],
-            'status': 'pending',
+            'status': 'open',
             'entity': 'EVENT',
+            'approved': null,
+            'offers': []
         };
         eventDAO.createEvent.mockResolvedValue(dummyData);
 
@@ -212,8 +218,10 @@ describe('Negative testing on postEvent', () => {
             'PK': 'u#fa0s9d8f',
             'SK': 'EVENT#e12345',
             'photos': [],
-            'status': 'pending',
+            'status': 'open',
             'entity': 'EVENT',
+            'offers': [],
+            'approved': null
         };
         eventDAO.createEvent.mockResolvedValue(null);
 

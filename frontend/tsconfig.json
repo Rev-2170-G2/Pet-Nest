@@ -5,7 +5,7 @@
     "lib": ["ES2020", "DOM", "DOM.Iterable"],
     "module": "ESNext",
     "skipLibCheck": true,
-    "types": ["vite/client", "@mui/types"],
+    "types": ["vite/client", "@mui/types", "cypress"],
  
     /* Bundler mode */
     "moduleResolution": "bundler",
@@ -28,6 +28,6 @@
     "noImplicitThis": true,
     "strictNullChecks": true,
   },
-  "include": ["src", "./jest.setup.ts"],
+  "include": ["src", "cypress", "./jest.setup.ts"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

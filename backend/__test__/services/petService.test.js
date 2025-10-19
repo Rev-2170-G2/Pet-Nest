@@ -51,10 +51,12 @@ describe('petService createPet', () => {
         'u#abc123',
         expect.objectContaining({
             id: 'p12345',
-            type: 'dog',
+            entity: 'PET',
+            type: 'Dog',
             name: 'Rex',
             services: [{ service: 'walking', price: 20 }],
             description: 'friendly dog',
+            offers: [],
             photos: ['img1.jpg'],
             location: 'NYC'
         })
