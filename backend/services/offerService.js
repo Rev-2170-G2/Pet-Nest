@@ -3,15 +3,15 @@ const { nanoid } = require("nanoid");
 const { logger } = require("../util/logger");
 
 async function createOffer(body, loggedInUserPK) {
-    const {requesterSK, requestedSK, requestedOwnerId, services, description} = body;
+    const {requesterSK, requestedSK, requestedPK, services, description} = body;
 
-    if (!requesterSK || !requestedSK || !requestedOwnerId || !Array.isArray(services) || services.length === 0) {
+    if (!requesterSK || !requestedSK || !requestedPK || !Array.isArray(services) || services.length === 0) {
         logger.info(`Invalid offer body from ${loggedInUserPK}: ${JSON.stringify(body)}`);
         return null;
     }
 
     const requesterPK = loggedInUserPK;
-    const requestedPK = requestedOwnerId.startsWith("u#") ? requestedOwnerId : `u#${requestedOwnerId}`;
+    const requestedOwnerId = requestedPK.startsWith("u#") ? requestedPK : `u#${requestedPK}`;
 
     const requesterEntity = await offerDAO.getEntity(requesterPK, requesterSK);
     if (!requesterEntity) return null;
@@ -31,7 +31,7 @@ async function createOffer(body, loggedInUserPK) {
         id: nanoid(5),
         requesterPK,
         requesterSK,
-        requestedPK,
+        requestedOwnerId,
         requestedSK,
         services,
         description,
