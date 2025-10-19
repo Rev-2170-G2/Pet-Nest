@@ -23,7 +23,6 @@ function Review({ pet, onReviewSubmit } : ReviewProps){
       return null;
     }
     const pk = pet.PK;
-    console.log(pk);
     const reviewData = {
       rating,
       reviewText,
@@ -43,14 +42,14 @@ function Review({ pet, onReviewSubmit } : ReviewProps){
 
       if (response){
         const reviewArray = response.data.data.review;
-        console.log(reviewArray[reviewArray.length - 1])
+        console.log(reviewArray[reviewArray.length - 1]);
         onReviewSubmit(reviewArray[reviewArray.length - 1]);
 
-        toast("Great - your review was sent!")
+        toast("Great - your review was sent!");
         setRating(0);
         setReviewText('');
       } else {
-        toast("Sorry, we were unable to update your review. Please contact admin for support.")
+        toast("Sorry, we were unable to update your review. Please contact admin for support.");
       }
     } catch (error: any) {
       console.error('Update failed:', error.response?.data || error.message);

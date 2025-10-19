@@ -46,9 +46,9 @@ export default function PetCard() {
 
   return (
     <div className="d-flex flex-column">
-        <div className="mb-2 mx-3 d-flex flex-row">
+        <div className="mx-3 d-flex flex-row">
             <PetFilter onSelectType={(type: string) => getPetsByType(type)} />
-            <button className='btn btn-info h-75 my-auto' onClick={() => setShowMap(true)}>Show Map</button>
+            <button className='btn btn-info h-75 my-auto' onClick={() => setShowMap(true)}>Check Out The Pet Map</button>
             <MapPopup
             isOpen={showMap}
             onClose={() => setShowMap(false)}
@@ -58,7 +58,7 @@ export default function PetCard() {
 
         <div className="petcard-container">
             {pets.length === 0 ? (
-                <p style={{ textAlign: 'center', width: '100%', marginTop: '20px' }}>
+                <p style={{ textAlign: 'center', width: '100%' }}>
                     No pets found matching your filter.
                 </p>
             ) : (
@@ -78,7 +78,7 @@ export default function PetCard() {
                                     {"Location: " + pet.location}
                                 </Typography>
                                 <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                                    {pet.description}
+                                    {pet.description.length > 125 ? pet.description.substring(0, 125) + '...' : pet.description}
                                 </Typography>
                             </CardContent>
                             <CardActions className="card-actions">
