@@ -10,7 +10,7 @@ const offerRoutes = require('./routes/api/offerRoutes');
 
 const app = express();
 
-app.use(cors())
+app.use(cors());
 app.use(bodyParser.json());
 app.use(loggerMiddleware);
 

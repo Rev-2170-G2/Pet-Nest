@@ -13,6 +13,8 @@ export default function PetCard() {
     const [showMap, setShowMap] = useState<boolean>(false);
     const navigate = useNavigate();
     const URL = import.meta.env.VITE_BASE_URL || "http://localhost:3000";
+    const DEFAULT_PIC_1 = `url("https://cdn.pixabay.com/photo/2017/07/22/08/49/cat-2528119_1280.jpg")`;
+    
 
     useEffect(() => {
         const fetchPets = async () => {
@@ -46,9 +48,9 @@ export default function PetCard() {
 
   return (
     <div className="d-flex flex-column">
-        <div className="mb-2 mx-3 d-flex flex-row">
+        <div className="mx-3 d-flex flex-row">
             <PetFilter onSelectType={(type: string) => getPetsByType(type)} />
-            <button className='btn btn-info h-75 my-auto' onClick={() => setShowMap(true)}>Show Map</button>
+            <button className='btn btn-info h-75 my-auto' onClick={() => setShowMap(true)}>Check Out The Pet Map</button>
             <MapPopup
             isOpen={showMap}
             onClose={() => setShowMap(false)}
@@ -58,7 +60,7 @@ export default function PetCard() {
 
         <div className="petcard-container">
             {pets.length === 0 ? (
-                <p style={{ textAlign: 'center', width: '100%', marginTop: '20px' }}>
+                <p style={{ textAlign: 'center', width: '100%' }}>
                     No pets found matching your filter.
                 </p>
             ) : (
@@ -67,7 +69,7 @@ export default function PetCard() {
                         <Card className="card-root">
                             <CardMedia
                                 className="card-media"
-                                image={Array.isArray(pet.photos) ? pet.photos?.[0] : pet.photos}
+                                image={pet.photos ? (Array.isArray(pet.photos) ? pet.photos?.[0] : pet.photos) : DEFAULT_PIC_1}
                                 title={pet.entity}
                             />
                             <CardContent>
@@ -78,7 +80,7 @@ export default function PetCard() {
                                     {"Location: " + pet.location}
                                 </Typography>
                                 <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                                    {pet.description}
+                                    {pet.description.length > 125 ? pet.description.substring(0, 125) + '...' : pet.description}
                                 </Typography>
                             </CardContent>
                             <CardActions className="card-actions">

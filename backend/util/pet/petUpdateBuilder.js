@@ -1,9 +1,19 @@
 //allow user to update any or all, used in petService layer -> petDAO
-function buildPetUpdates({ location, photos, services }) {
+function buildPetUpdates({ name, description, location, photos, services }) {
     const expressionParts = [];
     const names = {};
     const values = {};
 
+    if (name !== undefined) {
+        expressionParts.push("#name = :name");
+        names["#name"] = "name";
+        values[":name"] = name;
+    }
+    if (description !== undefined) {
+        expressionParts.push("#description = :description");
+        names["#description"] = "description";
+        values[":description"] = description;
+    }
     if (location !== undefined) {
         expressionParts.push("#location = :location");
         names["#location"] = "location";

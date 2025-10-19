@@ -30,7 +30,7 @@ export default function PetPage() {
       .finally(() => setLoading(false));
   }, [id]);
 
-  const updatePetReview = (newReview: { rating: number; reviewText: string; createdAt: string }) => {
+  const updatePetReview = (newReview: { rating: number; reviewText: string; createdAt: string}) => {
     console.log("new Review from updatePetREview:", newReview);
     if (!pet) return;
 

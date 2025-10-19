@@ -47,6 +47,10 @@ export default function EventDetails({ event }: { event: Event }) {
     fetchPetsByUser();
   }, [userId]);
 
+  const handleNavigate = () => {
+    navigate(`/event-form`, {state : {event}});
+  }
+
   return (
     <div className="container py-5 min-vh-100">
       <div className="mb-4">
@@ -105,6 +109,9 @@ export default function EventDetails({ event }: { event: Event }) {
           >
             Join Event
           </button>
+          {user?.id === event.PK && 
+            <button className='btn btn-warning btn-lg px-4' onClick={handleNavigate}>Edit</button>
+            }
 
           {userPets.length > 0 && 
             (<EventOfferModal event={event} userPets={userPets} open={open} handleClose={handleClose}/>)}

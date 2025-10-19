@@ -1,0 +1,13 @@
+version: 0.2
+phases:
+  install:
+    runtime-versions:
+      nodejs: 22.20
+    commands:
+      - cd backend
+      - npm install
+
+artifacts:
+  base-directory: backend
+  files:
+    - '**/*'

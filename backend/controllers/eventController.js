@@ -10,7 +10,6 @@ const { validateEvent } = require('../util/eventValidation');
 async function PostEvent(req, res) { 
     if (validateEvent(req.body)) { 
         const pk = req.user.id;
-        // const pk = 'u#xbNX9';
         const { name, description, date, location, photos } = req.body;
         const data = await eventService.postEvent({name, description, date, location, photos, pk});
         if (data) {
@@ -82,8 +81,7 @@ async function PatchEventById(req, res) {
     const event = req.body;
     const id = req.params.id;
     const pk = req.user.id;
-    // const id = 'e8sBH_';
-    // const pk = 'u#xbNX9';
+
     const data = await eventService.patchEventById(id, pk, event);
     if (data) {
         res.status(200).json({message: 'Event patched', data});

@@ -25,6 +25,11 @@ export default function PetDetails({ pet }: { pet: Pet }) {
       : 0;
 
   console.log("averageRating", pet)
+
+  const handleNavigate = () => {
+    navigate(`/pet-form`, {state : {pet}});
+  }
+
   return (
     <div className="container py-5 d-flex flex-column justify-content-center">
       <div className="row g-4 align-items-start">
@@ -107,6 +112,9 @@ export default function PetDetails({ pet }: { pet: Pet }) {
             >
               Request Service
             </button>
+            {user?.id === pet.PK && 
+            <button className='btn btn-warning btn-lg px-4' onClick={handleNavigate}>Edit</button>
+            }
             <PetOfferModal pet={pet} open={open} handleClose={handleClose}/>
 
             {showWarning && 

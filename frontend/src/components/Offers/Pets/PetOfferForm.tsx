@@ -25,7 +25,7 @@ function PetOfferForm({ pet, handleClose }: PetOfferFormProps) {
   const [requesterSK, setRequesterSK] = useState<string>("");
   const [serviceSelection, setServiceSelection] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
-  // const [message, setMessage] = useState("");
+
 
   useEffect(() => {
     const fetchEventsByUser = async () => {
@@ -89,11 +89,9 @@ function PetOfferForm({ pet, handleClose }: PetOfferFormProps) {
       const newMessage = response           
         ? `Success! You’ve made an offer for ${pet.name}! 🐾` 
         : `Something went wrong with your offer for ${pet.name}. Try again!`
-      // setMessage(newMessage);
       toast(newMessage);
     } catch (error) {
         console.log(`Error creating offer: ${error}`);
-        // setMessage(`Offer failed! ${pet.name} is still waiting… 🐾`);
     } finally {
       setLoading(false);
       handleClose();

@@ -24,7 +24,8 @@ export default function MapView({showAutoComplete, setSelectedPlace, selectedPla
     >([]);
   
     useEffect(() => {
-      const getLocations = async () => {
+      let approvedEvents;
+      const getLocations = async (positions) => {
         if (positions) {
           const validSpots = positions
           .filter(i => i.location && i.location.trim().length > 0);
@@ -36,7 +37,17 @@ export default function MapView({showAutoComplete, setSelectedPlace, selectedPla
             })));
         };
       }
-      getLocations();
+
+      // filter out positions of events that are not approved
+      if (Array.isArray(positions) && positions.length > 0) {
+        const first = positions[0];
+        if ('approved' in first) {
+        approvedEvents = (positions as Event[]).filter(event => event.approved === true)
+          getLocations(approvedEvents);
+        } else {
+          getLocations(positions);
+        }
+      }
   }, [positions])
 
   return (

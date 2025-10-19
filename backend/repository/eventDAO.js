@@ -23,7 +23,7 @@ async function createEvent(event) {
     });
     try {
         const data = await documentClient.send(command);
-        logger.info(`PUT command to database complete | eventDAO | createEvent | data: ${JSON.stringify(data.Items)}`);
+        logger.info(`PUT command to database complete | eventDAO | createEvent | data: ${JSON.stringify(data)}`);
         return data;
     } catch (err) { 
         logger.error(`Error in eventDAO | createEvent | error: ${err}`);

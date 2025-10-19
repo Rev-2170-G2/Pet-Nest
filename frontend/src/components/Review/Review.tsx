@@ -5,7 +5,6 @@ import { Pet } from '../../types/Pet';
 import axios from 'axios';
 import { useAuth } from '../../context/AuthContext';
 import { toast } from 'react-toastify';
-
 interface ReviewProps {
   pet: Pet;
   onReviewSubmit: (review: { rating: number; reviewText: string; createdAt: string }) => void;
@@ -22,11 +21,12 @@ function Review({ pet, onReviewSubmit } : ReviewProps){
       toast("Users cannot give ratings to their own pets.🐾")
       return null;
     }
+    const pk = pet.PK;
     const reviewData = {
       rating,
       reviewText,
+      pk
     };
-
     try {
       const response = await axios.patch(
         `${baseUrl}/pets/${pet.id}/reviews`,
@@ -41,14 +41,14 @@ function Review({ pet, onReviewSubmit } : ReviewProps){
 
       if (response){
         const reviewArray = response.data.data.review;
-        console.log(reviewArray[reviewArray.length - 1])
+        console.log(reviewArray[reviewArray.length - 1]);
         onReviewSubmit(reviewArray[reviewArray.length - 1]);
 
-        toast("Great - your review was sent!")
+        toast("Great - your review was sent!");
         setRating(0);
         setReviewText('');
       } else {
-        toast("Sorry, we were unable to update your review. Please contact admin for support.")
+        toast("Sorry, we were unable to update your review. Please contact admin for support.");
       }
     } catch (error: any) {
       console.error('Update failed:', error.response?.data || error.message);
