@@ -81,7 +81,8 @@ async function updateOfferStatus(ownerId, entityId, offerId, newStatus) {
         if (offerIndex === -1) continue;
 
         const offer = entity.offers[offerIndex];
-        if (offer.requestedPK !== ownerId) return null;
+        console.log(offer);
+        if (offer.requestedOwnerId !== ownerId) return null;
 
         entity.offers[offerIndex].status = newStatus;
         const updatedEntity = await offerDAO.updateEntityOffers(ownerId, SK, entity.offers);

@@ -90,7 +90,7 @@ const updateOfferStatus = async (req, res) => {
     const {requestedSK, status} = req.body; // requestedSK (prev entityId is PET or EVENT id)
     const userId = req.user.id;
 
-    logger.info("offerController | updateOfferStatus", req.body);
+    logger.info(`offerController | updateOfferStatus ${requestedSK} ${status} ${id}`);
     if (!id|| !requestedSK || !status) {
         return res.status(400).json({message: "Offer ID, entity ID, and status are required"});
     }
