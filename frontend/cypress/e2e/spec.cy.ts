@@ -113,10 +113,7 @@ describe('Logged In User Actions', () => {
     cy.contains('Fluffy').should('not.exist');
   });
 
-  //event
   it('should allow a logged in user to create an event', () => {
-    cy.contains('Profile').click();
-    cy.contains('Your Profile');
     cy.contains('My Pets').click();
     cy.contains('My Events').click();
     cy.contains('Add Event').click();
