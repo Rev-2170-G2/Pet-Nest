@@ -107,8 +107,8 @@ async function getPetsByType(petType) {
     }
 }
 
-async function addPetReview(petId, userId, rating, reviewText) {
-  if (!petId || !userId) {
+async function addPetReview(petId, rating, reviewText, pk) {
+  if (!petId || !pk) {
     logger.info("Missing petId or userId for review");
     return null;
   }
@@ -120,7 +120,7 @@ async function addPetReview(petId, userId, rating, reviewText) {
   };
 
   try {
-    const updatedPet = await petDAO.addPetReview(userId, petId, review);
+    const updatedPet = await petDAO.addPetReview(petId, review, pk);
     return updatedPet;
   } catch (err) {
     logger.info(`Service failed to add review for pet ${petId}: ${err.message}`);

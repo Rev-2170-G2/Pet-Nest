@@ -14,7 +14,7 @@ const mockPet = {
   type: "Cat",
   location: "NYC",
   eventsCompleted: 3,
-  review: 5,
+  review: [{ createdAt: 'just now', rating: 5, reviewText: 'wow so great'}],
   description: "Crazy cat",
   photos: ["https://example.com/fufu.jpg"],
   services: [{service: "Model", price: 20}]

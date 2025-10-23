@@ -13,13 +13,14 @@ function Register({ onClose, onSwitchToLogin, onSubmit }: RegisterProps) {
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
+  const URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:3000";
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
     onSubmit?.();
 
     try {
-      await axios.post("http://localhost:3000/api/users/register", {
+      await axios.post(`${URL}/users/register`, {
         username,
         password,
         email,

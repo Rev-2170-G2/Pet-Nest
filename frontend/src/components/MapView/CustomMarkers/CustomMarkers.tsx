@@ -13,38 +13,18 @@ type Props = {
 }
 
 function CustomMarker({markerSpots, markerType}: Props) {
-    // const [positions, setPositions] = useState<
-    // { item: Pet | Event; location: google.maps.LatLng }[]
-    // >([]);
+
     const [activeMarker, setActiveMarker] = useState<string | null>(null);
     const [hovered, setHovered] = useState(false);
-
-    // useEffect(() => {
-    //     const getLocations = async () => {
-          
-    //       const validSpots = markerSpots
-    //       .filter(i => i.location && i.location.trim().length > 0);
-
-    //         const locations = await geocoder(validSpots.map(i => i.location!));
-    //         setPositions(markerSpots.map((item, i) => ({
-    //             item,
-    //             location: locations[i],
-    //         })));
-    //     };
-    //     getLocations();
-    // }, [markerSpots])
 
 
      const renderCustomPin = (item: Pet | Event) => {
         return (
         <>
             <div className="custom-pin"
-              // style={{
-              //   border: '2px solid 12271e',
-              //   borderRadius: '12px',
-              //   background: '#f4f4f4',
-              //   boxShadow: '0 2px 8px rgba(0,0,0,0,2)',
-              // }}
+              style={{
+                maxWidth: '250px'
+              }}
               >
             <button className="close-button">
                 <span className="material-symbols-outlined"> close </span>

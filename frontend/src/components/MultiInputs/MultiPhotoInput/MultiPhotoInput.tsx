@@ -1,12 +1,13 @@
-import { useState, KeyboardEvent, ChangeEvent } from 'react';
+import { useState, KeyboardEvent, ChangeEvent, useEffect } from 'react';
 import { Form, Button, Badge, InputGroup } from "react-bootstrap";
 
 type Props = {
     label: string;
     onChange?: ( values: string[]) => void;
+    preSet?: string[] | null;
 }
 
-export default function MultiPhotoInput({onChange, label}: Props) {
+export default function MultiPhotoInput({onChange, label, preSet}: Props) {
     
       const [values, setValues] = useState<string[]>([]);
       const [inputValue, setInputValue] = useState<string>('');
@@ -30,10 +31,17 @@ export default function MultiPhotoInput({onChange, label}: Props) {
     
       const handleRemove = (valueToRemove: string) => {
         const updated = values.filter((v) => v !== valueToRemove);
-        console.log(updated);
         setValues(updated);
         onChange?.(updated);
       };
+
+      useEffect(() => {
+        if (preSet && preSet.length > 0) {
+          setValues(preSet);
+          onChange?.(preSet);
+        }
+      }, [preSet])
+
   return (
     <>
     <Form.Group className="mb-3">
@@ -53,13 +61,12 @@ export default function MultiPhotoInput({onChange, label}: Props) {
         {values.map((v) => (
           <Badge
             key={v}
-            pill
             bg="secondary"
             className="me-2"
             style={{ cursor: "pointer", zIndex: 1 }}
             onClick={() => handleRemove(v)}
           >
-            {v} ✕
+            {v.length > 25 ? v.slice(0, 26) + '...' : v} ✕
           </Badge>
         ))}
       </div>

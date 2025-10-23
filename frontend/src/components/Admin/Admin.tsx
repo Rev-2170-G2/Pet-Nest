@@ -14,7 +14,7 @@ export default function Admin() {
 useEffect(() => {
   axios
     .get(`${URL}/api/events`)
-    .then((res) =>
+    .then((res) => 
       setEvents(
         (res.data?.data || []).filter((event: Event) => event.approved === null)
       )
